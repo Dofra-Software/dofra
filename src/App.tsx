@@ -1,179 +1,366 @@
-import type { ReactNode } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 
 type Lang = 'es' | 'en'
+type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
+
+const CONTACT_EMAIL = 'dofrasoftware@gmail.com'
+
 const content = {
   es: {
-    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotros', 'Contacto'], talk: 'Hablemos',
-    eyebrow: 'DESARROLLO WEB · SOFTWARE A MEDIDA',
-    heroA: 'Ideas que se convierten en', heroB: 'soluciones digitales.',
-    heroDesc: 'Diseñamos y desarrollamos experiencias digitales que ayudan a las empresas a crecer. Tecnología bien pensada, hecha para personas reales.',
-    seeWork: 'Ver proyectos', quoteCTA: 'Solicitar presupuesto', discover: 'Conocé Dofra',
-    trust1: 'Pensado para crecer', trust2: 'Diseño + ingeniería', trust3: 'Argentina · Irlanda',
-    serviceKicker: 'QUÉ HACEMOS', serviceTitle: 'La tecnología correcta para cada desafío.', serviceDesc: 'Desde tu primera presencia online hasta una plataforma que transforme tu operación.',
+    skip: 'Saltar al contenido',
+    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Switch to English', brandLabel: 'Dofra Software, ir al inicio',
+    eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
+    heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
+    heroDesc: 'Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo con tecnología adaptada a sus necesidades.',
+    heroContact: 'Contanos qué necesitás', seeWork: 'Ver proyectos',
+    trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'Argentina · Irlanda',
+    serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Cuatro formas de usar la tecnología a tu favor, explicadas sin tecnicismos.',
+    examplesLabel: 'Ejemplos',
     services: [
-      { n:'01', icon:'code', title:'Desarrollo web', desc:'Sitios rápidos, modernos y optimizados para convertir visitas en oportunidades.', tags:['Landing pages','Sitios corporativos','SEO técnico'] },
-      { n:'02', icon:'layers', title:'Aplicaciones web', desc:'Productos digitales intuitivos, seguros y preparados para acompañar tu crecimiento.', tags:['Web apps','Dashboards','Portales'] },
-      { n:'03', icon:'cpu', title:'Software a medida', desc:'Sistemas diseñados alrededor de tus procesos, no al revés.', tags:['Gestión interna','Integraciones','SaaS'] },
-      { n:'04', icon:'zap', title:'Automatizaciones', desc:'Conectamos herramientas y eliminamos tareas repetitivas para liberar tiempo valioso.', tags:['Flujos de trabajo','APIs','Optimización'] },
+      { icon: 'code', title: 'Páginas web', desc: 'Mostrá tus servicios y facilitá que tus próximos clientes te contacten.', examples: ['Páginas de presentación', 'Sitios profesionales', 'Webs para empresas'] },
+      { icon: 'layers', title: 'Aplicaciones web', desc: 'Herramientas que se usan desde el navegador para que tus clientes o tu equipo puedan realizar gestiones.', examples: ['Reservas online', 'Portales de clientes', 'Paneles de seguimiento'] },
+      { icon: 'cpu', title: 'Sistemas a medida', desc: 'Organizá la información y los procesos de tu negocio en una herramienta adaptada a tu forma de trabajar.', examples: ['Gestión de clientes', 'Turnos', 'Cobros', 'Tareas internas'] },
+      { icon: 'zap', title: 'Automatizaciones', desc: 'Reducí tareas repetitivas y evitá cargar la misma información en distintos lugares.', examples: ['Recordatorios', 'Formularios conectados con planillas', 'Avisos automáticos'] },
     ],
-    workKicker:'TRABAJO DESTACADO', workTitle:'Proyectos y soluciones digitales.', workDesc:'Conocé nuestro trabajo y explorá las ideas que estamos desarrollando.',
-    caseType:'PLATAFORMA WEB · GESTIÓN DE TURNOS', caseName:'Equilibrium Estética', caseDesc:'Una solución digital para simplificar la gestión de turnos, organizar servicios y ofrecer una experiencia más cómoda a clientes y administradores.', caseNote:'Proyecto propio · Caso de estudio', caseCTA:'Conocer el proyecto',
-    processKicker:'NUESTRA FORMA DE TRABAJAR', processTitle:'Simple, transparente y enfocado en resultados.',
-    process:[{n:'01',title:'Descubrimos',desc:'Escuchamos tus objetivos y definimos qué problema resolver.'},{n:'02',title:'Diseñamos',desc:'Transformamos ideas en una experiencia clara y funcional.'},{n:'03',title:'Construimos',desc:'Desarrollamos con tecnología moderna, calidad y criterio.'},{n:'04',title:'Evolucionamos',desc:'Lanzamos, medimos y mejoramos cuando tu negocio lo necesita.'}],
-    aboutKicker:'SOBRE DOFRA', aboutTitle:'Una mirada humana sobre la tecnología.', aboutDesc:'Dofra Software nace con una idea simple: el buen software no debería complicarte la vida. Combinamos diseño, desarrollo e ingeniería para construir productos digitales claros, confiables y preparados para el futuro.',
-    aboutQuote:'Menos complejidad. Más posibilidades.', aboutStats:['Soluciones a medida','Enfoque en calidad','Visión internacional'],
-    faqKicker:'PREGUNTAS FRECUENTES', faqTitle:'Antes de empezar.',
-    faqs:[{q:'¿Trabajan con negocios pequeños?',a:'Sí. Trabajamos con emprendimientos, profesionales y empresas que buscan una solución digital acorde a su etapa.'},{q:'¿Puedo contratar solo una página web?',a:'Por supuesto. Podemos desarrollar una landing page, un sitio corporativo o una solución más compleja según tu objetivo.'},{q:'¿Ofrecen mantenimiento?',a:'Podemos acordar soporte, mejoras y mantenimiento después de la entrega, según las necesidades del proyecto.'},{q:'¿Trabajan con clientes fuera de Argentina?',a:'Sí. Nuestro enfoque es internacional, con especial atención a clientes de Argentina e Irlanda.'}],
-    contactKicker:'EMPECEMOS ALGO BUENO', contactTitle:'Tu próxima gran idea merece hacerse realidad.', contactDesc:'Contanos qué tenés en mente. Nos encantaría conocer tu proyecto y encontrar juntos la mejor solución.', contactBtn:'Escribinos', contactSubject:'Consulta de proyecto — Dofra Software',
-    footerTag:'Software built around your business.', footerNote:'Diseñado con intención. Construido con tecnología.', rights:'Todos los derechos reservados.',
-    previewLabel:'VISTA DE PRODUCTO', previewTitle:'Tu negocio, más simple.', previewMini:'Panel de gestión', previewClients:'Clientes', previewBookings:'Turnos', previewGrowth:'Actividad', previewStatus:'En marcha', previewRecent:'Próximos turnos', previewToday:'Hoy', previewTomorrow:'Mañana',
+    workKicker: 'PROYECTOS', workTitle: 'En qué estamos trabajando.', workDesc: 'Estos son nuestros proyectos en curso. Vamos a sumar más a medida que estén listos para mostrar.',
+    caseType: 'PLATAFORMA WEB · GESTIÓN DE TURNOS', caseName: 'Equilibrium Estética',
+    caseDesc: 'Una solución digital para simplificar la gestión de turnos, organizar servicios y ofrecer una experiencia más cómoda a clientes y administradores.',
+    caseStatus: 'En desarrollo', caseImageNote: 'Imagen ilustrativa', caseMockSubtitle: 'Gestión de turnos', caseMockHeadline: 'Tu tiempo. Tu bienestar.',
+    caseFooter: 'Vamos a compartir más detalles cuando el proyecto esté publicado.',
+    processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
+    process: [
+      { title: 'Escuchamos', desc: 'Nos contás cómo funciona tu negocio y qué te gustaría resolver.' },
+      { title: 'Diseñamos', desc: 'Convertimos esas ideas en una propuesta clara y fácil de usar.' },
+      { title: 'Desarrollamos', desc: 'Construimos la solución con tecnología actual y cuidando cada detalle.' },
+      { title: 'Acompañamos', desc: 'Lanzamos el proyecto y lo mejoramos cuando tu negocio lo necesite.' },
+    ],
+    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Dos hermanas, un mismo proyecto.',
+    aboutDesc: 'Dofra es un proyecto creado por dos hermanas. Nació con una idea simple: la tecnología tiene que hacerte la vida más fácil, no complicártela. Por eso empezamos por entender cómo trabaja cada negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
+    aboutQuote: 'Menos complejidad. Más posibilidades.', aboutCaption: 'DISEÑO · DESARROLLO · ENTREGA',
+    aboutStats: ['Soluciones a medida', 'Explicaciones claras, sin tecnicismos', 'Visión internacional'],
+    faqKicker: 'PREGUNTAS FRECUENTES', faqTitle: 'Antes de empezar.',
+    faqs: [
+      { q: '¿Qué necesitan de mí para empezar?', a: 'Para la primera conversación alcanza con que nos cuentes a qué se dedica tu negocio, qué te gustaría resolver y, si tenés, ejemplos de páginas o herramientas que te gusten. No hace falta que sepas de tecnología.' },
+      { q: '¿Trabajan con negocios pequeños?', a: 'Sí. Trabajamos con emprendimientos, profesionales y empresas que buscan una solución digital acorde a su etapa.' },
+      { q: '¿Puedo contratar solo una página web?', a: 'Por supuesto. Podemos hacer una página de presentación, un sitio profesional o una solución más completa, según lo que necesites.' },
+      { q: '¿Cuánto puede tardar el proyecto?', a: '[A CONFIRMAR] Depende del tipo de proyecto y de cuánto haya que desarrollar. Por ejemplo, una página de presentación suele llevar alrededor de [PLAZO] y un sistema a medida, [PLAZO]. Antes de empezar te pasamos un plazo estimado.', pending: true },
+      { q: '¿El dominio y el alojamiento están incluidos?', a: '[A CONFIRMAR] [Incluido / No incluido / Opcional]. El dominio es la dirección de tu página (por ejemplo, tunegocio.com) y el alojamiento es el servicio que la mantiene publicada en internet.', pending: true },
+      { q: '¿Voy a poder actualizar la página?', a: '[A CONFIRMAR] Sí / Según el proyecto. [Explicar qué podrá cambiar el cliente por su cuenta —textos, fotos, precios— y qué cambios se hacen con nosotras].', pending: true },
+      { q: '¿Cómo se define el presupuesto?', a: '[A CONFIRMAR] Lo armamos después de conocer qué necesitás, según el alcance del proyecto. [Indicar si es precio cerrado, si hay anticipo y medios de pago].', pending: true },
+      { q: '¿Qué soporte ofrecen después de entregar?', a: 'Podemos acordar soporte, mejoras y mantenimiento después de la entrega, según las necesidades del proyecto.' },
+      { q: '¿Trabajan con clientes fuera de Argentina?', a: 'Sí. Trabajamos de forma remota, con especial atención a clientes de Argentina e Irlanda.' },
+    ] as Faq[],
+    contactKicker: 'CONTACTO', contactTitle: 'Contanos qué necesitás.',
+    contactDesc: 'Escribinos con tus propias palabras. No hace falta saber de tecnología: si todavía no tenés claro qué solución te conviene, te ayudamos a definirlo.',
+    contactSubject: 'Consulta de proyecto — Dofra Software',
+    form: {
+      requiredNote: 'Los campos marcados con * son obligatorios.',
+      name: 'Nombre y apellido', namePh: 'Tu nombre',
+      email: 'Correo electrónico', emailPh: 'nombre@ejemplo.com',
+      type: 'Qué necesitás', typePh: 'Elegí una opción',
+      types: ['Página web', 'Aplicación web', 'Sistema a medida', 'Automatización', 'No sé qué necesito, quiero asesoramiento', 'Otro'],
+      budget: 'Presupuesto aproximado (opcional)', budgetNone: 'Prefiero conversarlo',
+      budgets: ['Menos de USD 500', 'USD 500 – 1.500', 'USD 1.500 – 5.000', 'Más de USD 5.000'],
+      message: 'Contanos sobre tu proyecto', messagePh: 'Qué hace tu negocio, qué te gustaría resolver y cualquier detalle que quieras compartir.', messageHint: 'Mínimo 15 caracteres.',
+      consent: 'Acepto que Dofra Software use mis datos solo para responder esta consulta. El envío se procesa mediante el servicio FormSubmit.',
+      send: 'Enviar consulta', sending: 'Enviando…',
+      success: '¡Gracias! Recibimos tu consulta y te vamos a responder por correo electrónico.',
+      error: 'No pudimos enviar tu consulta. Probá de nuevo en unos minutos o escribinos directamente a',
+      subject: 'Nueva consulta desde la web de Dofra',
+      orEmail: 'También podés escribirnos a',
+    },
+    contactSmall: ['Argentina', 'Irlanda', 'Trabajo remoto'],
+    footerTag: 'Tecnología pensada para tu negocio.', footerNote: 'Diseñado con intención. Construido con tecnología.', rights: 'Todos los derechos reservados.',
+    demo: {
+      label: 'DEMOSTRACIÓN ILUSTRATIVA', a11y: 'Ejemplo ilustrativo de un panel de gestión. Los datos que muestra son ficticios.',
+      note: 'Ejemplo de panel de gestión. Las cifras son ficticias, no son resultados de Dofra.',
+      breadcrumb: 'demo / panel', mini: 'Panel de gestión', title: 'Tu negocio, más simple.', status: 'Demo',
+      clients: 'Clientes', bookings: 'Turnos', activity: 'Actividad', recent: 'Próximos turnos', today: 'Hoy', tomorrow: 'Mañana',
+      confirmed: 'Confirmado', pending: 'Pendiente', months: ['ENE', 'MAR', 'MAY', 'JUL', 'SEP', 'NOV'], floating: 'hecho con dedicación',
+    },
   },
   en: {
-    nav:['Home','Services','Projects','About','Contact'], talk:"Let's talk",
-    eyebrow:'WEB DEVELOPMENT · CUSTOM SOFTWARE', heroA:'Ideas transformed into', heroB:'digital solutions.',
-    heroDesc:'We design and build digital experiences that help businesses grow. Thoughtful technology, made for real people.',
-    seeWork:'View projects', quoteCTA:'Request a quote', discover:'Discover Dofra', trust1:'Built to scale', trust2:'Design + engineering', trust3:'Argentina · Ireland',
-    serviceKicker:'WHAT WE DO', serviceTitle:'The right technology for every challenge.', serviceDesc:'From your first online presence to a platform that transforms the way you work.',
-    services:[
-      {n:'01',icon:'code',title:'Web development',desc:'Fast, modern websites designed to turn visitors into opportunities.',tags:['Landing pages','Business websites','Technical SEO']},
-      {n:'02',icon:'layers',title:'Web applications',desc:'Intuitive, secure digital products ready to grow with your business.',tags:['Web apps','Dashboards','Portals']},
-      {n:'03',icon:'cpu',title:'Custom software',desc:'Systems designed around your workflows, not the other way around.',tags:['Operations','Integrations','SaaS']},
-      {n:'04',icon:'zap',title:'Automation',desc:'We connect tools and eliminate repetitive tasks so you can focus on what matters.',tags:['Workflows','APIs','Optimization']},
+    skip: 'Skip to content',
+    nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
+    navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Cambiar a español', brandLabel: 'Dofra Software, go to top',
+    eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
+    heroA: 'Websites and custom systems', heroB: 'for your business.',
+    heroDesc: 'We help startups, independent professionals and small businesses showcase their services, organize their work and save time with technology tailored to their needs.',
+    heroContact: 'Tell us what you need', seeWork: 'View projects',
+    trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Argentina · Ireland',
+    serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Four ways to put technology to work for you, explained without jargon.',
+    examplesLabel: 'Examples',
+    services: [
+      { icon: 'code', title: 'Websites', desc: 'Showcase your services and make it easy for new customers to get in touch.', examples: ['Single-page business sites', 'Professional websites', 'Company websites'] },
+      { icon: 'layers', title: 'Web apps', desc: 'Tools that run in the browser so your customers or your team can get things done online.', examples: ['Online booking', 'Customer portals', 'Progress tracking panels'] },
+      { icon: 'cpu', title: 'Custom systems', desc: 'Organize your business information and processes in a tool built around the way you work.', examples: ['Customer management', 'Appointments', 'Payments', 'Internal tasks'] },
+      { icon: 'zap', title: 'Automation', desc: 'Cut down on repetitive tasks and stop entering the same information in different places.', examples: ['Reminders', 'Forms linked to spreadsheets', 'Automatic notifications'] },
     ],
-    workKicker:'FEATURED WORK',workTitle:'Projects and digital solutions.',workDesc:'Explore our work and discover the ideas we are developing.',
-    caseType:'WEB PLATFORM · APPOINTMENT MANAGEMENT',caseName:'Equilibrium Estética',caseDesc:'A digital solution to simplify appointment scheduling, organize services, and make life easier for customers and administrators.',caseNote:'In-house project · Case study',caseCTA:'Explore the project',
-    processKicker:'HOW WE WORK',processTitle:'Simple, transparent, results-focused.',
-    process:[{n:'01',title:'Discover',desc:'We listen to your goals and define the problem to solve.'},{n:'02',title:'Design',desc:'We turn ideas into a clear, functional experience.'},{n:'03',title:'Build',desc:'We develop with modern technology, quality, and care.'},{n:'04',title:'Evolve',desc:'We launch, learn, and improve as your business grows.'}],
-    aboutKicker:'ABOUT DOFRA',aboutTitle:'A human approach to technology.',aboutDesc:'Dofra Software was born from a simple idea: great software should make life easier. We bring together design, development, and engineering to build clear, reliable digital products made for the future.',
-    aboutQuote:'Less complexity. More possibility.',aboutStats:['Tailored solutions','Quality first','Global mindset'],
-    faqKicker:'FREQUENTLY ASKED QUESTIONS',faqTitle:'Before we begin.',
-    faqs:[{q:'Do you work with small businesses?',a:'Yes. We work with startups, independent professionals, and established businesses looking for solutions that fit their stage.'},{q:'Can I hire you just for a website?',a:'Absolutely. We can build a landing page, business website, or a more complex solution depending on your goals.'},{q:'Do you offer maintenance?',a:'We can arrange ongoing support, improvements, and maintenance after launch based on your project needs.'},{q:'Do you work internationally?',a:'Yes. We work with an international mindset, particularly with clients in Argentina and Ireland.'}],
-    contactKicker:"LET'S BUILD SOMETHING",contactTitle:'Your next big idea deserves to happen.',contactDesc:"Tell us what you're thinking. We'd love to learn about your project and find the right solution together.",contactBtn:'Get in touch',contactSubject:'Project inquiry — Dofra Software',
-    footerTag:'Software built around your business.',footerNote:'Designed with intention. Built with technology.',rights:'All rights reserved.',
-    previewLabel:'PRODUCT PREVIEW',previewTitle:'Business, simplified.',previewMini:'Management overview',previewClients:'Clients',previewBookings:'Bookings',previewGrowth:'Activity',previewStatus:'On track',previewRecent:'Upcoming bookings',previewToday:'Today',previewTomorrow:'Tomorrow',
-  }
+    workKicker: 'PROJECTS', workTitle: "What we're working on.", workDesc: "These are our current projects. We'll add more as they're ready to share.",
+    caseType: 'WEB PLATFORM · APPOINTMENT MANAGEMENT', caseName: 'Equilibrium Estética',
+    caseDesc: 'A digital solution to simplify appointment scheduling, organize services and offer a more convenient experience for customers and administrators.',
+    caseStatus: 'In progress', caseImageNote: 'Illustrative image', caseMockSubtitle: 'Appointment management', caseMockHeadline: 'Your time. Your wellbeing.',
+    caseFooter: "We'll share more details once the project is live.",
+    processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
+    process: [
+      { title: 'We listen', desc: 'You tell us how your business works and what you would like to solve.' },
+      { title: 'We design', desc: 'We turn those ideas into a clear, easy-to-use proposal.' },
+      { title: 'We build', desc: 'We develop the solution with current technology and attention to detail.' },
+      { title: 'We support', desc: 'We launch the project and improve it whenever your business needs it.' },
+    ],
+    aboutKicker: 'ABOUT DOFRA', aboutTitle: 'Two sisters, one shared project.',
+    aboutDesc: "Dofra is a project created by two sisters. It started with a simple idea: technology should make your life easier, not more complicated. That's why we first get to know how each business works, and only then design the solution: clear, tailored and easy to use.",
+    aboutQuote: 'Less complexity. More possibility.', aboutCaption: 'DESIGN · DEVELOP · DELIVER',
+    aboutStats: ['Tailored solutions', 'Clear explanations, no jargon', 'Global mindset'],
+    faqKicker: 'FREQUENTLY ASKED QUESTIONS', faqTitle: 'Before we begin.',
+    faqs: [
+      { q: 'What do you need from me to get started?', a: "For our first conversation, just tell us what your business does, what you'd like to solve and, if you have them, examples of websites or tools you like. No technical knowledge needed." },
+      { q: 'Do you work with small businesses?', a: 'Yes. We work with startups, independent professionals and businesses looking for a digital solution that fits their stage.' },
+      { q: 'Can I hire you just for a website?', a: 'Absolutely. We can build a single-page site, a professional website or a more complete solution, depending on what you need.' },
+      { q: 'How long does a project take?', a: '[TO CONFIRM] It depends on the type of project and how much needs to be built. For example, a single-page site usually takes about [TIME] and a custom system [TIME]. We give you an estimated timeline before we start.', pending: true },
+      { q: 'Are domain and hosting included?', a: '[TO CONFIRM] [Included / Not included / Optional]. The domain is your website address (for example, yourbusiness.com) and hosting is the service that keeps it online.', pending: true },
+      { q: 'Will I be able to update my website?', a: '[TO CONFIRM] Yes / Depending on the project. [Explain what clients can change on their own —text, photos, prices— and what changes go through us].', pending: true },
+      { q: 'How is the price defined?', a: "[TO CONFIRM] We put it together once we know what you need, based on the project scope. [State whether it's a fixed price, deposits and payment methods].", pending: true },
+      { q: 'What support do you offer after delivery?', a: 'We can arrange ongoing support, improvements and maintenance after delivery, based on your project needs.' },
+      { q: 'Do you work with clients outside Argentina?', a: 'Yes. We work remotely, with a particular focus on clients in Argentina and Ireland.' },
+    ] as Faq[],
+    contactKicker: 'CONTACT', contactTitle: 'Tell us what you need.',
+    contactDesc: "Write to us in your own words. No technical knowledge needed: if you're not sure which solution is right for you, we'll help you figure it out.",
+    contactSubject: 'Project inquiry — Dofra Software',
+    form: {
+      requiredNote: 'Fields marked with * are required.',
+      name: 'Full name', namePh: 'Your name',
+      email: 'Email', emailPh: 'name@example.com',
+      type: 'What do you need?', typePh: 'Choose an option',
+      types: ['Website', 'Web app', 'Custom system', 'Automation', "I'm not sure what I need, I'd like some advice", 'Other'],
+      budget: 'Estimated budget (optional)', budgetNone: "I'd rather discuss it",
+      budgets: ['Under USD 500', 'USD 500 – 1,500', 'USD 1,500 – 5,000', 'Over USD 5,000'],
+      message: 'Tell us about your project', messagePh: "What your business does, what you'd like to solve and any other details you want to share.", messageHint: 'At least 15 characters.',
+      consent: 'I agree that Dofra Software may use my details only to reply to this inquiry. The form is processed by the FormSubmit service.',
+      send: 'Send inquiry', sending: 'Sending…',
+      success: "Thank you! We've received your inquiry and will reply by email.",
+      error: "We couldn't send your inquiry. Please try again in a few minutes or email us directly at",
+      subject: 'New inquiry from the Dofra website',
+      orEmail: 'You can also email us at',
+    },
+    contactSmall: ['Argentina', 'Ireland', 'Remote-first'],
+    footerTag: 'Technology built around your business.', footerNote: 'Designed with intention. Built with technology.', rights: 'All rights reserved.',
+    demo: {
+      label: 'ILLUSTRATIVE DEMO', a11y: 'Illustrative example of a management dashboard. The data shown is fictional.',
+      note: 'Sample management panel. Figures are fictional, not Dofra results.',
+      breadcrumb: 'demo / panel', mini: 'Management panel', title: 'Business, simplified.', status: 'Demo',
+      clients: 'Clients', bookings: 'Bookings', activity: 'Activity', recent: 'Upcoming bookings', today: 'Today', tomorrow: 'Tomorrow',
+      confirmed: 'Confirmed', pending: 'Pending', months: ['JAN', 'MAR', 'MAY', 'JUL', 'SEP', 'NOV'], floating: 'crafted with care',
+    },
+  },
 }
 
-function Icon({ name, size = 22 }: { name:string; size?:number }) {
+/** Valores que llegan en el correo: siempre en español, sin importar el idioma del visitante. */
+const TYPE_VALUES = content.es.form.types
+const BUDGET_VALUES = content.es.form.budgets
+
+function Icon({ name, size = 22 }: { name: string; size?: number }) {
   const paths: Record<string, ReactNode> = {
-    arrow:<><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></>,
-    code:<><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m14 4-4 16"/></>,
-    layers:<><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></>,
-    cpu:<><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/></>,
-    zap:<path d="m13 2-9 12h7l-1 8 10-12h-7z"/>,
-    check:<path d="m5 12 5 5L20 7"/>,
-    plus:<path d="M12 5v14M5 12h14"/>,
-    minus:<path d="M5 12h14"/>,
-    menu:<path d="M4 7h16M4 12h16M4 17h16"/>,
-    close:<path d="M5 5l14 14M19 5 5 19"/>,
-    mail:<><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></>,
-    globe:<><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c6 5 6 13 0 18M12 3c-6 5-6 13 0 18"/></>,
-    calendar:<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></>,
-    users:<><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5"/></>,
-    trending:<><path d="m3 17 7-7 4 4 7-7M15 7h6v6"/></>,
-    external:<><path d="M13 5h6v6M19 5l-9 9"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></>,
+    arrow: <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>,
+    code: <><path d="m8 8-4 4 4 4" /><path d="m16 8 4 4-4 4" /><path d="m14 4-4 16" /></>,
+    layers: <><rect x="4" y="4" width="16" height="16" rx="3" /><path d="M8 9h8M8 13h8M8 17h5" /></>,
+    cpu: <><rect x="6" y="6" width="12" height="12" rx="2" /><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" /></>,
+    zap: <path d="m13 2-9 12h7l-1 8 10-12h-7z" />,
+    check: <path d="m5 12 5 5L20 7" />,
+    plus: <path d="M12 5v14M5 12h14" />,
+    minus: <path d="M5 12h14" />,
+    menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+    close: <path d="M5 5l14 14M19 5 5 19" />,
+    globe: <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c6 5 6 13 0 18M12 3c-6 5-6 13 0 18" /></>,
+    calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></>,
+    users: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5" /></>,
+    trending: <><path d="m3 17 7-7 4 4 7-7M15 7h6v6" /></>,
   }
-  return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
+  return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
 }
-function Brand({ light = false }: { light?:boolean }) { return <a className={`brand ${light ? 'brand-light':''}`} href="#inicio" aria-label="Dofra Software, inicio"><span className="brand-word">dofra<span className="brand-dot">.</span></span><span className="brand-caption">SOFTWARE</span></a> }
-function Dashboard({ lang }: { lang:Lang }) {
-  const t=content[lang]
-  return <div className="dashboard" aria-label={t.previewLabel}>
-    <div className="dash-side"><div className="dash-logo">d<span>.</span></div><div className="side-line active"/><div className="side-line"/><div className="side-line"/><div className="side-line"/><div className="side-bottom"/></div>
-    <div className="dash-main"><div className="dash-top"><span className="dash-breadcrumb">dofra / overview</span><span className="dash-avatar">D</span></div><div className="dash-title"><div><small>{t.previewMini}</small><strong>{t.previewTitle}</strong></div><span className="dash-pill"><i/>{t.previewStatus}</span></div>
-    <div className="dash-metrics"><div><span className="metric-icon"><Icon name="users" size={17}/></span><small>{t.previewClients}</small><strong>1,248</strong><em>↗ 12.8%</em></div><div><span className="metric-icon"><Icon name="calendar" size={17}/></span><small>{t.previewBookings}</small><strong>328</strong><em>↗ 8.2%</em></div><div><span className="metric-icon"><Icon name="trending" size={17}/></span><small>{t.previewGrowth}</small><strong>+24%</strong><em>↗ 5.4%</em></div></div>
-    <div className="dash-chart"><div className="dash-chart-head"><strong>{t.previewGrowth}</strong><span>2026 <span className="chev">⌄</span></span></div><div className="chart-grid"><svg viewBox="0 0 500 140" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#398cff" stopOpacity=".24"/><stop offset="1" stopColor="#398cff" stopOpacity="0"/></linearGradient></defs><path d="M0 111 C30 101 43 108 70 92 S119 99 151 73 S195 91 228 61 S278 70 311 45 S360 58 394 32 S458 42 500 10 V140 H0Z" fill="url(#area)"/><path d="M0 111 C30 101 43 108 70 92 S119 99 151 73 S195 91 228 61 S278 70 311 45 S360 58 394 32 S458 42 500 10" stroke="#3487fa" strokeWidth="3" fill="none"/></svg></div><div className="chart-months"><span>JAN</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span></div></div>
-    <div className="dash-list"><strong>{t.previewRecent}</strong><div><span className="dash-list-icon">✦</span><span>09:30 · {t.previewToday}</span><span className="dash-list-tag">Confirmed</span></div><div><span className="dash-list-icon alt">✦</span><span>11:00 · {t.previewTomorrow}</span><span className="dash-list-tag">Pending</span></div></div>
+
+function Brand({ light = false, label }: { light?: boolean; label: string }) {
+  return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><span className="brand-word">dofra<span className="brand-dot">.</span></span><span className="brand-caption">SOFTWARE</span></a>
+}
+
+/** Panel ilustrativo del inicio. Todo su contenido es ficticio y está marcado como demostración. */
+function Dashboard({ lang }: { lang: Lang }) {
+  const d = content[lang].demo
+  return <div className="dashboard" role="img" aria-label={d.a11y}>
+    <div className="dash-side" aria-hidden="true"><div className="dash-logo">d<span>.</span></div><div className="side-line active" /><div className="side-line" /><div className="side-line" /><div className="side-line" /><div className="side-bottom" /></div>
+    <div className="dash-main" aria-hidden="true">
+      <div className="dash-top"><span className="dash-breadcrumb">{d.breadcrumb}</span><span className="dash-avatar">D</span></div>
+      <div className="dash-title"><div><small>{d.mini}</small><strong>{d.title}</strong></div><span className="dash-pill"><i />{d.status}</span></div>
+      <div className="dash-metrics">
+        <div><span className="metric-icon"><Icon name="users" size={17} /></span><small>{d.clients}</small><strong>1.248</strong><em>↗ 12,8%</em></div>
+        <div><span className="metric-icon"><Icon name="calendar" size={17} /></span><small>{d.bookings}</small><strong>328</strong><em>↗ 8,2%</em></div>
+        <div><span className="metric-icon"><Icon name="trending" size={17} /></span><small>{d.activity}</small><strong>+24%</strong><em>↗ 5,4%</em></div>
+      </div>
+      <div className="dash-chart"><div className="dash-chart-head"><strong>{d.activity}</strong><span>2026 <span className="chev">⌄</span></span></div><div className="chart-grid"><svg viewBox="0 0 500 140" preserveAspectRatio="none"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#398cff" stopOpacity=".24" /><stop offset="1" stopColor="#398cff" stopOpacity="0" /></linearGradient></defs><path d="M0 111 C30 101 43 108 70 92 S119 99 151 73 S195 91 228 61 S278 70 311 45 S360 58 394 32 S458 42 500 10 V140 H0Z" fill="url(#area)" /><path d="M0 111 C30 101 43 108 70 92 S119 99 151 73 S195 91 228 61 S278 70 311 45 S360 58 394 32 S458 42 500 10" stroke="#3487fa" strokeWidth="3" fill="none" /></svg></div><div className="chart-months">{d.months.map(m => <span key={m}>{m}</span>)}</div></div>
+      <div className="dash-list"><strong>{d.recent}</strong><div><span className="dash-list-icon">✦</span><span>09:30 · {d.today}</span><span className="dash-list-tag">{d.confirmed}</span></div><div><span className="dash-list-icon alt">✦</span><span>11:00 · {d.tomorrow}</span><span className="dash-list-tag">{d.pending}</span></div></div>
     </div>
   </div>
 }
+
+function readStoredLang(): Lang {
+  try { return window.localStorage.getItem('dofra-lang') === 'en' ? 'en' : 'es' } catch { return 'es' }
+}
+
 export default function App() {
-  const [lang,setLang]=useState<Lang>(() => window.localStorage.getItem('dofra-lang')==='en'?'en':'es')
-  const [menuOpen,setMenuOpen]=useState(false)
-  const [faqOpen,setFaqOpen]=useState<number|null>(0)
-  const [formStatus,setFormStatus]=useState<'idle'|'sending'|'success'|'error'>('idle')
-  const t=content[lang]
-  useEffect(()=>{document.documentElement.lang=lang;window.localStorage.setItem('dofra-lang',lang);document.title=lang==='es'?'Dofra Software | Desarrollo web y software a medida':'Dofra Software | Web development & custom software'},[lang])
-  const navIds=['inicio','servicios','proyectos','nosotros','contacto']
-  const contactEmail='dofrasoftware@gmail.com'
-  const contactLink=`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contactEmail)}&su=${encodeURIComponent(t.contactSubject)}`
-  async function submitQuote(event: React.FormEvent<HTMLFormElement>) {
+  const [lang, setLang] = useState<Lang>(readStoredLang)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [faqOpen, setFaqOpen] = useState<number | null>(0)
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const t = content[lang]
+  const f = t.form
+  const faqs = t.faqs.filter(item => !item.pending)
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+    try { window.localStorage.setItem('dofra-lang', lang) } catch { /* sin almacenamiento disponible */ }
+    document.title = lang === 'es' ? 'Dofra Software | Páginas web y sistemas a medida' : 'Dofra Software | Websites and custom systems'
+  }, [lang])
+
+  const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
+  // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
+  const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
+
+  async function submitQuote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (formStatus === 'sending') return
-    const form=event.currentTarget
-    const data=new FormData(form)
-    if (data.get('_honey')) return
+    const form = event.currentTarget
+    const data = new FormData(form)
+    if (data.get('_honey')) return // bot detectado: no se envía nada
     setFormStatus('sending')
     try {
-      const response=await fetch(`https://formsubmit.co/ajax/${contactEmail}`,{
-        method:'POST',
-        body:data,
-        headers:{'Accept':'application/json'}
+      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
       })
-      const result=await response.json() as {success?:boolean|string}
-      if (!response.ok || result.success === false || result.success === 'false') throw new Error('Submission failed')
+      const result = await response.json() as { success?: boolean | string }
+      // FormSubmit responde success "false" (por ejemplo, si el formulario todavía no fue activado).
+      if (!response.ok || String(result.success) !== 'true') throw new Error('Submission failed')
       form.reset()
       setFormStatus('success')
     } catch {
       setFormStatus('error')
     }
   }
+
   return <>
-    <header className="header"><div className="container nav-inner"><Brand/><nav className={menuOpen?'nav-links open':'nav-links'} aria-label={lang==='es'?'Navegación principal':'Main navigation'}>{t.nav.map((label,i)=><a key={navIds[i]} href={`#${navIds[i]}`} onClick={()=>setMenuOpen(false)}>{label}</a>)}</nav><div className="nav-actions"><button className="lang-switch" onClick={()=>setLang(lang==='es'?'en':'es')} aria-label={lang==='es'?'Switch to English':'Cambiar a español'}><Icon name="globe" size={16}/>{lang.toUpperCase()}</button><a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={17}/></a><button className="menu-toggle" onClick={()=>setMenuOpen(!menuOpen)} aria-label={menuOpen?'Cerrar menú':'Abrir menú'} aria-expanded={menuOpen}><Icon name={menuOpen?'close':'menu'} size={24}/></button></div></div></header>
-    <main>
-      <section className="hero" id="inicio"><div className="hero-glow"/><div className="container hero-grid"><div className="hero-copy"><div className="eyebrow"><span className="eyebrow-line"/>{t.eyebrow}</div><h1>{t.heroA}<br/><span>{t.heroB}</span></h1><p>{t.heroDesc}</p><div className="hero-actions"><a className="button button-primary button-large" href="#contacto">{t.quoteCTA}<Icon name="arrow" size={19}/></a><a className="button button-text" href="#proyectos">{t.seeWork}<Icon name="arrow" size={18}/></a></div><div className="hero-trust"><span><Icon name="check" size={15}/>{t.trust1}</span><span><Icon name="check" size={15}/>{t.trust2}</span><span><Icon name="globe" size={15}/>{t.trust3}</span></div></div><div className="hero-art"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="hero-art-label"><span className="status-dot"/> {t.previewLabel}</div><Dashboard lang={lang}/><div className="floating-code"><span>&lt;/&gt;</span> crafted with care</div></div></div><div className="hero-bottom-line"/></section>
-      <section className="section services" id="servicios"><div className="container"><div className="section-heading section-heading-split"><div><div className="kicker">{t.serviceKicker}</div><h2>{t.serviceTitle}</h2></div><p>{t.serviceDesc}</p></div><div className="services-grid">{t.services.map(s=><article className="service-card" key={s.n}><div className="service-card-top"><span className="service-icon"><Icon name={s.icon} size={25}/></span><span className="service-num">{s.n} / 04</span></div><h3>{s.title}</h3><p>{s.desc}</p><div className="tag-list">{s.tags.map(tag=><span key={tag}>{tag}</span>)}</div></article>)}</div></div></section>
-      <section className="section work" id="proyectos">
-        <div className="container">
-          <div className="section-heading"><div className="kicker">{t.workKicker}</div><h2>{t.workTitle}</h2><p>{t.workDesc}</p></div>
-          <style>{` .dofra-project-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; } @media(max-width:700px){ .dofra-project-grid { grid-template-columns:1fr; } } `}</style>
-          <div className="dofra-project-grid">
-            {[
-              {name:t.caseName,category:t.caseType,description:t.caseDesc,subtitle:lang==='es'?'Gestión de turnos y catálogo':'Appointment management and catalog',gradient:'linear-gradient(135deg,#eee3d6,#c6b39c)',accent:'#6b5843',mark:'✳',real:true},
-              {name:'Dentalia',category:lang==='es'?'LANDING PAGE · ODONTOLOGÍA':'LANDING PAGE · DENTAL CARE',description:lang==='es'?'Concepto de landing para un consultorio odontológico: tratamientos, presentación del equipo, preguntas frecuentes y contacto directo por WhatsApp.':'Landing page concept for a dental practice: treatments, team introduction, FAQs, and direct WhatsApp contact.',subtitle:lang==='es'?'Clínica odontológica':'Dental practice',gradient:'linear-gradient(135deg,#d8f4f2,#b8dbe8)',accent:'#127c83',mark:'✳',real:false},
-              {name:'Estudio Norte',category:lang==='es'?'LANDING PAGE · CONTABILIDAD':'LANDING PAGE · ACCOUNTING',description:lang==='es'?'Concepto de sitio profesional para un estudio contable: servicios impositivos, asesoramiento para empresas y monotributistas, y formulario de consultas.':'Professional website concept for an accounting firm: tax services, business and independent professional advisory, and an inquiry form.',subtitle:lang==='es'?'Asesoramiento contable':'Accounting advisory',gradient:'linear-gradient(135deg,#e6ecf6,#c5d3e9)',accent:'#244b7b',mark:'↗',real:false},
-              {name:'Atelier Arquitectura',category:lang==='es'?'LANDING PAGE · ARQUITECTURA':'LANDING PAGE · ARCHITECTURE',description:lang==='es'?'Concepto de landing para un estudio de arquitectura: portfolio visual de obras, presentación de servicios, proceso de trabajo y formulario para solicitar una consulta.':'Landing page concept for an architecture studio: visual project portfolio, services, design process, and an inquiry form.',subtitle:lang==='es'?'Estudio de arquitectura':'Architecture studio',gradient:'linear-gradient(135deg,#f2e9dc,#dfcdb8)',accent:'#80634c',mark:'⌂',real:false}
-            ].map(project=><article key={project.name} style={{background:'#fff',border:'1px solid #e0e8f2',borderRadius:18,overflow:'hidden',display:'flex',flexDirection:'column',minWidth:0}}>
-              <div style={{background:project.gradient,padding:24,minHeight:220,display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <div style={{width:'100%',maxWidth:390,background:'#fff',borderRadius:10,boxShadow:'0 18px 45px #12304d24',overflow:'hidden'}}>
-                  <div style={{height:25,background:'#f2f5f9',display:'flex',alignItems:'center',gap:5,padding:'0 11px'}}><span style={{width:6,height:6,borderRadius:'50%',background:'#b9c5d2'}}/><span style={{width:6,height:6,borderRadius:'50%',background:'#b9c5d2'}}/><span style={{width:6,height:6,borderRadius:'50%',background:'#b9c5d2'}}/></div>
-                  <div style={{padding:'24px 22px 28px',color:project.accent}}><div style={{fontSize:13,fontWeight:800,letterSpacing:'.5px'}}>{project.mark} {project.name.toUpperCase()}</div><div style={{fontSize:10,marginTop:17,opacity:.75}}>{project.subtitle}</div><div style={{fontSize:22,fontWeight:800,lineHeight:1.25,marginTop:7}}>{project.real?(lang==='es'?'Tu tiempo. Tu bienestar.':'Your time. Your wellbeing.'):(lang==='es'?'Tu próximo paso empieza acá.':'Your next step starts here.')}</div><div style={{width:100,height:9,borderRadius:8,background:project.accent,opacity:.2,marginTop:17}}/></div>
-                </div>
-              </div>
-              <div style={{padding:'27px 28px 30px',display:'flex',flexDirection:'column',flex:1}}>
-                <div style={{fontSize:10,fontWeight:800,letterSpacing:1.3,color:'#4185ce'}}>{project.category}</div>
-                <h3 style={{fontFamily:'Manrope, sans-serif',fontSize:25,letterSpacing:'-.7px',margin:'14px 0 12px',color:'#102139'}}>{project.name}</h3>
-                <p style={{fontSize:13,lineHeight:1.85,color:'#64768b',margin:0,flex:1}}>{project.description}</p>
-                <div style={{borderTop:'1px solid #e6ecf3',marginTop:24,paddingTop:17,display:'flex',justifyContent:'space-between',gap:12,flexWrap:'wrap',alignItems:'center'}}>
-                  <span style={{fontSize:11,color:'#6b7f95'}}>{project.real?(lang==='es'?'Proyecto real':'Real project'):(lang==='es'?'Demo conceptual · No es un cliente real':'Concept demo · Not a real client')}</span>
-                  {project.real?<a href="#contacto" style={{fontSize:11,fontWeight:700,color:'#287cce'}}>{t.caseCTA} ↗</a>:<span style={{fontSize:11,fontWeight:700,color:'#287cce'}}>{lang==='es'?'Próximamente':'Coming soon'}</span>}
-                </div>
-              </div>
-            </article>)}
+    <a className="skip-link" href="#contenido">{t.skip}</a>
+    <header className="header"><div className="container nav-inner">
+      <Brand label={t.brandLabel} />
+      <nav id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
+      <div className="nav-actions">
+        <button type="button" className="lang-switch" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label={t.langSwitch} lang={lang === 'es' ? 'en' : 'es'}><Icon name="globe" size={16} /><span aria-hidden="true">{lang === 'es' ? 'EN' : 'ES'}</span></button>
+        <a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={17} /></a>
+        <button type="button" className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="menu-principal"><Icon name={menuOpen ? 'close' : 'menu'} size={24} /></button>
+      </div>
+    </div></header>
+
+    <main id="contenido" tabIndex={-1}>
+      <section className="hero" id="inicio"><div className="hero-glow" /><div className="container hero-grid">
+        <div className="hero-copy">
+          <div className="eyebrow"><span className="eyebrow-line" />{t.eyebrow}</div>
+          <h1>{t.heroA} <span>{t.heroB}</span></h1>
+          <p>{t.heroDesc}</p>
+          <div className="hero-actions">
+            <a className="button button-primary button-large" href="#contacto">{t.heroContact}<Icon name="arrow" size={19} /></a>
+            <a className="button button-text" href="#proyectos">{t.seeWork}<Icon name="arrow" size={18} /></a>
           </div>
+          <div className="hero-trust"><span><Icon name="check" size={15} />{t.trust1}</span><span><Icon name="check" size={15} />{t.trust2}</span><span><Icon name="globe" size={15} />{t.trust3}</span></div>
         </div>
-      </section>
-      <section className="section process"><div className="container"><div className="section-heading"><div className="kicker">{t.processKicker}</div><h2>{t.processTitle}</h2></div><div className="process-grid">{t.process.map((step,i)=><div className="process-item" key={step.n}><div className="process-number">{step.n}<span>{i<3?'↗':'✓'}</span></div><h3>{step.title}</h3><p>{step.desc}</p></div>)}</div></div></section>
-      <section className="section about" id="nosotros"><div className="container about-grid"><div className="about-visual"><div className="about-shape"><div className="about-shape-ring"/><div className="about-d">d<span>.</span></div><div className="about-shape-caption">DESIGN · DEVELOP · DELIVER</div></div><div className="about-quote">“{t.aboutQuote}”</div></div><div className="about-copy"><div className="kicker">{t.aboutKicker}</div><h2>{t.aboutTitle}</h2><p>{t.aboutDesc}</p><div className="about-points">{t.aboutStats.map(s=><div key={s}><span><Icon name="check" size={16}/></span>{s}</div>)}</div></div></div></section>
-      <section className="section faq"><div className="container faq-grid"><div><div className="kicker">{t.faqKicker}</div><h2>{t.faqTitle}</h2></div><div className="faq-list">{t.faqs.map((f,i)=><div className={`faq-item ${faqOpen===i?'expanded':''}`} key={f.q}><button aria-expanded={faqOpen===i} onClick={()=>setFaqOpen(faqOpen===i?null:i)}><span>{f.q}</span><Icon name={faqOpen===i?'minus':'plus'} size={19}/></button>{faqOpen===i&&<p>{f.a}</p>}</div>)}</div></div></section>
-      <section className="contact" id="contacto"><div className="container"><div className="contact-panel"><div className="contact-orb"/><div className="kicker">{t.contactKicker}</div><h2>{t.contactTitle}</h2><p>{t.contactDesc}</p><form className="quote-form" onSubmit={submitQuote}>
-        <input type="hidden" name="_subject" value={lang==='es'?'Nuevo presupuesto desde Dofra Software':'New quote request from Dofra Software'}/>
-        <input type="hidden" name="_captcha" value="true"/>
-        <div className="quote-honey" aria-hidden="true"><label>Website<input name="_honey" tabIndex={-1} autoComplete="off"/></label></div>
-        <div className="quote-grid">
-          <label>{lang==='es'?'Nombre y apellido':'Full name'}<input name="name" required maxLength={100} autoComplete="name" placeholder={lang==='es'?'Tu nombre':'Your name'}/></label>
-          <label>Email<input type="email" name="email" required maxLength={150} autoComplete="email" placeholder="name@example.com"/></label>
-          <label>{lang==='es'?'Tipo de proyecto':'Project type'}<select name="project_type" required defaultValue=""><option value="" disabled>{lang==='es'?'Seleccioná una opción':'Choose an option'}</option><option value="Landing page">Landing page</option><option value="Business website">{lang==='es'?'Sitio empresarial':'Business website'}</option><option value="Web application">{lang==='es'?'Aplicación web':'Web application'}</option><option value="Custom software">{lang==='es'?'Software a medida':'Custom software'}</option><option value="Automation">{lang==='es'?'Automatización':'Automation'}</option><option value="Other">{lang==='es'?'Otro':'Other'}</option></select></label>
-          <label>{lang==='es'?'Presupuesto aproximado (opcional)':'Estimated budget (optional)'}<select name="budget" defaultValue=""><option value="">{lang==='es'?'A definir':'To be discussed'}</option><option value="Under USD 500">{lang==='es'?'Menos de USD 500':'Under USD 500'}</option><option value="USD 500–1500">USD 500–1,500</option><option value="USD 1500–5000">USD 1,500–5,000</option><option value="Over USD 5000">{lang==='es'?'Más de USD 5.000':'Over USD 5,000'}</option></select></label>
-        </div>
-        <label>{lang==='es'?'Contanos sobre tu proyecto':'Tell us about your project'}<textarea name="message" required minLength={15} maxLength={3000} rows={5} placeholder={lang==='es'?'Qué necesitás, para cuándo y cualquier detalle que quieras compartir...':'What do you need, when, and any useful details...'} /></label>
-        <label className="quote-consent"><input type="checkbox" required name="consent" value="yes"/><span>{lang==='es'?'Acepto que Dofra Software utilice mis datos para responder esta consulta. El envío se procesa mediante FormSubmit.':'I agree that Dofra Software may use my details to reply to this inquiry. Submission is processed by FormSubmit.'}</span></label>
-        <button type="submit" className="button button-white button-large" disabled={formStatus==='sending'}>{formStatus==='sending'?(lang==='es'?'Enviando...':'Sending...'):(lang==='es'?'Enviar solicitud':'Send request')}<Icon name="arrow" size={19}/></button>
-        <div className="quote-feedback" role="status" aria-live="polite">{formStatus==='success'?(lang==='es'?'Solicitud enviada. Revisá tu email por si el servicio solicita una confirmación.':'Request submitted. Check your email in case the service requests confirmation.'):formStatus==='error'?(lang==='es'?'No pudimos enviar el formulario. Escribinos directamente por email.':'Could not send the form. Please email us directly.'):null}</div>
-        <a className="quote-email" href={contactLink} target="_blank" rel="noopener noreferrer">{lang==='es'?'O escribinos a':'Or email us at'} {contactEmail}</a>
-      </form><div className="contact-small">Argentina <span>·</span> Ireland <span>·</span> Remote-first</div></div></div></section>
+        <figure className="hero-art">
+          <div className="orbit orbit-one" /><div className="orbit orbit-two" />
+          <div className="hero-art-label" aria-hidden="true"><span className="demo-dot" /> {t.demo.label}</div>
+          <Dashboard lang={lang} />
+          <div className="floating-code" aria-hidden="true"><span>&lt;/&gt;</span> {t.demo.floating}</div>
+          <figcaption className="hero-demo-note">{t.demo.note}</figcaption>
+        </figure>
+      </div><div className="hero-bottom-line" /></section>
+
+      <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
+        <div className="section-heading section-heading-split"><div><p className="kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2></div><p>{t.serviceDesc}</p></div>
+        <div className="services-grid">{t.services.map((s, i) => <article className="service-card" key={s.title}>
+          <div className="service-card-top"><span className="service-icon"><Icon name={s.icon} size={25} /></span><span className="service-num" aria-hidden="true">0{i + 1} / 04</span></div>
+          <h3>{s.title}</h3><p>{s.desc}</p>
+          <p className="examples-label">{t.examplesLabel}</p>
+          <ul className="tag-list">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
+        </article>)}</div>
+      </div></section>
+
+      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+        <div className="section-heading"><p className="kicker">{t.workKicker}</p><h2 id="proyectos-titulo">{t.workTitle}</h2><p>{t.workDesc}</p></div>
+        {/* Las demos conceptuales (Dentalia, Estudio Norte, Atelier) se retiraron hasta que tengan una versión explorable con diseño propio. */}
+        <article className="project-card">
+          <figure className="project-visual">
+            <div className="project-browser" aria-hidden="true">
+              <div className="project-browser-bar"><span /><span /><span /></div>
+              <div className="project-browser-body"><div className="project-mock-brand">✳ {t.caseName.toUpperCase()}</div><div className="project-mock-sub">{t.caseMockSubtitle}</div><div className="project-mock-headline">{t.caseMockHeadline}</div><div className="project-mock-bar" /></div>
+            </div>
+            <figcaption className="image-note">{t.caseImageNote}</figcaption>
+          </figure>
+          <div className="project-copy">
+            <div className="project-meta"><span className="project-category">{t.caseType}</span><span className="status-badge"><span className="status-badge-dot" />{t.caseStatus}</span></div>
+            <h3>{t.caseName}</h3>
+            <p>{t.caseDesc}</p>
+            <p className="project-footer">{t.caseFooter}</p>
+          </div>
+        </article>
+      </div></section>
+
+      <section className="section process" aria-labelledby="proceso-titulo"><div className="container">
+        <div className="section-heading"><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></div>
+        <ol className="process-grid">{t.process.map((step, i) => <li className="process-item" key={step.title}><div className="process-number">0{i + 1}<span aria-hidden="true">{i < 3 ? '↗' : '✓'}</span></div><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
+      </div></section>
+
+      <section className="section about" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid">
+        <div className="about-visual" aria-hidden="true"><div className="about-shape"><div className="about-shape-ring" /><div className="about-d">d<span>.</span></div><div className="about-shape-caption">{t.aboutCaption}</div></div><div className="about-quote">“{t.aboutQuote}”</div></div>
+        <div className="about-copy"><p className="kicker">{t.aboutKicker}</p><h2 id="nosotras-titulo">{t.aboutTitle}</h2><p>{t.aboutDesc}</p><ul className="about-points">{t.aboutStats.map(s => <li key={s}><span><Icon name="check" size={16} /></span>{s}</li>)}</ul></div>
+      </div></section>
+
+      <section className="section faq" aria-labelledby="faq-titulo"><div className="container faq-grid">
+        <div><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></div>
+        <div className="faq-list">{faqs.map((item, i) => <div className={`faq-item ${faqOpen === i ? 'expanded' : ''}`} key={item.q}>
+          <h3><button type="button" id={`faq-q-${i}`} aria-expanded={faqOpen === i} aria-controls={`faq-a-${i}`} onClick={() => setFaqOpen(faqOpen === i ? null : i)}><span>{item.q}</span><Icon name={faqOpen === i ? 'minus' : 'plus'} size={19} /></button></h3>
+          <div id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`} hidden={faqOpen !== i}><p>{item.a}</p></div>
+        </div>)}</div>
+      </div></section>
+
+      <section className="contact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel"><div className="contact-orb" />
+        <p className="kicker">{t.contactKicker}</p><h2 id="contacto-titulo">{t.contactTitle}</h2><p>{t.contactDesc}</p>
+        <form className="quote-form" onSubmit={submitQuote} aria-describedby="form-required-note">
+          <input type="hidden" name="_subject" value={f.subject} />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="idioma" value={lang === 'es' ? 'Español' : 'Inglés'} />
+          <div className="quote-honey" aria-hidden="true"><label>Website<input name="_honey" tabIndex={-1} autoComplete="off" /></label></div>
+          <p className="quote-required" id="form-required-note">{f.requiredNote}</p>
+          <div className="quote-grid">
+            <label><span>{f.name} <span aria-hidden="true">*</span></span><input name="name" required maxLength={100} autoComplete="name" placeholder={f.namePh} /></label>
+            <label><span>{f.email} <span aria-hidden="true">*</span></span><input type="email" name="email" required maxLength={150} autoComplete="email" placeholder={f.emailPh} /></label>
+            <label><span>{f.type} <span aria-hidden="true">*</span></span><select name="project_type" required defaultValue=""><option value="" disabled>{f.typePh}</option>{f.types.map((label, i) => <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>{label}</option>)}</select></label>
+            <label><span>{f.budget}</span><select name="budget" defaultValue=""><option value="">{f.budgetNone}</option>{f.budgets.map((label, i) => <option key={BUDGET_VALUES[i]} value={BUDGET_VALUES[i]}>{label}</option>)}</select></label>
+          </div>
+          <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required minLength={15} maxLength={3000} rows={5} placeholder={f.messagePh} aria-describedby="message-hint" /><span className="quote-hint" id="message-hint">{f.messageHint}</span></label>
+          <label className="quote-consent"><input type="checkbox" required name="consent" value="Sí" /><span>{f.consent} <span aria-hidden="true">*</span></span></label>
+          <button type="submit" className="button button-white button-large" disabled={formStatus === 'sending'}>{formStatus === 'sending' ? f.sending : f.send}<Icon name="arrow" size={19} /></button>
+          <div className={`quote-feedback ${formStatus}`} role={formStatus === 'error' ? 'alert' : 'status'} aria-live="polite">
+            {formStatus === 'success' && f.success}
+            {formStatus === 'error' && <>{f.error} <a href={mailtoLink}>{CONTACT_EMAIL}</a>.</>}
+          </div>
+          <p className="quote-email">{f.orEmail} <a href={mailtoLink}>{CONTACT_EMAIL}</a></p>
+        </form>
+        <div className="contact-small">{t.contactSmall.map((item, i) => <span key={item}>{i > 0 && <span className="sep" aria-hidden="true">·</span>}{item}</span>)}</div>
+      </div></div></section>
     </main>
-    <footer className="footer"><div className="container"><div className="footer-main"><div><Brand light/><p>{t.footerTag}</p></div><div className="footer-links">{t.nav.slice(1).map((label,i)=><a key={label} href={`#${navIds[i+1]}`}>{label}</a>)}</div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span>{t.footerNote}</span></div></div></footer>
+
+    <footer className="footer"><div className="container">
+      <div className="footer-main"><div><Brand light label={t.brandLabel} /><p>{t.footerTag}</p></div><nav className="footer-links" aria-label={t.navLabel}>{t.nav.slice(1).map((label, i) => <a key={label} href={`#${navIds[i + 1]}`}>{label}</a>)}</nav></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span>{t.footerNote}</span></div>
+    </div></footer>
   </>
 }

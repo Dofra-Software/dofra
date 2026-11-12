@@ -20,11 +20,12 @@ npm run dev
 
 ## Antes de publicar (IMPORTANTE)
 
-1. **Contacto:** reemplazá `CONTACT_EMAIL_REPLACE_ME` en `src/App.tsx` por un email real. El botón usa `mailto:`; no existe backend ni se recopilan datos.
-2. **Portfolio:** Equilibrium Estética se presenta como caso de estudio, pero su maqueta es ilustrativa. Reemplazala por capturas reales si querés mostrar el producto final.
-3. **Textos:** revisá los servicios y afirmaciones antes de publicarlos.
-4. **Marca:** verificá disponibilidad de Dofra Software en registros de marcas y dominios antes de invertir en branding.
-5. **Dominio y redes:** no se configuraron porque aún no están confirmados.
+1. **Formulario (FormSubmit):** el primer envío hacia `dofrasoftware@gmail.com` dispara un correo de activación de FormSubmit. Hay que abrirlo y confirmar; hasta entonces el formulario muestra el mensaje de error (nunca uno de éxito falso).
+2. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
+3. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
+4. **Equilibrium Estética:** figura "En desarrollo" y su imagen está marcada como ilustrativa. Sin botón ni caso de estudio hasta que haya una página o demo.
+5. **Sobre Dofra:** falta completar la presentación de cada hermana (nombres, formación, experiencia, fotos).
+6. **Panel del inicio:** es una demostración con datos ficticios y está identificado como tal.
 
 ## Compilar
 
