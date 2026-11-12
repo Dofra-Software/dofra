@@ -10,12 +10,12 @@ const CONTACT_EMAIL = 'dofrasoftware@gmail.com'
 const content = {
   es: {
     skip: 'Saltar al contenido',
-    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    nav: ['Inicio', 'Servicios', 'Nosotras', 'Contacto'], talk: 'Hablemos',
     navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Switch to English', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
     heroDesc: 'Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo con tecnología adaptada a sus necesidades.',
-    heroContact: 'Contanos qué necesitás', seeWork: 'Ver proyectos',
+    heroContact: 'Contanos qué necesitás', seeWork: 'Ver servicios',
     trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'En todo el mundo',
     serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Cuatro formas de usar la tecnología a tu favor, explicadas sin tecnicismos.',
     examplesLabel: 'Ejemplos',
@@ -24,19 +24,6 @@ const content = {
       { icon: 'layers', title: 'Aplicaciones web', desc: 'Herramientas que se usan desde el navegador para que tus clientes o tu equipo puedan realizar gestiones.', examples: ['Reservas online', 'Portales de clientes', 'Paneles de seguimiento'] },
       { icon: 'cpu', title: 'Sistemas a medida', desc: 'Organizá la información y los procesos de tu negocio en una herramienta adaptada a tu forma de trabajar.', examples: ['Gestión de clientes', 'Turnos', 'Cobros', 'Tareas internas'] },
       { icon: 'zap', title: 'Automatizaciones', desc: 'Reducí tareas repetitivas y evitá cargar la misma información en distintos lugares.', examples: ['Recordatorios', 'Formularios conectados con planillas', 'Avisos automáticos'] },
-    ],
-    workKicker: 'PROYECTOS', workTitle: 'Lo que construimos.', workDesc: 'Productos que diseñamos y desarrollamos nosotras, de punta a punta.',
-    projectStatus: 'Desarrollo propio', imageNote: 'Captura real · datos de ejemplo', featuresLabel: 'Incluye',
-    projects: [
-      { img: 'appfotos', name: 'AppFotos', type: 'PLATAFORMA WEB · FOTOGRAFÍA', alt: 'Pantalla de inicio de AppFotos con una foto de paisaje y el título “Cada imagen merece un lugar especial”.',
-        desc: 'Una plataforma para fotógrafos: cada uno publica sus galerías en un sitio profesional propio y vende sus fotos directamente a sus clientes, que pueden explorarlas y comprarlas online.',
-        features: ['Galerías y portfolio', 'Sitio profesional propio', 'Venta de fotos online'] },
-      { img: 'spa-gestor', name: 'Spa Gestor', type: 'SISTEMA DE GESTIÓN · CENTROS DE ESTÉTICA', alt: 'Pantalla de Spa Gestor con la agenda del día de un centro de estética vista en un celular.',
-        desc: 'Un sistema para centros de estética que reúne todo el flujo de trabajo —agenda, pacientes y cobros— en un solo lugar, pensado para usarse desde el celular.',
-        features: ['Agenda de turnos', 'Fichas de pacientes', 'Cobros', 'Avisos por WhatsApp'] },
-      { img: 'odonto', name: 'Odonto', type: 'SISTEMA DE GESTIÓN · ODONTOLOGÍA', alt: 'Agenda semanal de Odonto con turnos por profesional y el menú de módulos de la clínica.',
-        desc: 'Un sistema integral para clínicas odontológicas: agenda por profesional y consultorio, turnero, ficha clínica, presupuestos y pagos, con módulos específicos para implantología y ortodoncia.',
-        features: ['Agenda y turnero', 'Ficha clínica', 'Implantología y ortodoncia', 'Presupuestos, pagos y reportes'] },
     ],
     processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
     process: [
@@ -89,12 +76,12 @@ const content = {
   },
   en: {
     skip: 'Skip to content',
-    nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
+    nav: ['Home', 'Services', 'About us', 'Contact'], talk: "Let's talk",
     navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Cambiar a español', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
     heroDesc: 'We help startups, independent professionals and small businesses showcase their services, organize their work and save time with technology tailored to their needs.',
-    heroContact: 'Tell us what you need', seeWork: 'View projects',
+    heroContact: 'Tell us what you need', seeWork: 'View services',
     trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Worldwide',
     serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Four ways to put technology to work for you, explained without jargon.',
     examplesLabel: 'Examples',
@@ -103,19 +90,6 @@ const content = {
       { icon: 'layers', title: 'Web apps', desc: 'Tools that run in the browser so your customers or your team can get things done online.', examples: ['Online booking', 'Customer portals', 'Progress tracking panels'] },
       { icon: 'cpu', title: 'Custom systems', desc: 'Organize your business information and processes in a tool built around the way you work.', examples: ['Customer management', 'Appointments', 'Payments', 'Internal tasks'] },
       { icon: 'zap', title: 'Automation', desc: 'Cut down on repetitive tasks and stop entering the same information in different places.', examples: ['Reminders', 'Forms linked to spreadsheets', 'Automatic notifications'] },
-    ],
-    workKicker: 'PROJECTS', workTitle: 'What we build.', workDesc: 'Products we designed and built ourselves, end to end.',
-    projectStatus: 'In-house product', imageNote: 'Real screenshot · sample data', featuresLabel: 'Includes',
-    projects: [
-      { img: 'appfotos', name: 'AppFotos', type: 'WEB PLATFORM · PHOTOGRAPHY', alt: 'AppFotos home screen with a landscape photo and the headline “Every image deserves a special place”.',
-        desc: 'A platform for photographers: each one publishes their galleries on their own professional website and sells their photos directly to clients, who can browse and buy them online.',
-        features: ['Galleries and portfolio', 'Own professional website', 'Online photo sales'] },
-      { img: 'spa-gestor', name: 'Spa Gestor', type: 'MANAGEMENT SYSTEM · BEAUTY CLINICS', alt: 'Spa Gestor screen showing a beauty clinic’s daily schedule on a phone.',
-        desc: 'A system for beauty clinics that brings the whole workflow —appointments, clients and payments— into one place, designed to be used from a phone.',
-        features: ['Appointment calendar', 'Client records', 'Payments', 'WhatsApp reminders'] },
-      { img: 'odonto', name: 'Odonto', type: 'MANAGEMENT SYSTEM · DENTISTRY', alt: 'Odonto weekly calendar with appointments by practitioner and the clinic’s module menu.',
-        desc: 'A complete system for dental clinics: scheduling by practitioner and treatment room, patient queue, clinical records, quotes and payments, with dedicated modules for implantology and orthodontics.',
-        features: ['Scheduling and patient queue', 'Clinical records', 'Implantology and orthodontics', 'Quotes, payments and reports'] },
     ],
     processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
     process: [
@@ -233,7 +207,7 @@ export default function App() {
     document.title = lang === 'es' ? 'Dofra Software | Páginas web y sistemas a medida' : 'Dofra Software | Websites and custom systems'
   }, [lang])
 
-  const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
+  const navIds = ['inicio', 'servicios', 'nosotras', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
 
@@ -280,7 +254,7 @@ export default function App() {
           <p className="hero-lead">{t.heroDesc}</p>
           <div className="hero-actions">
             <a className="button button-primary button-large" href="#contacto">{t.heroContact}<Icon name="arrow" size={18} /></a>
-            <a className="button button-ghost button-large" href="#proyectos">{t.seeWork}<Icon name="arrow" size={18} /></a>
+            <a className="button button-ghost button-large" href="#servicios">{t.seeWork}<Icon name="arrow" size={18} /></a>
           </div>
           <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
         </div>
@@ -303,24 +277,7 @@ export default function App() {
         </article>)}</div>
       </div></section>
 
-      <section className="section section-soft" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
-        <header className="section-head" data-reveal><p className="kicker">{t.workKicker}</p><h2 id="proyectos-titulo">{t.workTitle}</h2><p>{t.workDesc}</p></header>
-        <div className="grid grid-2 projects-grid" data-reveal>{t.projects.map(p => <article className="card project-card" key={p.name}>
-          <figure className="project-visual">
-            <img src={`/proyectos/${p.img}.webp`} alt={p.alt} width={1350} height={597} loading="lazy" decoding="async" />
-            <figcaption className="image-note">{t.imageNote}</figcaption>
-          </figure>
-          <div className="project-copy">
-            <div className="project-meta"><span className="project-category">{p.type}</span><span className="status-badge"><span className="status-badge-dot" aria-hidden="true" />{t.projectStatus}</span></div>
-            <h3>{p.name}</h3>
-            <p>{p.desc}</p>
-            <p className="mini-label">{t.featuresLabel}</p>
-            <ul className="tag-list">{p.features.map(feat => <li key={feat}>{feat}</li>)}</ul>
-          </div>
-        </article>)}</div>
-      </div></section>
-
-      <section className="section" aria-labelledby="proceso-titulo"><div className="container">
+      <section className="section section-soft" aria-labelledby="proceso-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
         <ol className="grid grid-4 process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
       </div></section>
