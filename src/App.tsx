@@ -45,7 +45,7 @@ const content = {
       { title: 'Desarrollamos', desc: 'Construimos la solución con tecnología actual y cuidando cada detalle.' },
       { title: 'Acompañamos', desc: 'Lanzamos el proyecto y lo mejoramos cuando tu negocio lo necesite.' },
     ],
-    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Sobre Dofra',
+    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Nosotras',
     aboutDesc: 'Dofra une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso empezamos por entender cómo trabaja tu negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
     people: [
       { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada del negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
