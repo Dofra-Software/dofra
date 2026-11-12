@@ -287,13 +287,19 @@ export default function App() {
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
       </div></section>
 
-      <section className="section" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
-        <header className="section-head" data-reveal><p className="kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
-        <div className="grid grid-4" data-reveal>{t.services.map((s, i) => <article className="card service-card" key={s.title}>
-          <div className="service-card-top"><span className="icon-badge"><Icon name={s.icon} size={22} /></span><span className="card-index" aria-hidden="true">0{i + 1}</span></div>
-          <h3>{s.title}</h3><p>{s.desc}</p>
-          <p className="mini-label">{t.examplesLabel}</p>
-          <ul className="tag-list">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
+      <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
+        <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
+        <div className="svc-grid" data-reveal>{t.services.map((s, i) => <article className="svc-card" key={s.title}>
+          <div className="svc-head">
+            <span className="svc-icon"><Icon name={s.icon} size={20} /></span>
+            <h3>{s.title}</h3>
+            <span className="svc-index" aria-hidden="true">0{i + 1}</span>
+          </div>
+          <p className="svc-desc">{s.desc}</p>
+          <div className="svc-examples">
+            <p className="svc-label">{t.examplesLabel}</p>
+            <ul className="svc-tags">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
+          </div>
         </article>)}</div>
       </div></section>
 
