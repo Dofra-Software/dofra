@@ -1,8 +1,6 @@
 import type { FormEvent, ReactNode } from 'react'
-import { lazy, Suspense, useEffect, useState } from 'react'
-
-// El 3D (three.js) se descarga aparte, después del contenido principal.
-const DofraCore3D = lazy(() => import('./components/DofraCore3D'))
+import { useEffect, useState } from 'react'
+import DofraParticles from './components/DofraParticles'
 
 type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
@@ -87,7 +85,7 @@ const content = {
     },
     contactSmall: ['En todo el mundo', 'Trabajo remoto'],
     footerTag: 'Tecnología pensada para tu negocio.', footerNote: 'Diseñado con intención. Construido con tecnología.', rights: 'Todos los derechos reservados.',
-    hero3d: 'Escultura digital de Dofra: un núcleo azul rodeado de anillos orbitales.',
+    heroVisual: 'Logo de Dofra formado por partículas blancas y azules.',
   },
   en: {
     skip: 'Skip to content',
@@ -166,7 +164,7 @@ const content = {
     },
     contactSmall: ['Worldwide', 'Remote-first'],
     footerTag: 'Technology built around your business.', footerNote: 'Designed with intention. Built with technology.', rights: 'All rights reserved.',
-    hero3d: 'Dofra digital sculpture: a blue core surrounded by orbital rings.',
+    heroVisual: 'Dofra logo made of white and blue particles.',
   },
 }
 
@@ -198,16 +196,21 @@ function Brand({ light = false, label }: { light?: boolean; label: string }) {
   return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><span className="brand-word">dofra<span className="brand-dot">.</span></span><span className="brand-caption">SOFTWARE</span></a>
 }
 
-function supportsWebGL(): boolean {
-  try {
-    const canvas = document.createElement('canvas')
-    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl2') || canvas.getContext('webgl')))
-  } catch { return false }
-}
-
-/** Marca estática de Dofra: se ve mientras carga el 3D o si el dispositivo no tiene WebGL. */
-function CoreMark() {
-  return <div className="dofra-core-fallback" aria-hidden="true">d<span>.</span></div>
+/** Aparición suave de bloques al entrar en pantalla. Sin efecto con movimiento reducido. */
+function useReveal() {
+  useEffect(() => {
+    const root = document.documentElement
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return
+    root.classList.add('reveal-on')
+    const io = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        // También se muestran los bloques que quedaron arriba tras un salto de navegación.
+        if (entry.isIntersecting || entry.boundingClientRect.top < 0) { entry.target.classList.add('is-visible'); io.unobserve(entry.target) }
+      }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 })
+    document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el))
+    return () => { io.disconnect(); root.classList.remove('reveal-on') }
+  }, [])
 }
 
 function readStoredLang(): Lang {
@@ -217,12 +220,12 @@ function readStoredLang(): Lang {
 export default function App() {
   const [lang, setLang] = useState<Lang>(readStoredLang)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [webgl] = useState(supportsWebGL)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const t = content[lang]
   const f = t.form
   const faqs = t.faqs.filter(item => !item.pending)
+  useReveal()
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -264,78 +267,84 @@ export default function App() {
       <nav id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
       <div className="nav-actions">
         <button type="button" className="lang-switch" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label={t.langSwitch} lang={lang === 'es' ? 'en' : 'es'}><Icon name="globe" size={16} /><span aria-hidden="true">{lang === 'es' ? 'EN' : 'ES'}</span></button>
-        <a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={17} /></a>
+        <a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={16} /></a>
         <button type="button" className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="menu-principal"><Icon name={menuOpen ? 'close' : 'menu'} size={24} /></button>
       </div>
     </div></header>
 
     <main id="contenido" tabIndex={-1}>
-      <section className="hero" id="inicio"><div className="hero-glow" /><div className="container hero-grid">
+      <section className="hero" id="inicio" aria-labelledby="hero-titulo"><div className="container hero-grid">
         <div className="hero-copy">
-          <div className="eyebrow"><span className="eyebrow-line" />{t.eyebrow}</div>
-          <h1>{t.heroA} <span>{t.heroB}</span></h1>
-          <p>{t.heroDesc}</p>
+          <p className="eyebrow"><span className="eyebrow-line" aria-hidden="true" />{t.eyebrow}</p>
+          <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
+          <p className="hero-lead">{t.heroDesc}</p>
           <div className="hero-actions">
-            <a className="button button-primary button-large" href="#contacto">{t.heroContact}<Icon name="arrow" size={19} /></a>
-            <a className="button button-text" href="#proyectos">{t.seeWork}<Icon name="arrow" size={18} /></a>
+            <a className="button button-primary button-large" href="#contacto">{t.heroContact}<Icon name="arrow" size={18} /></a>
+            <a className="button button-ghost button-large" href="#proyectos">{t.seeWork}<Icon name="arrow" size={18} /></a>
           </div>
-          <div className="hero-trust"><span><Icon name="check" size={15} />{t.trust1}</span><span><Icon name="check" size={15} />{t.trust2}</span><span><Icon name="globe" size={15} />{t.trust3}</span></div>
+          <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
         </div>
-        <div className="hero-art">
-          <div className="orbit orbit-one" aria-hidden="true" /><div className="orbit orbit-two" aria-hidden="true" />
-          {webgl
-            ? <Suspense fallback={<CoreMark />}><DofraCore3D label={t.hero3d} /></Suspense>
-            : <div className="dofra-core-3d" role="img" aria-label={t.hero3d}><CoreMark /></div>}
-        </div>
-      </div><div className="hero-bottom-line" /></section>
+        <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
+      </div></section>
 
-      <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
-        <div className="section-heading section-heading-split"><div><p className="kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2></div><p>{t.serviceDesc}</p></div>
-        <div className="services-grid">{t.services.map((s, i) => <article className="service-card" key={s.title}>
-          <div className="service-card-top"><span className="service-icon"><Icon name={s.icon} size={25} /></span><span className="service-num" aria-hidden="true">0{i + 1} / 04</span></div>
+      <section className="section" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
+        <header className="section-head" data-reveal><p className="kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
+        <div className="grid grid-4" data-reveal>{t.services.map((s, i) => <article className="card service-card" key={s.title}>
+          <div className="service-card-top"><span className="icon-badge"><Icon name={s.icon} size={22} /></span><span className="card-index" aria-hidden="true">0{i + 1}</span></div>
           <h3>{s.title}</h3><p>{s.desc}</p>
-          <p className="examples-label">{t.examplesLabel}</p>
+          <p className="mini-label">{t.examplesLabel}</p>
           <ul className="tag-list">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
         </article>)}</div>
       </div></section>
 
-      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
-        <div className="section-heading"><p className="kicker">{t.workKicker}</p><h2 id="proyectos-titulo">{t.workTitle}</h2><p>{t.workDesc}</p></div>
-        <div className="projects-grid">{t.projects.map(p => <article className="project-card" key={p.name}>
+      <section className="section section-soft" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+        <header className="section-head" data-reveal><p className="kicker">{t.workKicker}</p><h2 id="proyectos-titulo">{t.workTitle}</h2><p>{t.workDesc}</p></header>
+        <div className="grid grid-2 projects-grid" data-reveal>{t.projects.map(p => <article className="card project-card" key={p.name}>
           <figure className="project-visual">
             <img src={`/proyectos/${p.img}.webp`} alt={p.alt} width={1350} height={597} loading="lazy" decoding="async" />
             <figcaption className="image-note">{t.imageNote}</figcaption>
           </figure>
           <div className="project-copy">
-            <div className="project-meta"><span className="project-category">{p.type}</span><span className="status-badge"><span className="status-badge-dot" />{t.projectStatus}</span></div>
+            <div className="project-meta"><span className="project-category">{p.type}</span><span className="status-badge"><span className="status-badge-dot" aria-hidden="true" />{t.projectStatus}</span></div>
             <h3>{p.name}</h3>
             <p>{p.desc}</p>
-            <p className="examples-label">{t.featuresLabel}</p>
+            <p className="mini-label">{t.featuresLabel}</p>
             <ul className="tag-list">{p.features.map(feat => <li key={feat}>{feat}</li>)}</ul>
           </div>
         </article>)}</div>
       </div></section>
 
-      <section className="section process" aria-labelledby="proceso-titulo"><div className="container">
-        <div className="section-heading"><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></div>
-        <ol className="process-grid">{t.process.map((step, i) => <li className="process-item" key={step.title}><div className="process-number">0{i + 1}<span aria-hidden="true">{i < 3 ? '↗' : '✓'}</span></div><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
+      <section className="section" aria-labelledby="proceso-titulo"><div className="container">
+        <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
+        <ol className="grid grid-4 process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
       </div></section>
 
-      <section className="section about" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid">
-        <div className="about-visual" aria-hidden="true"><div className="about-shape"><div className="about-shape-ring" /><div className="about-d">d<span>.</span></div><div className="about-shape-caption">{t.aboutCaption}</div></div><div className="about-quote">“{t.aboutQuote}”</div></div>
-        <div className="about-copy"><h2 id="nosotras-titulo">{t.aboutTitle}</h2><p>{t.aboutDesc}</p><ul className="people">{t.people.map(person => <li key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul></div>
+      <section className="section section-dark" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
+        <div className="about-copy">
+          <p className="kicker">{t.aboutCaption}</p>
+          <h2 id="nosotras-titulo">{t.aboutTitle}</h2>
+          <p>{t.aboutDesc}</p>
+          <p className="about-quote"><span className="about-mark" aria-hidden="true">d<span>.</span></span>“{t.aboutQuote}”</p>
+        </div>
+        <ul className="people">{t.people.map(person => <li className="person-card" key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul>
       </div></section>
 
-      <section className="section faq" aria-labelledby="faq-titulo"><div className="container faq-grid">
-        <div><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></div>
-        <div className="faq-list">{faqs.map((item, i) => <div className={`faq-item ${faqOpen === i ? 'expanded' : ''}`} key={item.q}>
-          <h3><button type="button" id={`faq-q-${i}`} aria-expanded={faqOpen === i} aria-controls={`faq-a-${i}`} onClick={() => setFaqOpen(faqOpen === i ? null : i)}><span>{item.q}</span><Icon name={faqOpen === i ? 'minus' : 'plus'} size={19} /></button></h3>
+      <section className="section section-soft" aria-labelledby="faq-titulo"><div className="container">
+        <header className="section-head" data-reveal><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></header>
+        <div className="faq-list" data-reveal>{faqs.map((item, i) => <div className={`faq-item ${faqOpen === i ? 'expanded' : ''}`} key={item.q}>
+          <h3><button type="button" id={`faq-q-${i}`} aria-expanded={faqOpen === i} aria-controls={`faq-a-${i}`} onClick={() => setFaqOpen(faqOpen === i ? null : i)}><span>{item.q}</span><span className="faq-icon" aria-hidden="true"><Icon name={faqOpen === i ? 'minus' : 'plus'} size={18} /></span></button></h3>
           <div id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`} hidden={faqOpen !== i}><p>{item.a}</p></div>
         </div>)}</div>
       </div></section>
 
-      <section className="contact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel"><div className="contact-orb" />
-        <p className="kicker">{t.contactKicker}</p><h2 id="contacto-titulo">{t.contactTitle}</h2><p>{t.contactDesc}</p>
+      <section className="section contact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal>
+        <div className="contact-intro">
+          <p className="kicker">{t.contactKicker}</p>
+          <h2 id="contacto-titulo">{t.contactTitle}</h2>
+          <p>{t.contactDesc}</p>
+          <p className="quote-email">{f.orEmail} <a href={mailtoLink}>{CONTACT_EMAIL}</a></p>
+          <ul className="contact-chips">{t.contactSmall.map(item => <li key={item}><Icon name="globe" size={15} />{item}</li>)}</ul>
+        </div>
         <form className="quote-form" onSubmit={submitQuote} aria-describedby="form-required-note">
           <input type="hidden" name="_subject" value={f.subject} />
           <input type="hidden" name="_template" value="table" />
@@ -348,16 +357,16 @@ export default function App() {
             <label><span>{f.type} <span aria-hidden="true">*</span></span><select name="project_type" required defaultValue=""><option value="" disabled>{f.typePh}</option>{f.types.map((label, i) => <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>{label}</option>)}</select></label>
             <label><span>{f.budget}</span><select name="budget" defaultValue=""><option value="">{f.budgetNone}</option>{f.budgets.map((label, i) => <option key={BUDGET_VALUES[i]} value={BUDGET_VALUES[i]}>{label}</option>)}</select></label>
           </div>
-          <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required minLength={15} maxLength={3000} rows={5} placeholder={f.messagePh} aria-describedby="message-hint" /><span className="quote-hint" id="message-hint">{f.messageHint}</span></label>
+          <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required minLength={15} maxLength={3000} rows={4} placeholder={f.messagePh} aria-describedby="message-hint" /><span className="quote-hint" id="message-hint">{f.messageHint}</span></label>
           <label className="quote-consent"><input type="checkbox" required name="consent" value="Sí" /><span>{f.consent} <span aria-hidden="true">*</span></span></label>
-          <button type="submit" className="button button-white button-large" disabled={formStatus === 'sending'}>{formStatus === 'sending' ? f.sending : f.send}<Icon name="arrow" size={19} /></button>
-          <div className={`quote-feedback ${formStatus}`} role={formStatus === 'error' ? 'alert' : 'status'} aria-live="polite">
-            {formStatus === 'success' && f.success}
-            {formStatus === 'error' && <>{f.error} <a href={mailtoLink}>{CONTACT_EMAIL}</a>.</>}
+          <div className="quote-submit">
+            <button type="submit" className="button button-primary button-large" disabled={formStatus === 'sending'}>{formStatus === 'sending' ? f.sending : f.send}<Icon name="arrow" size={18} /></button>
+            <div className={`quote-feedback ${formStatus}`} role={formStatus === 'error' ? 'alert' : 'status'} aria-live="polite">
+              {formStatus === 'success' && f.success}
+              {formStatus === 'error' && <>{f.error} <a href={mailtoLink}>{CONTACT_EMAIL}</a>.</>}
+            </div>
           </div>
-          <p className="quote-email">{f.orEmail} <a href={mailtoLink}>{CONTACT_EMAIL}</a></p>
         </form>
-        <div className="contact-small">{t.contactSmall.map((item, i) => <span key={item}>{i > 0 && <span className="sep" aria-hidden="true">·</span>}{item}</span>)}</div>
       </div></div></section>
     </main>
 
