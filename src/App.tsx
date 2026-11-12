@@ -44,8 +44,8 @@ const content = {
       { title: 'Desarrollamos', desc: 'Construimos la solución con tecnología actual y cuidando cada detalle.' },
       { title: 'Acompañamos', desc: 'Lanzamos el proyecto y lo mejoramos cuando tu negocio lo necesite.' },
     ],
-    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Dos hermanas, un mismo proyecto.',
-    aboutDesc: 'Dofra es un proyecto creado por dos hermanas que une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso empezamos por entender cómo trabaja tu negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
+    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Sobre Dofra',
+    aboutDesc: 'Dofra une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso empezamos por entender cómo trabaja tu negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
     people: [
       { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada del negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
       { name: 'Victoria', role: 'Ingeniera en software', desc: 'Se ocupa del diseño técnico y el desarrollo, para que cada herramienta funcione bien y sea fácil de usar.' },
@@ -129,8 +129,8 @@ const content = {
       { title: 'We build', desc: 'We develop the solution with current technology and attention to detail.' },
       { title: 'We support', desc: 'We launch the project and improve it whenever your business needs it.' },
     ],
-    aboutKicker: 'ABOUT DOFRA', aboutTitle: 'Two sisters, one shared project.',
-    aboutDesc: "Dofra is a project created by two sisters that brings together two perspectives: business and technology. Between us, we have experience at international companies and more than 4 years working in software systems. That's why we first get to know how your business works, and only then design the solution: clear, tailored and easy to use.",
+    aboutKicker: 'ABOUT DOFRA', aboutTitle: 'About Dofra',
+    aboutDesc: "Dofra brings together two perspectives: business and technology. Between us, we have experience at international companies and more than 4 years working in software systems. That's why we first get to know how your business works, and only then design the solution: clear, tailored and easy to use.",
     people: [
       { name: 'Franca', role: 'Accountant', desc: 'Brings the business perspective: costs, payments and admin processes, so every solution meets real needs.' },
       { name: 'Victoria', role: 'Software engineer', desc: 'Leads the technical design and development, so every tool works well and is easy to use.' },
@@ -339,7 +339,7 @@ export default function App() {
 
       <section className="section about" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid">
         <div className="about-visual" aria-hidden="true"><div className="about-shape"><div className="about-shape-ring" /><div className="about-d">d<span>.</span></div><div className="about-shape-caption">{t.aboutCaption}</div></div><div className="about-quote">“{t.aboutQuote}”</div></div>
-        <div className="about-copy"><p className="kicker">{t.aboutKicker}</p><h2 id="nosotras-titulo">{t.aboutTitle}</h2><p>{t.aboutDesc}</p><ul className="people">{t.people.map(person => <li key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul></div>
+        <div className="about-copy"><h2 id="nosotras-titulo">{t.aboutTitle}</h2><p>{t.aboutDesc}</p><ul className="people">{t.people.map(person => <li key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul></div>
       </div></section>
 
       <section className="section faq" aria-labelledby="faq-titulo"><div className="container faq-grid">
