@@ -85,7 +85,7 @@ const content = {
     },
     contactSmall: ['En todo el mundo', 'Trabajo remoto'],
     footerTag: 'Tecnología pensada para tu negocio.', footerNote: 'Diseñado con intención. Construido con tecnología.', rights: 'Todos los derechos reservados.',
-    heroVisual: 'Logo de Dofra formado por partículas blancas y azules.',
+    heroVisual: 'Logo de Dofra formado por partículas blancas y terracota.',
   },
   en: {
     skip: 'Skip to content',
@@ -164,7 +164,7 @@ const content = {
     },
     contactSmall: ['Worldwide', 'Remote-first'],
     footerTag: 'Technology built around your business.', footerNote: 'Designed with intention. Built with technology.', rights: 'All rights reserved.',
-    heroVisual: 'Dofra logo made of white and blue particles.',
+    heroVisual: 'Dofra logo made of white and terracotta particles.',
   },
 }
 
@@ -193,7 +193,7 @@ function Icon({ name, size = 22 }: { name: string; size?: number }) {
 }
 
 function Brand({ light = false, label }: { light?: boolean; label: string }) {
-  return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><span className="brand-word">dofra<span className="brand-dot">.</span></span><span className="brand-caption">SOFTWARE</span></a>
+  return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><img className="brand-logo" src="/dofra-logo.png" alt="" width="48" height="48" /></a>
 }
 
 /** Aparición suave de bloques al entrar en pantalla. Sin efecto con movimiento reducido. */
