@@ -1,5 +1,8 @@
 import type { FormEvent, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
+
+// El 3D (three.js) se descarga aparte, después del contenido principal.
+const DofraCore3D = lazy(() => import('./components/DofraCore3D'))
 
 type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
@@ -84,13 +87,7 @@ const content = {
     },
     contactSmall: ['En todo el mundo', 'Trabajo remoto'],
     footerTag: 'Tecnología pensada para tu negocio.', footerNote: 'Diseñado con intención. Construido con tecnología.', rights: 'Todos los derechos reservados.',
-    demo: {
-      label: 'DEMOSTRACIÓN ILUSTRATIVA', a11y: 'Ejemplo ilustrativo de un panel de gestión. Los datos que muestra son ficticios.',
-      note: 'Ejemplo de panel de gestión. Las cifras son ficticias, no son resultados de Dofra.',
-      breadcrumb: 'demo / panel', mini: 'Panel de gestión', title: 'Tu negocio, más simple.', status: 'Demo',
-      clients: 'Clientes', bookings: 'Turnos', activity: 'Actividad', recent: 'Próximos turnos', today: 'Hoy', tomorrow: 'Mañana',
-      confirmed: 'Confirmado', pending: 'Pendiente', months: ['ENE', 'MAR', 'MAY', 'JUL', 'SEP', 'NOV'], floating: 'hecho con dedicación',
-    },
+    hero3d: 'Escultura digital de Dofra: un núcleo azul rodeado de anillos orbitales.',
   },
   en: {
     skip: 'Skip to content',
@@ -169,13 +166,7 @@ const content = {
     },
     contactSmall: ['Worldwide', 'Remote-first'],
     footerTag: 'Technology built around your business.', footerNote: 'Designed with intention. Built with technology.', rights: 'All rights reserved.',
-    demo: {
-      label: 'ILLUSTRATIVE DEMO', a11y: 'Illustrative example of a management dashboard. The data shown is fictional.',
-      note: 'Sample management panel. Figures are fictional, not Dofra results.',
-      breadcrumb: 'demo / panel', mini: 'Management panel', title: 'Business, simplified.', status: 'Demo',
-      clients: 'Clients', bookings: 'Bookings', activity: 'Activity', recent: 'Upcoming bookings', today: 'Today', tomorrow: 'Tomorrow',
-      confirmed: 'Confirmed', pending: 'Pending', months: ['JAN', 'MAR', 'MAY', 'JUL', 'SEP', 'NOV'], floating: 'crafted with care',
-    },
+    hero3d: 'Dofra digital sculpture: a blue core surrounded by orbital rings.',
   },
 }
 
@@ -207,23 +198,16 @@ function Brand({ light = false, label }: { light?: boolean; label: string }) {
   return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><span className="brand-word">dofra<span className="brand-dot">.</span></span><span className="brand-caption">SOFTWARE</span></a>
 }
 
-/** Panel ilustrativo del inicio. Todo su contenido es ficticio y está marcado como demostración. */
-function Dashboard({ lang }: { lang: Lang }) {
-  const d = content[lang].demo
-  return <div className="dashboard" role="img" aria-label={d.a11y}>
-    <div className="dash-side" aria-hidden="true"><div className="dash-logo">d<span>.</span></div><div className="side-line active" /><div className="side-line" /><div className="side-line" /><div className="side-line" /><div className="side-bottom" /></div>
-    <div className="dash-main" aria-hidden="true">
-      <div className="dash-top"><span className="dash-breadcrumb">{d.breadcrumb}</span><span className="dash-avatar">D</span></div>
-      <div className="dash-title"><div><small>{d.mini}</small><strong>{d.title}</strong></div><span className="dash-pill"><i />{d.status}</span></div>
-      <div className="dash-metrics">
-        <div><span className="metric-icon"><Icon name="users" size={17} /></span><small>{d.clients}</small><strong>1.248</strong><em>↗ 12,8%</em></div>
-        <div><span className="metric-icon"><Icon name="calendar" size={17} /></span><small>{d.bookings}</small><strong>328</strong><em>↗ 8,2%</em></div>
-        <div><span className="metric-icon"><Icon name="trending" size={17} /></span><small>{d.activity}</small><strong>+24%</strong><em>↗ 5,4%</em></div>
-      </div>
-      <div className="dash-chart"><div className="dash-chart-head"><strong>{d.activity}</strong><span>2026 <span className="chev">⌄</span></span></div><div className="chart-grid"><svg viewBox="0 0 500 140" preserveAspectRatio="none"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#398cff" stopOpacity=".24" /><stop offset="1" stopColor="#398cff" stopOpacity="0" /></linearGradient></defs><path d="M0 111 C30 101 43 108 70 92 S119 99 151 73 S195 91 228 61 S278 70 311 45 S360 58 394 32 S458 42 500 10 V140 H0Z" fill="url(#area)" /><path d="M0 111 C30 101 43 108 70 92 S119 99 151 73 S195 91 228 61 S278 70 311 45 S360 58 394 32 S458 42 500 10" stroke="#3487fa" strokeWidth="3" fill="none" /></svg></div><div className="chart-months">{d.months.map(m => <span key={m}>{m}</span>)}</div></div>
-      <div className="dash-list"><strong>{d.recent}</strong><div><span className="dash-list-icon">✦</span><span>09:30 · {d.today}</span><span className="dash-list-tag">{d.confirmed}</span></div><div><span className="dash-list-icon alt">✦</span><span>11:00 · {d.tomorrow}</span><span className="dash-list-tag">{d.pending}</span></div></div>
-    </div>
-  </div>
+function supportsWebGL(): boolean {
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl2') || canvas.getContext('webgl')))
+  } catch { return false }
+}
+
+/** Marca estática de Dofra: se ve mientras carga el 3D o si el dispositivo no tiene WebGL. */
+function CoreMark() {
+  return <div className="dofra-core-fallback" aria-hidden="true">d<span>.</span></div>
 }
 
 function readStoredLang(): Lang {
@@ -233,6 +217,7 @@ function readStoredLang(): Lang {
 export default function App() {
   const [lang, setLang] = useState<Lang>(readStoredLang)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [webgl] = useState(supportsWebGL)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const t = content[lang]
@@ -296,13 +281,12 @@ export default function App() {
           </div>
           <div className="hero-trust"><span><Icon name="check" size={15} />{t.trust1}</span><span><Icon name="check" size={15} />{t.trust2}</span><span><Icon name="globe" size={15} />{t.trust3}</span></div>
         </div>
-        <figure className="hero-art">
-          <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-          <div className="hero-art-label" aria-hidden="true"><span className="demo-dot" /> {t.demo.label}</div>
-          <Dashboard lang={lang} />
-          <div className="floating-code" aria-hidden="true"><span>&lt;/&gt;</span> {t.demo.floating}</div>
-          <figcaption className="hero-demo-note">{t.demo.note}</figcaption>
-        </figure>
+        <div className="hero-art">
+          <div className="orbit orbit-one" aria-hidden="true" /><div className="orbit orbit-two" aria-hidden="true" />
+          {webgl
+            ? <Suspense fallback={<CoreMark />}><DofraCore3D label={t.hero3d} /></Suspense>
+            : <div className="dofra-core-3d" role="img" aria-label={t.hero3d}><CoreMark /></div>}
+        </div>
       </div><div className="hero-bottom-line" /></section>
 
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
