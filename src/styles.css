@@ -18,27 +18,27 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .demo-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ffc35a;box-shadow:0 0 0 4px #ffc35a26}
 .hero-demo-note{position:absolute;z-index:3;left:4px;bottom:-30px;font-size:12px;color:#b7c8db;margin:0;max-width:calc(100% - 8px)}
 .examples-label{font-size:12px!important;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#4b5e73!important;margin:auto 0 10px!important}
-/* Proyecto */
-.project-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#fff;border:1px solid #dfe7f1;border-radius:20px;overflow:hidden}
-.project-visual{margin:0;background:linear-gradient(135deg,#eee3d6,#c6b39c);padding:40px 32px 48px;display:flex;align-items:center;justify-content:center;position:relative;min-height:300px}
-.project-browser{width:100%;max-width:420px;background:#fff;border-radius:10px;box-shadow:0 18px 45px #12304d24;overflow:hidden}
-.project-browser-bar{height:26px;background:#f2f5f9;display:flex;align-items:center;gap:5px;padding:0 11px}
-.project-browser-bar span{width:7px;height:7px;border-radius:50%;background:#b9c5d2}
-.project-browser-body{padding:26px 24px 30px;color:#6b5843}
-.project-mock-brand{font-size:13px;font-weight:800;letter-spacing:.5px}
-.project-mock-sub{font-size:11px;margin-top:17px;opacity:.8}
-.project-mock-headline{font-size:24px;font-weight:800;line-height:1.25;margin-top:7px}
-.project-mock-bar{width:100px;height:9px;border-radius:8px;background:#6b5843;opacity:.2;margin-top:17px}
-.image-note{position:absolute;left:16px;bottom:14px;background:#ffffffe6;color:#4a3c2d;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}
-.project-copy{padding:40px 40px 38px;display:flex;flex-direction:column}
-.project-meta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
-.project-category{font-size:12px;font-weight:800;letter-spacing:1.3px;color:#1f6fd6}
-.status-badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#7a4b00;background:#fff3dc;border:1px solid #f3d59b;padding:5px 12px;border-radius:100px}
-.status-badge-dot{width:7px;height:7px;border-radius:50%;background:#e19a1c}
-.project-copy h3{font-family:Manrope,sans-serif;font-size:30px;letter-spacing:-.8px;margin:18px 0 12px;color:#102139}
-.project-copy>p{font-size:16px;line-height:1.75;color:#55667b;margin:0}
-.project-copy>.project-footer{margin-top:auto;padding-top:22px;border-top:1px solid #e6ecf3;font-size:14px;color:#5b6b7f}
-.project-copy>p+.project-footer{margin-top:28px}
+/* Proyectos */
+.projects-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.project-card{display:flex;flex-direction:column;background:#fff;border:1px solid #dfe7f1;border-radius:18px;overflow:hidden;min-width:0}
+.project-visual{margin:0;position:relative;background:#0b1626;aspect-ratio:1350/597;overflow:hidden;border-bottom:1px solid #e6ecf3}
+.project-visual img{display:block;width:100%;height:100%;object-fit:cover;object-position:left top}
+.image-note{position:absolute;left:12px;bottom:12px;background:#ffffffeb;color:#253446;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}
+.project-copy{padding:26px 26px 28px;display:flex;flex-direction:column;flex:1}
+.project-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.project-category{font-size:12px;font-weight:800;letter-spacing:1.2px;color:#1f6fd6}
+.status-badge{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#0d5c40;background:#e3f6ee;border:1px solid #b8e5d1;padding:4px 10px;border-radius:100px}
+.status-badge-dot{width:7px;height:7px;border-radius:50%;background:#23a874}
+.project-copy h3{font-family:Manrope,sans-serif;font-size:26px;letter-spacing:-.8px;margin:16px 0 10px;color:#102139}
+.project-copy>p{font-size:15px;line-height:1.7;color:#55667b;margin:0 0 22px}
+.project-copy .examples-label{margin-top:auto!important}
+/* Sobre Dofra: personas */
+.people{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.people li{display:flex;gap:16px;align-items:flex-start;background:#0f2742;border:1px solid #1d4269;border-radius:14px;padding:18px 20px}
+.person-initial{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#194e80;color:#cfe5ff;font-family:Manrope,sans-serif;font-weight:800;font-size:19px}
+.people h3{margin:0 0 6px;font-family:Manrope,sans-serif;font-size:18px;color:#fff;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.people h3 span{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#7fc0ff}
+.people p{margin:0;font-size:15px;line-height:1.65;color:#bccbdc}
 /* Formulario */
 .quote-required{font-size:13px;color:#c3d4e6;margin:0!important;text-align:left}
 .quote-hint{font-size:12px;font-weight:400;color:#a9c0d8}
@@ -47,9 +47,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .quote-feedback.error{color:#ffd0d0}
 .quote-form .quote-consent{font-size:14px}
 .contact-panel .quote-form p{max-width:none}
-@media(max-width:900px){.project-card{grid-template-columns:1fr}.project-copy{padding:32px 26px}}
+@media(max-width:1000px){.projects-grid{grid-template-columns:1fr;max-width:640px}}
 @media(max-width:760px){.hero-art{margin-bottom:24px}}
-@media(max-width:490px){.hero-demo-note{bottom:-34px;font-size:11px}.hero-art{margin-bottom:34px}.project-visual{padding:30px 18px 50px}.project-copy h3{font-size:26px}}
+@media(max-width:490px){.hero-demo-note{bottom:-34px;font-size:11px}.hero-art{margin-bottom:34px}.project-copy{padding:22px 20px 24px}}
 @media(max-width:760px){.hero-art{margin-top:30px}.hero-art-label,.hero-art-label{top:-28px}}
 .quote-form input,.quote-form select,.quote-form textarea{font-weight:400!important}
 .quote-email a{display:inline-block}
+.section-heading>.kicker,.section-heading-split .kicker{color:#1f6fd6;font-size:12px;line-height:normal;max-width:none;margin:0}
+.image-note{font-size:11px;padding:4px 8px;left:10px;bottom:10px}

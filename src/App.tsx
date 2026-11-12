@@ -15,7 +15,7 @@ const content = {
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
     heroDesc: 'Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo con tecnología adaptada a sus necesidades.',
     heroContact: 'Contanos qué necesitás', seeWork: 'Ver proyectos',
-    trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'Argentina · Irlanda',
+    trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'En todo el mundo',
     serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Cuatro formas de usar la tecnología a tu favor, explicadas sin tecnicismos.',
     examplesLabel: 'Ejemplos',
     services: [
@@ -24,11 +24,19 @@ const content = {
       { icon: 'cpu', title: 'Sistemas a medida', desc: 'Organizá la información y los procesos de tu negocio en una herramienta adaptada a tu forma de trabajar.', examples: ['Gestión de clientes', 'Turnos', 'Cobros', 'Tareas internas'] },
       { icon: 'zap', title: 'Automatizaciones', desc: 'Reducí tareas repetitivas y evitá cargar la misma información en distintos lugares.', examples: ['Recordatorios', 'Formularios conectados con planillas', 'Avisos automáticos'] },
     ],
-    workKicker: 'PROYECTOS', workTitle: 'En qué estamos trabajando.', workDesc: 'Estos son nuestros proyectos en curso. Vamos a sumar más a medida que estén listos para mostrar.',
-    caseType: 'PLATAFORMA WEB · GESTIÓN DE TURNOS', caseName: 'Equilibrium Estética',
-    caseDesc: 'Una solución digital para simplificar la gestión de turnos, organizar servicios y ofrecer una experiencia más cómoda a clientes y administradores.',
-    caseStatus: 'En desarrollo', caseImageNote: 'Imagen ilustrativa', caseMockSubtitle: 'Gestión de turnos', caseMockHeadline: 'Tu tiempo. Tu bienestar.',
-    caseFooter: 'Vamos a compartir más detalles cuando el proyecto esté publicado.',
+    workKicker: 'PROYECTOS', workTitle: 'Lo que construimos.', workDesc: 'Productos que diseñamos y desarrollamos nosotras, de punta a punta.',
+    projectStatus: 'Desarrollo propio', imageNote: 'Captura real · datos de ejemplo', featuresLabel: 'Incluye',
+    projects: [
+      { img: 'appfotos', name: 'AppFotos', type: 'PLATAFORMA WEB · FOTOGRAFÍA', alt: 'Pantalla de inicio de AppFotos con una foto de paisaje y el título “Cada imagen merece un lugar especial”.',
+        desc: 'Una plataforma para fotógrafos: cada uno publica sus galerías en un sitio profesional propio y vende sus fotos directamente a sus clientes, que pueden explorarlas y comprarlas online.',
+        features: ['Galerías y portfolio', 'Sitio profesional propio', 'Venta de fotos online'] },
+      { img: 'spa-gestor', name: 'Spa Gestor', type: 'SISTEMA DE GESTIÓN · CENTROS DE ESTÉTICA', alt: 'Pantalla de Spa Gestor con la agenda del día de un centro de estética vista en un celular.',
+        desc: 'Un sistema para centros de estética que reúne todo el flujo de trabajo —agenda, pacientes y cobros— en un solo lugar, pensado para usarse desde el celular.',
+        features: ['Agenda de turnos', 'Fichas de pacientes', 'Cobros', 'Avisos por WhatsApp'] },
+      { img: 'odonto', name: 'Odonto', type: 'SISTEMA DE GESTIÓN · ODONTOLOGÍA', alt: 'Agenda semanal de Odonto con turnos por profesional y el menú de módulos de la clínica.',
+        desc: 'Un sistema integral para clínicas odontológicas: agenda por profesional y consultorio, turnero, ficha clínica, presupuestos y pagos, con módulos específicos para implantología y ortodoncia.',
+        features: ['Agenda y turnero', 'Ficha clínica', 'Implantología y ortodoncia', 'Presupuestos, pagos y reportes'] },
+    ],
     processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
     process: [
       { title: 'Escuchamos', desc: 'Nos contás cómo funciona tu negocio y qué te gustaría resolver.' },
@@ -37,9 +45,12 @@ const content = {
       { title: 'Acompañamos', desc: 'Lanzamos el proyecto y lo mejoramos cuando tu negocio lo necesite.' },
     ],
     aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Dos hermanas, un mismo proyecto.',
-    aboutDesc: 'Dofra es un proyecto creado por dos hermanas. Nació con una idea simple: la tecnología tiene que hacerte la vida más fácil, no complicártela. Por eso empezamos por entender cómo trabaja cada negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
+    aboutDesc: 'Dofra es un proyecto creado por dos hermanas que une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso empezamos por entender cómo trabaja tu negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
+    people: [
+      { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada del negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
+      { name: 'Victoria', role: 'Ingeniera en software', desc: 'Se ocupa del diseño técnico y el desarrollo, para que cada herramienta funcione bien y sea fácil de usar.' },
+    ],
     aboutQuote: 'Menos complejidad. Más posibilidades.', aboutCaption: 'DISEÑO · DESARROLLO · ENTREGA',
-    aboutStats: ['Soluciones a medida', 'Explicaciones claras, sin tecnicismos', 'Visión internacional'],
     faqKicker: 'PREGUNTAS FRECUENTES', faqTitle: 'Antes de empezar.',
     faqs: [
       { q: '¿Qué necesitan de mí para empezar?', a: 'Para la primera conversación alcanza con que nos cuentes a qué se dedica tu negocio, qué te gustaría resolver y, si tenés, ejemplos de páginas o herramientas que te gusten. No hace falta que sepas de tecnología.' },
@@ -50,7 +61,7 @@ const content = {
       { q: '¿Voy a poder actualizar la página?', a: '[A CONFIRMAR] Sí / Según el proyecto. [Explicar qué podrá cambiar el cliente por su cuenta —textos, fotos, precios— y qué cambios se hacen con nosotras].', pending: true },
       { q: '¿Cómo se define el presupuesto?', a: '[A CONFIRMAR] Lo armamos después de conocer qué necesitás, según el alcance del proyecto. [Indicar si es precio cerrado, si hay anticipo y medios de pago].', pending: true },
       { q: '¿Qué soporte ofrecen después de entregar?', a: 'Podemos acordar soporte, mejoras y mantenimiento después de la entrega, según las necesidades del proyecto.' },
-      { q: '¿Trabajan con clientes fuera de Argentina?', a: 'Sí. Trabajamos de forma remota, con especial atención a clientes de Argentina e Irlanda.' },
+      { q: '¿Trabajan con clientes de otros países?', a: 'Sí. Trabajamos de forma remota con clientes de cualquier parte del mundo.' },
     ] as Faq[],
     contactKicker: 'CONTACTO', contactTitle: 'Contanos qué necesitás.',
     contactDesc: 'Escribinos con tus propias palabras. No hace falta saber de tecnología: si todavía no tenés claro qué solución te conviene, te ayudamos a definirlo.',
@@ -71,7 +82,7 @@ const content = {
       subject: 'Nueva consulta desde la web de Dofra',
       orEmail: 'También podés escribirnos a',
     },
-    contactSmall: ['Argentina', 'Irlanda', 'Trabajo remoto'],
+    contactSmall: ['En todo el mundo', 'Trabajo remoto'],
     footerTag: 'Tecnología pensada para tu negocio.', footerNote: 'Diseñado con intención. Construido con tecnología.', rights: 'Todos los derechos reservados.',
     demo: {
       label: 'DEMOSTRACIÓN ILUSTRATIVA', a11y: 'Ejemplo ilustrativo de un panel de gestión. Los datos que muestra son ficticios.',
@@ -89,7 +100,7 @@ const content = {
     heroA: 'Websites and custom systems', heroB: 'for your business.',
     heroDesc: 'We help startups, independent professionals and small businesses showcase their services, organize their work and save time with technology tailored to their needs.',
     heroContact: 'Tell us what you need', seeWork: 'View projects',
-    trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Argentina · Ireland',
+    trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Worldwide',
     serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Four ways to put technology to work for you, explained without jargon.',
     examplesLabel: 'Examples',
     services: [
@@ -98,11 +109,19 @@ const content = {
       { icon: 'cpu', title: 'Custom systems', desc: 'Organize your business information and processes in a tool built around the way you work.', examples: ['Customer management', 'Appointments', 'Payments', 'Internal tasks'] },
       { icon: 'zap', title: 'Automation', desc: 'Cut down on repetitive tasks and stop entering the same information in different places.', examples: ['Reminders', 'Forms linked to spreadsheets', 'Automatic notifications'] },
     ],
-    workKicker: 'PROJECTS', workTitle: "What we're working on.", workDesc: "These are our current projects. We'll add more as they're ready to share.",
-    caseType: 'WEB PLATFORM · APPOINTMENT MANAGEMENT', caseName: 'Equilibrium Estética',
-    caseDesc: 'A digital solution to simplify appointment scheduling, organize services and offer a more convenient experience for customers and administrators.',
-    caseStatus: 'In progress', caseImageNote: 'Illustrative image', caseMockSubtitle: 'Appointment management', caseMockHeadline: 'Your time. Your wellbeing.',
-    caseFooter: "We'll share more details once the project is live.",
+    workKicker: 'PROJECTS', workTitle: 'What we build.', workDesc: 'Products we designed and built ourselves, end to end.',
+    projectStatus: 'In-house product', imageNote: 'Real screenshot · sample data', featuresLabel: 'Includes',
+    projects: [
+      { img: 'appfotos', name: 'AppFotos', type: 'WEB PLATFORM · PHOTOGRAPHY', alt: 'AppFotos home screen with a landscape photo and the headline “Every image deserves a special place”.',
+        desc: 'A platform for photographers: each one publishes their galleries on their own professional website and sells their photos directly to clients, who can browse and buy them online.',
+        features: ['Galleries and portfolio', 'Own professional website', 'Online photo sales'] },
+      { img: 'spa-gestor', name: 'Spa Gestor', type: 'MANAGEMENT SYSTEM · BEAUTY CLINICS', alt: 'Spa Gestor screen showing a beauty clinic’s daily schedule on a phone.',
+        desc: 'A system for beauty clinics that brings the whole workflow —appointments, clients and payments— into one place, designed to be used from a phone.',
+        features: ['Appointment calendar', 'Client records', 'Payments', 'WhatsApp reminders'] },
+      { img: 'odonto', name: 'Odonto', type: 'MANAGEMENT SYSTEM · DENTISTRY', alt: 'Odonto weekly calendar with appointments by practitioner and the clinic’s module menu.',
+        desc: 'A complete system for dental clinics: scheduling by practitioner and treatment room, patient queue, clinical records, quotes and payments, with dedicated modules for implantology and orthodontics.',
+        features: ['Scheduling and patient queue', 'Clinical records', 'Implantology and orthodontics', 'Quotes, payments and reports'] },
+    ],
     processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
     process: [
       { title: 'We listen', desc: 'You tell us how your business works and what you would like to solve.' },
@@ -111,9 +130,12 @@ const content = {
       { title: 'We support', desc: 'We launch the project and improve it whenever your business needs it.' },
     ],
     aboutKicker: 'ABOUT DOFRA', aboutTitle: 'Two sisters, one shared project.',
-    aboutDesc: "Dofra is a project created by two sisters. It started with a simple idea: technology should make your life easier, not more complicated. That's why we first get to know how each business works, and only then design the solution: clear, tailored and easy to use.",
+    aboutDesc: "Dofra is a project created by two sisters that brings together two perspectives: business and technology. Between us, we have experience at international companies and more than 4 years working in software systems. That's why we first get to know how your business works, and only then design the solution: clear, tailored and easy to use.",
+    people: [
+      { name: 'Franca', role: 'Accountant', desc: 'Brings the business perspective: costs, payments and admin processes, so every solution meets real needs.' },
+      { name: 'Victoria', role: 'Software engineer', desc: 'Leads the technical design and development, so every tool works well and is easy to use.' },
+    ],
     aboutQuote: 'Less complexity. More possibility.', aboutCaption: 'DESIGN · DEVELOP · DELIVER',
-    aboutStats: ['Tailored solutions', 'Clear explanations, no jargon', 'Global mindset'],
     faqKicker: 'FREQUENTLY ASKED QUESTIONS', faqTitle: 'Before we begin.',
     faqs: [
       { q: 'What do you need from me to get started?', a: "For our first conversation, just tell us what your business does, what you'd like to solve and, if you have them, examples of websites or tools you like. No technical knowledge needed." },
@@ -124,7 +146,7 @@ const content = {
       { q: 'Will I be able to update my website?', a: '[TO CONFIRM] Yes / Depending on the project. [Explain what clients can change on their own —text, photos, prices— and what changes go through us].', pending: true },
       { q: 'How is the price defined?', a: "[TO CONFIRM] We put it together once we know what you need, based on the project scope. [State whether it's a fixed price, deposits and payment methods].", pending: true },
       { q: 'What support do you offer after delivery?', a: 'We can arrange ongoing support, improvements and maintenance after delivery, based on your project needs.' },
-      { q: 'Do you work with clients outside Argentina?', a: 'Yes. We work remotely, with a particular focus on clients in Argentina and Ireland.' },
+      { q: 'Do you work with clients in other countries?', a: 'Yes. We work remotely with clients anywhere in the world.' },
     ] as Faq[],
     contactKicker: 'CONTACT', contactTitle: 'Tell us what you need.',
     contactDesc: "Write to us in your own words. No technical knowledge needed: if you're not sure which solution is right for you, we'll help you figure it out.",
@@ -145,7 +167,7 @@ const content = {
       subject: 'New inquiry from the Dofra website',
       orEmail: 'You can also email us at',
     },
-    contactSmall: ['Argentina', 'Ireland', 'Remote-first'],
+    contactSmall: ['Worldwide', 'Remote-first'],
     footerTag: 'Technology built around your business.', footerNote: 'Designed with intention. Built with technology.', rights: 'All rights reserved.',
     demo: {
       label: 'ILLUSTRATIVE DEMO', a11y: 'Illustrative example of a management dashboard. The data shown is fictional.',
@@ -295,22 +317,19 @@ export default function App() {
 
       <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
         <div className="section-heading"><p className="kicker">{t.workKicker}</p><h2 id="proyectos-titulo">{t.workTitle}</h2><p>{t.workDesc}</p></div>
-        {/* Las demos conceptuales (Dentalia, Estudio Norte, Atelier) se retiraron hasta que tengan una versión explorable con diseño propio. */}
-        <article className="project-card">
+        <div className="projects-grid">{t.projects.map(p => <article className="project-card" key={p.name}>
           <figure className="project-visual">
-            <div className="project-browser" aria-hidden="true">
-              <div className="project-browser-bar"><span /><span /><span /></div>
-              <div className="project-browser-body"><div className="project-mock-brand">✳ {t.caseName.toUpperCase()}</div><div className="project-mock-sub">{t.caseMockSubtitle}</div><div className="project-mock-headline">{t.caseMockHeadline}</div><div className="project-mock-bar" /></div>
-            </div>
-            <figcaption className="image-note">{t.caseImageNote}</figcaption>
+            <img src={`/proyectos/${p.img}.webp`} alt={p.alt} width={1350} height={597} loading="lazy" decoding="async" />
+            <figcaption className="image-note">{t.imageNote}</figcaption>
           </figure>
           <div className="project-copy">
-            <div className="project-meta"><span className="project-category">{t.caseType}</span><span className="status-badge"><span className="status-badge-dot" />{t.caseStatus}</span></div>
-            <h3>{t.caseName}</h3>
-            <p>{t.caseDesc}</p>
-            <p className="project-footer">{t.caseFooter}</p>
+            <div className="project-meta"><span className="project-category">{p.type}</span><span className="status-badge"><span className="status-badge-dot" />{t.projectStatus}</span></div>
+            <h3>{p.name}</h3>
+            <p>{p.desc}</p>
+            <p className="examples-label">{t.featuresLabel}</p>
+            <ul className="tag-list">{p.features.map(feat => <li key={feat}>{feat}</li>)}</ul>
           </div>
-        </article>
+        </article>)}</div>
       </div></section>
 
       <section className="section process" aria-labelledby="proceso-titulo"><div className="container">
@@ -320,7 +339,7 @@ export default function App() {
 
       <section className="section about" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid">
         <div className="about-visual" aria-hidden="true"><div className="about-shape"><div className="about-shape-ring" /><div className="about-d">d<span>.</span></div><div className="about-shape-caption">{t.aboutCaption}</div></div><div className="about-quote">“{t.aboutQuote}”</div></div>
-        <div className="about-copy"><p className="kicker">{t.aboutKicker}</p><h2 id="nosotras-titulo">{t.aboutTitle}</h2><p>{t.aboutDesc}</p><ul className="about-points">{t.aboutStats.map(s => <li key={s}><span><Icon name="check" size={16} /></span>{s}</li>)}</ul></div>
+        <div className="about-copy"><p className="kicker">{t.aboutKicker}</p><h2 id="nosotras-titulo">{t.aboutTitle}</h2><p>{t.aboutDesc}</p><ul className="people">{t.people.map(person => <li key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul></div>
       </div></section>
 
       <section className="section faq" aria-labelledby="faq-titulo"><div className="container faq-grid">

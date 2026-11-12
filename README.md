@@ -23,8 +23,8 @@ npm run dev
 1. **Formulario (FormSubmit):** el primer envío hacia `dofrasoftware@gmail.com` dispara un correo de activación de FormSubmit. Hay que abrirlo y confirmar; hasta entonces el formulario muestra el mensaje de error (nunca uno de éxito falso).
 2. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
 3. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
-4. **Equilibrium Estética:** figura "En desarrollo" y su imagen está marcada como ilustrativa. Sin botón ni caso de estudio hasta que haya una página o demo.
-5. **Sobre Dofra:** falta completar la presentación de cada hermana (nombres, formación, experiencia, fotos).
+4. **Proyectos:** AppFotos, Spa Gestor y Odonto se muestran con capturas reales (datos de ejemplo) en `public/proyectos/`, sin enlaces. Equilibrium Estética se retiró hasta que esté listo.
+5. **Sobre Dofra:** presentación de Franca y Victoria cargada; faltan las fotos (opcional).
 6. **Panel del inicio:** es una demostración con datos ficticios y está identificado como tal.
 
 ## Compilar
