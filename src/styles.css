@@ -156,10 +156,7 @@ main:focus { outline: none; }
 /* ---------- Sobre Dofra ---------- */
 .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
 .section-dark .kicker { color: var(--accent-on-dark); }
-.about-copy > p:not(.kicker):not(.about-quote) { margin-top: 16px; font-size: 16px; line-height: 1.8; color: var(--muted-dark); }
-.about-quote { margin-top: 24px; display: flex; align-items: center; gap: 14px; font-size: 15px; font-style: italic; color: #FFFFFFCC; }
-.about-mark { flex: none; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 12px; border: 1px solid #ffffff1f; background: var(--brand-bg); font: normal 800 26px/1 var(--font-display); letter-spacing: -2px; color: #fff; padding-right: 3px; }
-.about-mark span { color: var(--brand-dot); }
+.about-copy > p:not(.kicker) { margin-top: 16px; font-size: 16px; line-height: 1.8; color: var(--muted-dark); }
 .people { display: grid; gap: 14px; }
 .person-card { display: flex; gap: 16px; align-items: flex-start; background: var(--navy-800); border: 1px solid var(--line-dark); border-radius: var(--radius); padding: 20px 22px; }
 .person-initial { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-dot); color: var(--brand-bg); font-family: var(--font-display); font-weight: 800; font-size: 19px; }

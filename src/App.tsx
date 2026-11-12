@@ -38,7 +38,6 @@ const content = {
       { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada del negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
       { name: 'Victoria', role: 'Ingeniera en software', desc: 'Se ocupa del diseño técnico y el desarrollo, para que cada herramienta funcione bien y sea fácil de usar.' },
     ],
-    aboutQuote: 'Menos complejidad. Más posibilidades.', aboutCaption: 'DISEÑO · DESARROLLO · ENTREGA',
     faqKicker: 'PREGUNTAS FRECUENTES', faqTitle: 'Antes de empezar.',
     faqs: [
       { q: '¿Qué necesitan de mí para empezar?', a: 'Para la primera conversación alcanza con que nos cuentes a qué se dedica tu negocio, qué te gustaría resolver y, si tenés, ejemplos de páginas o herramientas que te gusten. No hace falta que sepas de tecnología.' },
@@ -104,7 +103,6 @@ const content = {
       { name: 'Franca', role: 'Accountant', desc: 'Brings the business perspective: costs, payments and admin processes, so every solution meets real needs.' },
       { name: 'Victoria', role: 'Software engineer', desc: 'Leads the technical design and development, so every tool works well and is easy to use.' },
     ],
-    aboutQuote: 'Less complexity. More possibility.', aboutCaption: 'DESIGN · DEVELOP · DELIVER',
     faqKicker: 'FREQUENTLY ASKED QUESTIONS', faqTitle: 'Before we begin.',
     faqs: [
       { q: 'What do you need from me to get started?', a: "For our first conversation, just tell us what your business does, what you'd like to solve and, if you have them, examples of websites or tools you like. No technical knowledge needed." },
@@ -284,10 +282,8 @@ export default function App() {
 
       <section className="section section-dark" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
         <div className="about-copy">
-          <p className="kicker">{t.aboutCaption}</p>
           <h2 id="nosotras-titulo">{t.aboutTitle}</h2>
           <p>{t.aboutDesc}</p>
-          <p className="about-quote"><span className="about-mark" aria-hidden="true">d<span>.</span></span>“{t.aboutQuote}”</p>
         </div>
         <ul className="people">{t.people.map(person => <li className="person-card" key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul>
       </div></section>
