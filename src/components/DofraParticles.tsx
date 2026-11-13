@@ -281,8 +281,8 @@ export default function DofraParticles({ label }: { label: string }) {
       const delta = y - lastScrollY
       lastScrollY = y
       if (reduced || !visible || !coarseQuery.matches || !particles.length) return
-      // Impulso acotado: dispersa sin destruir la silueta; el resorte la reconstruye al frenar.
-      const impulse = Math.max(-1, Math.min(1, delta / 70)) * step * 1.6
+      // Impulso acotado y suave: la silueta sigue reconocible; el resorte la reconstruye al frenar.
+      const impulse = Math.max(-1, Math.min(1, delta / 80)) * step * 0.9 // dispersión muy sutil
       const mag = Math.abs(impulse)
       for (const p of particles) {
         const len = Math.hypot(p.tx, p.ty) || 1

@@ -281,6 +281,21 @@ main:focus { outline: none; }
   .person-card { padding: 16px; }
 }
 
+/* ---------- Hero mobile (solo celulares; escritorio y tablet sin cambios) ---------- */
+@media (max-width: 600px) {
+  .hero-grid { gap: 14px; padding-block: 12px 36px; }
+  /* Orden: logo de partículas primero, luego etiqueta, título, texto y botones */
+  .hero-visual { order: -1; justify-self: stretch; width: 100%; max-width: none; aspect-ratio: auto; height: clamp(220px, 58vw, 256px); }
+  .hero-copy { text-align: center; }
+  .eyebrow { justify-content: center; margin-bottom: 12px; font-size: 11px; letter-spacing: 2px; }
+  .eyebrow-line { display: none; } /* sin líneas decorativas antes de etiquetas */
+  .hero h1 { font-size: clamp(30px, 8.2vw, 36px); letter-spacing: -.04em; }
+  .hero-lead { margin: 12px auto 0; font-size: 16px; line-height: 1.6; }
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 20px; }
+  .hero-actions .button { width: 100%; }
+  .hero-trust { display: none; } /* fuera de la composición mobile aprobada */
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
