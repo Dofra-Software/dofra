@@ -20,7 +20,7 @@ npm run dev
 
 ## Antes de publicar (IMPORTANTE)
 
-1. **Formulario (FormSubmit):** el primer envío hacia `dofrasoftware@gmail.com` dispara un correo de activación de FormSubmit. Hay que abrirlo y confirmar; hasta entonces el formulario muestra el mensaje de error (nunca uno de éxito falso).
+1. **Formulario (FormSubmit):** el primer envío hacia `info@dofrasoftware.com` dispara un correo de activación de FormSubmit. Hay que abrirlo y confirmar; hasta entonces el formulario muestra el mensaje de error (nunca uno de éxito falso).
 2. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
 3. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
 4. **Proyectos:** la sección se retiró hasta que haya proyectos para mostrar (el contenido anterior queda en el historial de git).

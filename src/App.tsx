@@ -5,7 +5,7 @@ import DofraParticles from './components/DofraParticles'
 type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
 
-const CONTACT_EMAIL = 'dofrasoftware@gmail.com'
+const CONTACT_EMAIL = 'info@dofrasoftware.com'
 
 /** Redes oficiales. Un ícono solo se muestra si su URL está cargada. */
 const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[] = [
