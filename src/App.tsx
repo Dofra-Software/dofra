@@ -72,7 +72,7 @@ const content = {
       types: ['Página web', 'Aplicación web', 'Sistema a medida', 'Automatización', 'No sé qué necesito, quiero asesoramiento', 'Otro'],
       budget: 'Presupuesto aproximado (opcional)', budgetNone: 'Prefiero conversarlo',
       budgets: ['Menos de USD 500', 'USD 500 – 1.500', 'USD 1.500 – 5.000', 'Más de USD 5.000'],
-      message: 'Contanos sobre tu proyecto', messagePh: 'Qué hace tu negocio, qué te gustaría resolver y cualquier detalle que quieras compartir.', messageHint: 'Mínimo 15 caracteres.',
+      message: 'Contanos sobre tu proyecto', messagePh: 'Qué hace tu negocio, qué te gustaría resolver y cualquier detalle que quieras compartir.', messageEmpty: 'Escribí tu mensaje.',
       consent: 'Acepto que Dofra Software use mis datos solo para responder esta consulta. El envío se procesa mediante el servicio FormSubmit.',
       send: 'Enviar consulta', sending: 'Enviando…',
       success: '¡Gracias! Recibimos tu consulta y te vamos a responder por correo electrónico.',
@@ -148,7 +148,7 @@ const content = {
       types: ['Website', 'Web app', 'Custom system', 'Automation', "I'm not sure what I need, I'd like some advice", 'Other'],
       budget: 'Estimated budget (optional)', budgetNone: "I'd rather discuss it",
       budgets: ['Under USD 500', 'USD 500 – 1,500', 'USD 1,500 – 5,000', 'Over USD 5,000'],
-      message: 'Tell us about your project', messagePh: "What your business does, what you'd like to solve and any other details you want to share.", messageHint: 'At least 15 characters.',
+      message: 'Tell us about your project', messagePh: "What your business does, what you'd like to solve and any other details you want to share.", messageEmpty: 'Please write your message.',
       consent: 'I agree that Dofra Software may use my details only to reply to this inquiry. The form is processed by the FormSubmit service.',
       send: 'Send inquiry', sending: 'Sending…',
       success: "Thank you! We've received your inquiry and will reply by email.",
@@ -317,22 +317,41 @@ export default function App() {
     event.preventDefault()
     if (formStatus === 'sending') return
     const form = event.currentTarget
+    // El mensaje es obligatorio y no puede ser solo espacios (sin mínimo de caracteres).
+    const messageField = form.elements.namedItem('message') as HTMLTextAreaElement | null
+    if (messageField && !messageField.value.trim()) {
+      messageField.setCustomValidity(f.messageEmpty)
+      messageField.reportValidity()
+      return
+    }
     const data = new FormData(form)
     if (data.get('_honey')) return // bot detectado: no se envía nada
+    data.set('message', String(data.get('message') ?? '').trim())
     setFormStatus('sending')
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 15000)
     try {
       const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
         method: 'POST',
         body: data,
         headers: { Accept: 'application/json' },
+        signal: controller.signal,
       })
-      const result = await response.json() as { success?: boolean | string }
-      // FormSubmit responde success "false" (por ejemplo, si el formulario todavía no fue activado).
-      if (!response.ok || String(result.success) !== 'true') throw new Error('Submission failed')
+      let result: { success?: boolean | string; message?: string } = {}
+      try { result = await response.json() } catch { throw new Error(`Respuesta no válida de FormSubmit (HTTP ${response.status})`) }
+      // Éxito solo si el servicio confirma que aceptó el envío. Ej.: success "false" = formulario sin activar.
+      if (!response.ok || String(result.success) !== 'true') {
+        throw new Error(`FormSubmit rechazó el envío (HTTP ${response.status}): ${result.message ?? 'sin detalle'}`)
+      }
       form.reset()
       setFormStatus('success')
-    } catch {
+    } catch (error) {
+      // Diagnóstico técnico solo en la consola; el visitante ve un mensaje genérico y conserva sus datos.
+      const reason = controller.signal.aborted ? 'Tiempo de espera agotado (15 s)' : error instanceof Error ? error.message : String(error)
+      console.error('[Dofra] No se pudo enviar el formulario de contacto:', reason)
       setFormStatus('error')
+    } finally {
+      window.clearTimeout(timeout)
     }
   }
 
@@ -409,7 +428,7 @@ export default function App() {
             <label><span>{f.type} <span aria-hidden="true">*</span></span><select name="project_type" required defaultValue=""><option value="" disabled>{f.typePh}</option>{f.types.map((label, i) => <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>{label}</option>)}</select></label>
             <label><span>{f.budget}</span><select name="budget" defaultValue=""><option value="">{f.budgetNone}</option>{f.budgets.map((label, i) => <option key={BUDGET_VALUES[i]} value={BUDGET_VALUES[i]}>{label}</option>)}</select></label>
           </div>
-          <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required minLength={15} maxLength={3000} rows={4} placeholder={f.messagePh} aria-describedby="message-hint" /><span className="quote-hint" id="message-hint">{f.messageHint}</span></label>
+          <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required maxLength={3000} rows={4} placeholder={f.messagePh} onInput={event => event.currentTarget.setCustomValidity('')} /></label>
           <label className="quote-consent"><input type="checkbox" required name="consent" value="Sí" /><span>{f.consent} <span aria-hidden="true">*</span></span></label>
           <div className="quote-submit">
             <button type="submit" className="button button-primary button-large" disabled={formStatus === 'sending'}>{formStatus === 'sending' ? f.sending : f.send}<Icon name="arrow" size={18} /></button>
