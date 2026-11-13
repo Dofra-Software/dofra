@@ -1,7 +1,6 @@
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
-import ServiceArt from './components/ServiceArt'
 
 type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
@@ -26,6 +25,7 @@ const content = {
     trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'En todo el mundo',
     serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Cuatro formas de usar la tecnología a tu favor, explicadas sin tecnicismos.',
     examplesLabel: 'Ejemplos',
+    carousel: { label: 'Servicios', prev: 'Ver servicios anteriores', next: 'Ver más servicios', of: 'de', goTo: 'Ir al servicio' },
     services: [
       { icon: 'code', title: 'Páginas web', desc: 'Mostrá tus servicios y facilitá que tus próximos clientes te contacten.', examples: ['Páginas de presentación', 'Sitios profesionales', 'Webs para empresas'] },
       { icon: 'layers', title: 'Aplicaciones web', desc: 'Herramientas que se usan desde el navegador para que tus clientes o tu equipo puedan realizar gestiones.', examples: ['Reservas online', 'Portales de clientes', 'Paneles de seguimiento'] },
@@ -101,6 +101,7 @@ const content = {
     trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Worldwide',
     serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Four ways to put technology to work for you, explained without jargon.',
     examplesLabel: 'Examples',
+    carousel: { label: 'Services', prev: 'Show previous services', next: 'Show more services', of: 'of', goTo: 'Go to service' },
     services: [
       { icon: 'code', title: 'Websites', desc: 'Showcase your services and make it easy for new customers to get in touch.', examples: ['Single-page business sites', 'Professional websites', 'Company websites'] },
       { icon: 'layers', title: 'Web apps', desc: 'Tools that run in the browser so your customers or your team can get things done online.', examples: ['Online booking', 'Customer portals', 'Progress tracking panels'] },
@@ -214,6 +215,68 @@ function useReveal() {
   }, [])
 }
 
+type Service = { icon: string; title: string; desc: string; examples: string[] }
+type CarouselText = { label: string; prev: string; next: string; of: string; goTo: string }
+
+/**
+ * Carrusel de servicios: desplazamiento horizontal nativo (scroll-snap), sin librerías.
+ * Las tarjetas son informativas: no se abren ni enlazan a nada.
+ */
+function ServicesCarousel({ services, examplesLabel, text }: { services: Service[]; examplesLabel: string; text: CarouselText }) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
+  const [atStart, setAtStart] = useState(true)
+  const [atEnd, setAtEnd] = useState(false)
+
+  const update = useCallback(() => {
+    const track = trackRef.current
+    if (!track) return
+    const cards = [...track.children] as HTMLElement[]
+    const left = track.scrollLeft
+    let best = 0
+    cards.forEach((card, i) => { if (Math.abs(card.offsetLeft - left) < Math.abs(cards[best].offsetLeft - left)) best = i })
+    setActive(best)
+    setAtStart(left <= 2)
+    setAtEnd(left + track.clientWidth >= track.scrollWidth - 2)
+  }, [])
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    let frame = 0
+    const onScroll = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update) }
+    track.addEventListener('scroll', onScroll, { passive: true })
+    const ro = new ResizeObserver(update)
+    ro.observe(track)
+    update()
+    return () => { cancelAnimationFrame(frame); track.removeEventListener('scroll', onScroll); ro.disconnect() }
+  }, [update])
+
+  const goTo = (index: number) => {
+    const track = trackRef.current
+    const card = track?.children[Math.max(0, Math.min(services.length - 1, index))] as HTMLElement | undefined
+    if (!track || !card) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    track.scrollTo({ left: card.offsetLeft, behavior: reduce ? 'instant' : 'smooth' })
+  }
+
+  return <div className="svc-carousel" role="region" aria-roledescription="carrusel" aria-label={text.label}>
+    <div className="svc-nav">
+      <button type="button" className="svc-arrow svc-arrow-prev" onClick={() => goTo(active - 1)} disabled={atStart} aria-label={text.prev}><Icon name="arrow" size={18} /></button>
+      <button type="button" className="svc-arrow" onClick={() => goTo(active + 1)} disabled={atEnd} aria-label={text.next}><Icon name="arrow" size={18} /></button>
+    </div>
+    <div className="svc-track" ref={trackRef} tabIndex={0} aria-label={text.label}>
+      {services.map((s, i) => <article className="svc-card" key={s.title} role="group" aria-roledescription="slide" aria-label={`${i + 1} ${text.of} ${services.length}: ${s.title}`}>
+        <span className="svc-icon" aria-hidden="true"><Icon name={s.icon} size={20} /></span>
+        <h3>{s.title}</h3>
+        <p className="svc-desc">{s.desc}</p>
+        <p className="svc-examples"><span className="svc-label">{examplesLabel}:</span> {s.examples.map((ex, j) => <span key={ex}>{j > 0 && <span className="svc-sep" aria-hidden="true"> · </span>}{ex}</span>)}</p>
+      </article>)}
+    </div>
+    <div className="svc-dots">{services.map((s, i) => <button type="button" key={s.title} className={i === active ? 'is-active' : ''} aria-label={`${text.goTo} ${i + 1} ${text.of} ${services.length}`} aria-current={i === active ? 'true' : undefined} onClick={() => goTo(i)} />)}</div>
+  </div>
+}
+
 function readStoredLang(): Lang {
   try { return window.localStorage.getItem('dofra-lang') === 'en' ? 'en' : 'es' } catch { return 'es' }
 }
@@ -302,17 +365,7 @@ export default function App() {
 
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
-        <div className="svc-grid" data-reveal>{t.services.map(s => <article className="svc-card" key={s.title}>
-          <div className="svc-visual"><ServiceArt kind={s.icon} /></div>
-          <div className="svc-body">
-            <h3>{s.title}</h3>
-            <p className="svc-desc">{s.desc}</p>
-            <div className="svc-examples">
-              <span className="svc-label">{t.examplesLabel}:</span>{' '}
-              <ul className="svc-tags">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
-            </div>
-          </div>
-        </article>)}</div>
+        <div data-reveal><ServicesCarousel services={t.services} examplesLabel={t.examplesLabel} text={t.carousel} /></div>
       </div></section>
 
       <section className="section section-soft" aria-labelledby="proceso-titulo"><div className="container">
