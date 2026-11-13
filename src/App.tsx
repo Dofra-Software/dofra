@@ -1,4 +1,4 @@
-import type { FormEvent, ReactNode } from 'react'
+import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
 
@@ -6,6 +6,12 @@ type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
 
 const CONTACT_EMAIL = 'dofrasoftware@gmail.com'
+
+/** Redes oficiales. Un ícono solo se muestra si su URL está cargada. */
+const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[] = [
+  { id: 'instagram', name: 'Instagram', url: 'https://www.instagram.com/dofra.software/' },
+  { id: 'linkedin', name: 'LinkedIn', url: 'https://www.linkedin.com/company/dofra-software/' },
+]
 
 const content = {
   es: {
@@ -70,7 +76,13 @@ const content = {
       orEmail: 'También podés escribirnos a',
     },
     contactSmall: ['En todo el mundo', 'Trabajo remoto'],
-    footerTag: 'Tecnología pensada para tu negocio.', footerNote: 'Diseñado con intención. Construido con tecnología.', rights: 'Todos los derechos reservados.',
+    footer: {
+      kicker: 'TU PRÓXIMO PROYECTO EMPIEZA ACÁ', title: ['¿Tenés una idea?', 'Hagámosla realidad.'],
+      desc: 'Contanos qué necesitás y vemos cómo ayudarte.', cta: 'Hablemos',
+      navLabel: 'Navegación del pie de página', socialLabel: 'Redes sociales', newTab: 'se abre en una pestaña nueva',
+      slogan: 'Your vision. Our code.',
+    },
+    rights: 'Todos los derechos reservados.',
     heroVisual: 'Logo de Dofra formado por partículas blancas y terracota.',
   },
   en: {
@@ -135,7 +147,13 @@ const content = {
       orEmail: 'You can also email us at',
     },
     contactSmall: ['Worldwide', 'Remote-first'],
-    footerTag: 'Technology built around your business.', footerNote: 'Designed with intention. Built with technology.', rights: 'All rights reserved.',
+    footer: {
+      kicker: 'YOUR NEXT PROJECT STARTS HERE', title: ['Have an idea?', 'Let’s make it happen.'],
+      desc: 'Tell us what you need and we’ll find the best way to help.', cta: 'Let’s talk',
+      navLabel: 'Footer navigation', socialLabel: 'Social media', newTab: 'opens in a new tab',
+      slogan: 'Your vision. Our code.',
+    },
+    rights: 'All rights reserved.',
     heroVisual: 'Dofra logo made of white and terracotta particles.',
   },
 }
@@ -160,6 +178,8 @@ function Icon({ name, size = 22 }: { name: string; size?: number }) {
     calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></>,
     users: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5" /></>,
     trending: <><path d="m3 17 7-7 4 4 7-7M15 7h6v6" /></>,
+    instagram: <><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.2" cy="6.8" r=".6" fill="currentColor" /></>,
+    linkedin: <><rect x="3.5" y="3.5" width="17" height="17" rx="3" /><path d="M8 10.5V16M8 7.8v.2M11.5 16v-5.5M11.5 13c0-1.6 1-2.6 2.3-2.6s2.2.9 2.2 2.6V16" /></>,
   }
   return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
 }
@@ -208,6 +228,18 @@ export default function App() {
   const navIds = ['inicio', 'servicios', 'nosotras', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
+
+  /** CTA del footer: lleva al formulario de contacto y enfoca el primer campo. */
+  function goToContactForm(event: MouseEvent<HTMLAnchorElement>) {
+    const section = document.getElementById('contacto')
+    const field = document.querySelector<HTMLInputElement>('#contacto input[name="name"]')
+    if (!section || !field) return // sin JS especial: el enlace #contacto funciona igual
+    event.preventDefault()
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    section.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+    window.history.replaceState(null, '', '#contacto')
+    window.setTimeout(() => field.focus({ preventScroll: true }), reduce ? 0 : 600)
+  }
 
   async function submitQuote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -329,9 +361,26 @@ export default function App() {
       </div></div></section>
     </main>
 
-    <footer className="footer"><div className="container">
-      <div className="footer-main"><div><Brand light label={t.brandLabel} /><p>{t.footerTag}</p></div><nav className="footer-links" aria-label={t.navLabel}>{t.nav.slice(1).map((label, i) => <a key={label} href={`#${navIds[i + 1]}`}>{label}</a>)}</nav></div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span>{t.footerNote}</span></div>
+    <footer className="footer" aria-labelledby="footer-titulo"><div className="container">
+      <div className="footer-cta">
+        <div>
+          <p className="footer-kicker">{t.footer.kicker}</p>
+          <h2 id="footer-titulo"><span>{t.footer.title[0]}</span> <span>{t.footer.title[1]}</span></h2>
+          <p className="footer-desc">{t.footer.desc}</p>
+        </div>
+        <a className="button button-primary button-large footer-cta-button" href="#contacto" onClick={goToContactForm}>{t.footer.cta}<Icon name="arrow" size={18} /></a>
+      </div>
+      <div className="footer-main">
+        <a className="footer-brand" href="#inicio" aria-label={t.brandLabel}>
+          <img src="/dofra-logo.png" alt="" width="40" height="40" />
+          <span>DOFRA <span>SOFTWARE</span></span>
+        </a>
+        <nav className="footer-links" aria-label={t.footer.navLabel}>{t.nav.slice(1).map((label, i) => <a key={label} href={`#${navIds[i + 1]}`}>{label}</a>)}</nav>
+        <ul className="footer-social" aria-label={t.footer.socialLabel}>{SOCIAL_LINKS.filter(link => link.url).map(link => <li key={link.id}>
+          <a href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`${link.name} (${t.footer.newTab})`}><Icon name={link.id} size={18} /></a>
+        </li>)}</ul>
+      </div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span className="footer-slogan" lang="en">{t.footer.slogan}</span></div>
     </div></footer>
   </>
 }
