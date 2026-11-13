@@ -33,15 +33,16 @@ const content = {
     ],
     processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
     process: [
-      { title: 'Escuchamos', desc: 'Nos contás cómo funciona tu negocio y qué te gustaría resolver.' },
-      { title: 'Diseñamos', desc: 'Convertimos esas ideas en una propuesta clara y fácil de usar.' },
-      { title: 'Desarrollamos', desc: 'Construimos la solución con tecnología actual y cuidando cada detalle.' },
-      { title: 'Acompañamos', desc: 'Lanzamos el proyecto y lo mejoramos cuando tu negocio lo necesite.' },
+      { title: 'Escuchamos', desc: 'Nos contás cómo funciona tu negocio, qué necesitás y qué te gustaría resolver.' },
+      { title: 'Proponemos', desc: 'Definimos una solución a medida y te presentamos qué incluye, el presupuesto y los plazos.' },
+      { title: 'Diseñamos y desarrollamos', desc: 'Damos forma a tu proyecto con un diseño claro y herramientas fáciles de usar.' },
+      { title: 'Revisamos y ajustamos', desc: 'Te mostramos los avances, escuchamos tu opinión y realizamos los ajustes acordados.' },
+      { title: 'Entregamos y acompañamos', desc: 'Ponemos en marcha la solución y te explicamos cómo usarla. También podemos acordar soporte, mantenimiento y futuras mejoras.' },
     ],
     aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Nosotras',
-    aboutDesc: 'Dofra une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso empezamos por entender cómo trabaja tu negocio y recién después pensamos la solución: clara, a medida y fácil de usar.',
+    aboutDesc: 'Dofra une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso, primero entendemos cómo funciona tu negocio y después diseñamos una solución clara, a medida y fácil de usar.',
     people: [
-      { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada del negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
+      { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada de negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
       { name: 'Victoria', role: 'Ingeniera en software', desc: 'Se ocupa del diseño técnico y el desarrollo, para que cada herramienta funcione bien y sea fácil de usar.' },
     ],
     faqKicker: 'PREGUNTAS FRECUENTES', faqTitle: 'Antes de empezar.',
@@ -57,7 +58,7 @@ const content = {
       { q: '¿Trabajan con clientes de otros países?', a: 'Sí. Trabajamos de forma remota con clientes de cualquier parte del mundo.' },
     ] as Faq[],
     contactKicker: 'CONTACTO', contactTitle: 'Contanos qué necesitás.',
-    contactDesc: 'Escribinos con tus propias palabras. No hace falta saber de tecnología: si todavía no tenés claro qué solución te conviene, te ayudamos a definirlo.',
+    contactDesc: 'Escribinos con tus propias palabras. No hace falta saber de tecnología. Si todavía no tenés claro qué solución te conviene, te ayudamos a definirla.',
     contactSubject: 'Consulta de proyecto — Dofra Software',
     form: {
       requiredNote: 'Los campos marcados con * son obligatorios.',
@@ -104,13 +105,14 @@ const content = {
     ],
     processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
     process: [
-      { title: 'We listen', desc: 'You tell us how your business works and what you would like to solve.' },
-      { title: 'We design', desc: 'We turn those ideas into a clear, easy-to-use proposal.' },
-      { title: 'We build', desc: 'We develop the solution with current technology and attention to detail.' },
-      { title: 'We support', desc: 'We launch the project and improve it whenever your business needs it.' },
+      { title: 'We listen', desc: 'You tell us how your business works, what you need and what you would like to solve.' },
+      { title: 'We propose', desc: 'We define a tailored solution and walk you through what it includes, the budget and the timeline.' },
+      { title: 'We design and build', desc: 'We shape your project with a clear design and easy-to-use tools.' },
+      { title: 'We review and refine', desc: 'We show you our progress, listen to your feedback and make the agreed adjustments.' },
+      { title: 'We deliver and support', desc: 'We launch the solution and show you how to use it. We can also arrange support, maintenance and future improvements.' },
     ],
     aboutKicker: 'ABOUT DOFRA', aboutTitle: 'About Dofra',
-    aboutDesc: "Dofra brings together two perspectives: business and technology. Between us, we have experience at international companies and more than 4 years working in software systems. That's why we first get to know how your business works, and only then design the solution: clear, tailored and easy to use.",
+    aboutDesc: "Dofra brings together two perspectives: business and technology. Between us, we have experience at international companies and more than 4 years working in software systems. That's why we first understand how your business works and then design a clear, tailored, easy-to-use solution.",
     people: [
       { name: 'Franca', role: 'Accountant', desc: 'Brings the business perspective: costs, payments and admin processes, so every solution meets real needs.' },
       { name: 'Victoria', role: 'Software engineer', desc: 'Leads the technical design and development, so every tool works well and is easy to use.' },
@@ -128,7 +130,7 @@ const content = {
       { q: 'Do you work with clients in other countries?', a: 'Yes. We work remotely with clients anywhere in the world.' },
     ] as Faq[],
     contactKicker: 'CONTACT', contactTitle: 'Tell us what you need.',
-    contactDesc: "Write to us in your own words. No technical knowledge needed: if you're not sure which solution is right for you, we'll help you figure it out.",
+    contactDesc: "Write to us in your own words. No technical knowledge needed. If you're not sure which solution is right for you, we'll help you figure it out.",
     contactSubject: 'Project inquiry — Dofra Software',
     form: {
       requiredNote: 'Fields marked with * are required.',
@@ -309,7 +311,7 @@ export default function App() {
 
       <section className="section section-soft" aria-labelledby="proceso-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
-        <ol className="grid grid-4 process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
+        <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
       </div></section>
 
       <section className="section section-dark" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>

@@ -148,6 +148,7 @@ main:focus { outline: none; }
 .svc-tags li { font-size: 13px; line-height: 1.3; color: #333333; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
 
 /* ---------- Proceso ---------- */
+.process-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .process-card { padding: 22px; }
 .process-number { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--navy-950); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 14px; }
 .process-card h3 { font-size: 18px; margin: 16px 0 6px; }
@@ -234,6 +235,10 @@ main:focus { outline: none; }
    Responsive
    ========================================================= */
 @media (max-width: 1080px) {
+  /* Cinco pasos: 3 + 2 en tablet para que ninguna tarjeta quede sola */
+  .process-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .process-grid > li { grid-column: span 2; }
+  .process-grid > li:nth-child(n + 4) { grid-column: span 3; }
   .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact-panel { grid-template-columns: 1fr; }
   .contact-intro { max-width: 640px; }
@@ -255,6 +260,8 @@ main:focus { outline: none; }
 }
 
 @media (max-width: 700px) {
+  .process-grid { grid-template-columns: 1fr; }
+  .process-grid > li, .process-grid > li:nth-child(n + 4) { grid-column: auto; }
   .grid-2 { grid-template-columns: 1fr; }
   .svc-grid { grid-template-columns: 1fr; }
 }
