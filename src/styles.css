@@ -291,8 +291,20 @@ main:focus { outline: none; }
   .eyebrow-line { display: none; } /* sin líneas decorativas antes de etiquetas */
   .hero h1 { font-size: clamp(30px, 8.2vw, 36px); letter-spacing: -.04em; }
   .hero-lead { margin: 12px auto 0; font-size: 16px; line-height: 1.6; }
-  .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 20px; }
-  .hero-actions .button { width: 100%; }
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 20px; }
+  /* Botones del hero en mobile: mismo estilo para ambos (blanco con texto azul oscuro) */
+  .hero-actions .button,
+  .hero-actions .button-primary,
+  .hero-actions .button-ghost {
+    width: 100%; min-height: 48px; padding: 12px 20px; gap: 10px;
+    font-size: 15px; font-weight: 700; line-height: 1.2;
+    background: #FFFFFF; color: #0B1930; border: 0; border-radius: 11px; box-shadow: none;
+    transition: background-color .2s ease, transform .2s ease;
+  }
+  .hero-actions .button svg { color: #0B1930; }
+  .hero-actions .button:hover { background: #EEF2F7; transform: none; }
+  .hero-actions .button:active { background: #E2E8F0; transform: scale(.99); }
+  .hero-actions .button:focus-visible { outline: 3px solid var(--brand-dot); outline-offset: 3px; }
   .hero-trust { display: none; } /* fuera de la composición mobile aprobada */
 }
 
