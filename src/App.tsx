@@ -40,7 +40,10 @@ const content = {
       { title: 'Entregamos y acompañamos', desc: 'Ponemos en marcha la solución y te explicamos cómo usarla. También podemos acordar soporte, mantenimiento y futuras mejoras.' },
     ],
     aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Nosotras',
-    aboutDesc: 'Dofra une dos miradas: la del negocio y la de la tecnología. Entre las dos sumamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas. Por eso, primero entendemos cómo funciona tu negocio y después diseñamos una solución clara, a medida y fácil de usar.',
+    aboutDesc: [
+      'Somos Franca y Victoria, contadora pública e ingeniera en software. Creamos Dofra para ayudar a negocios y profesionales a transformar sus ideas y necesidades en herramientas digitales que les faciliten el trabajo.',
+      'Combinamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas con una forma de trabajar cercana: escuchamos, preguntamos y buscamos entender qué necesita cada proyecto. Así, desarrollamos soluciones a medida que tienen sentido para tu negocio y son fáciles de usar.',
+    ],
     people: [
       { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada de negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
       { name: 'Victoria', role: 'Ingeniera en software', desc: 'Se ocupa del diseño técnico y el desarrollo, para que cada herramienta funcione bien y sea fácil de usar.' },
@@ -112,7 +115,10 @@ const content = {
       { title: 'We deliver and support', desc: 'We launch the solution and show you how to use it. We can also arrange support, maintenance and future improvements.' },
     ],
     aboutKicker: 'ABOUT DOFRA', aboutTitle: 'About Dofra',
-    aboutDesc: "Dofra brings together two perspectives: business and technology. Between us, we have experience at international companies and more than 4 years working in software systems. That's why we first understand how your business works and then design a clear, tailored, easy-to-use solution.",
+    aboutDesc: [
+      'We are Franca and Victoria, a certified public accountant and a software engineer. We created Dofra to help businesses and professionals turn their ideas and needs into digital tools that make their work easier.',
+      'We bring together experience at international companies and more than 4 years working in software systems with a hands-on, personal approach: we listen, ask questions and make sure we understand what each project needs. That way, we build tailored solutions that make sense for your business and are easy to use.',
+    ],
     people: [
       { name: 'Franca', role: 'Accountant', desc: 'Brings the business perspective: costs, payments and admin processes, so every solution meets real needs.' },
       { name: 'Victoria', role: 'Software engineer', desc: 'Leads the technical design and development, so every tool works well and is easy to use.' },
@@ -317,7 +323,7 @@ export default function App() {
       <section className="section section-dark" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
         <div className="about-copy">
           <h2 id="nosotras-titulo">{t.aboutTitle}</h2>
-          <p>{t.aboutDesc}</p>
+          {t.aboutDesc.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
         </div>
         <ul className="people">{t.people.map(person => <li className="person-card" key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul>
       </div></section>
