@@ -1,6 +1,7 @@
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
+import ServiceArt from './components/ServiceArt'
 
 type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
@@ -301,16 +302,15 @@ export default function App() {
 
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
-        <div className="svc-grid" data-reveal>{t.services.map((s, i) => <article className="svc-card" key={s.title}>
-          <div className="svc-head">
-            <span className="svc-icon"><Icon name={s.icon} size={20} /></span>
+        <div className="svc-grid" data-reveal>{t.services.map(s => <article className="svc-card" key={s.title}>
+          <div className="svc-visual"><ServiceArt kind={s.icon} /></div>
+          <div className="svc-body">
             <h3>{s.title}</h3>
-            <span className="svc-index" aria-hidden="true">0{i + 1}</span>
-          </div>
-          <p className="svc-desc">{s.desc}</p>
-          <div className="svc-examples">
-            <p className="svc-label">{t.examplesLabel}</p>
-            <ul className="svc-tags">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
+            <p className="svc-desc">{s.desc}</p>
+            <div className="svc-examples">
+              <span className="svc-label">{t.examplesLabel}:</span>{' '}
+              <ul className="svc-tags">{s.examples.map(ex => <li key={ex}>{ex}</li>)}</ul>
+            </div>
           </div>
         </article>)}</div>
       </div></section>
