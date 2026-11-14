@@ -16,7 +16,7 @@ const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[
 const content = {
   es: {
     skip: 'Saltar al contenido',
-    nav: ['Inicio', 'Servicios', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
     navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Switch to English', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
@@ -87,12 +87,27 @@ const content = {
       navLabel: 'Navegación del pie de página', socialLabel: 'Redes sociales', newTab: 'se abre en una pestaña nueva',
       slogan: 'Your vision. Our code.',
     },
+    work: {
+      kicker: 'PROYECTOS', title: 'Proyectos que hablan por nosotros.', desc: 'Soluciones digitales diseñadas para necesidades reales.',
+      view: 'Ver proyecto', newTab: 'se abre en una pestaña nueva',
+      items: [
+        { id: 'odonto', name: 'Odonto App', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1600, h: 1000,
+          desc: 'Gestión integral para clínicas odontológicas: pacientes con historia clínica y odontograma, agenda por profesional y consultorio, lista de espera, presupuestos, pagos con cuenta corriente, reportes y un visor 3D de tomografías.',
+          note: 'Captura real · datos sintéticos', alt: 'Pantalla de inicio de Odonto App con casos clínicos recientes, actividad y estado de los módulos, con datos sintéticos.' },
+        { id: 'spa-gestor', name: 'Spa Gestor', category: 'Estética · Gestión y reservas', url: 'https://spa-gestor.pages.dev/', w: 1600, h: 960,
+          desc: 'Software para centros de estética y spas: agenda de turnos, fichas de clientes, tratamientos con catálogo público, pagos y deudas, promociones y reportes. Cada negocio trabaja en su propio espacio dentro de la misma plataforma.',
+          note: 'Captura real · datos ficticios', alt: 'Agenda semanal de Spa Gestor con turnos de un centro de estética ficticio.' },
+        { id: 'appfotos', name: 'AppFotos', category: 'Fotografía · Galerías y ventas', url: 'https://appfotos.dofrasoftware.workers.dev/', w: 1325, h: 590,
+          desc: 'Plataforma para fotógrafos profesionales: galerías con búsqueda y filtros, un sitio web propio con plantillas —incluida una para fotografía deportiva—, carrito y gestión de pedidos. La venta online con Mercado Pago está preparada para activarse.',
+          note: 'Captura real', alt: 'Portada de AppFotos con un paisaje de montaña y el título «Cada imagen merece un lugar especial».' },
+      ],
+    },
     rights: 'Todos los derechos reservados.',
     heroVisual: 'Logo de Dofra formado por partículas blancas y terracota.',
   },
   en: {
     skip: 'Skip to content',
-    nav: ['Home', 'Services', 'About us', 'Contact'], talk: "Let's talk",
+    nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
     navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Cambiar a español', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
@@ -162,6 +177,21 @@ const content = {
       desc: 'Tell us what you need and we’ll find the best way to help.', cta: 'Let’s talk',
       navLabel: 'Footer navigation', socialLabel: 'Social media', newTab: 'opens in a new tab',
       slogan: 'Your vision. Our code.',
+    },
+    work: {
+      kicker: 'PROJECTS', title: 'Projects that speak for us.', desc: 'Digital solutions designed for real needs.',
+      view: 'View project', newTab: 'opens in a new tab',
+      items: [
+        { id: 'odonto', name: 'Odonto App', category: 'Healthcare · Clinic management', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1600, h: 1000,
+          desc: 'End-to-end management for dental clinics: patients with clinical records and dental charts, scheduling by practitioner and treatment room, waitlist, quotes, payments with account balances, reports and a 3D CT viewer.',
+          note: 'Real screenshot · synthetic data', alt: 'Odonto App home screen with recent clinical cases, activity and module status, using synthetic data.' },
+        { id: 'spa-gestor', name: 'Spa Gestor', category: 'Beauty · Management and bookings', url: 'https://spa-gestor.pages.dev/', w: 1600, h: 960,
+          desc: 'Software for beauty clinics and spas: appointment calendar, client records, treatments with a public catalog, payments and balances, promotions and reports. Each business works in its own space within the same platform.',
+          note: 'Real screenshot · sample data', alt: 'Spa Gestor weekly calendar with appointments for a fictional beauty clinic.' },
+        { id: 'appfotos', name: 'AppFotos', category: 'Photography · Galleries and sales', url: 'https://appfotos.dofrasoftware.workers.dev/', w: 1325, h: 590,
+          desc: 'A platform for professional photographers: galleries with search and filters, their own website with templates —including one for sports photography—, cart and order management. Online sales with Mercado Pago are ready to be switched on.',
+          note: 'Real screenshot', alt: 'AppFotos home page with a mountain landscape and the headline “Every image deserves a special place”.' },
+      ],
     },
     rights: 'All rights reserved.',
     heroVisual: 'Dofra logo made of white and terracotta particles.',
@@ -297,7 +327,7 @@ export default function App() {
     document.title = lang === 'es' ? 'Dofra Software | Páginas web y sistemas a medida' : 'Dofra Software | Websites and custom systems'
   }, [lang])
 
-  const navIds = ['inicio', 'servicios', 'nosotras', 'contacto']
+  const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
 
@@ -385,6 +415,23 @@ export default function App() {
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
         <div data-reveal><ServicesCarousel services={t.services} examplesLabel={t.examplesLabel} text={t.carousel} /></div>
+      </div></section>
+
+      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+        <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
+        <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
+          <figure className="work-shot">
+            <img src={`/proyectos/${item.id}.webp`} srcSet={`/proyectos/${item.id}-800.webp 800w, /proyectos/${item.id}.webp ${item.w}w`} sizes="(max-width: 900px) calc(100vw - 32px), 680px"
+              width={item.w} height={item.h} alt={item.alt} loading="lazy" decoding="async" />
+          </figure>
+          <div className="work-copy">
+            <p className="work-category">{item.category}</p>
+            <h3 id={`proyecto-${item.id}`}>{item.name}</h3>
+            <p className="work-desc">{item.desc}</p>
+            <p className="work-note">{item.note}</p>
+            <a className="work-link" href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.work.view}: ${item.name} (${t.work.newTab})`}>{t.work.view}<Icon name="arrow" size={18} /></a>
+          </div>
+        </article>)}</div>
       </div></section>
 
       <section className="section section-soft" aria-labelledby="proceso-titulo"><div className="container">
