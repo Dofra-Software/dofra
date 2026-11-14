@@ -236,7 +236,6 @@ main:focus { outline: none; }
 
 /* ---------- Contacto ---------- */
 .contact-panel { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 56px); align-items: start; background: var(--brand-bg); color: #fff; border-radius: 22px; padding: clamp(28px, 4.5vw, 56px); position: relative; overflow: hidden; }
-.contact-panel::before { content: ''; position: absolute; width: 520px; height: 520px; left: -160px; top: -260px; border-radius: 50%; background: radial-gradient(circle, #C4938E55, transparent 65%); pointer-events: none; }
 .contact-panel > * { position: relative; }
 .contact .kicker { color: var(--accent-on-dark); }
 .contact-intro > p:not(.kicker) { margin-top: 14px; font-size: 16px; line-height: 1.75; color: #FFFFFFBF; }
