@@ -85,7 +85,7 @@ const content = {
       kicker: 'TU PRÓXIMO PROYECTO EMPIEZA ACÁ', title: ['¿Tenés una idea?', 'Hagámosla realidad.'],
       desc: 'Contanos qué necesitás y vemos cómo ayudarte.', cta: 'Hablemos',
       navLabel: 'Navegación del pie de página', socialLabel: 'Redes sociales', newTab: 'se abre en una pestaña nueva',
-      slogan: 'Your vision. Our code.',
+      slogan: 'Built by Dofra.',
     },
     work: {
       kicker: 'PROYECTOS', title: 'Proyectos que hablan por nosotros.', desc: 'Soluciones digitales diseñadas para necesidades reales.',
@@ -176,7 +176,7 @@ const content = {
       kicker: 'YOUR NEXT PROJECT STARTS HERE', title: ['Have an idea?', 'Let’s make it happen.'],
       desc: 'Tell us what you need and we’ll find the best way to help.', cta: 'Let’s talk',
       navLabel: 'Footer navigation', socialLabel: 'Social media', newTab: 'opens in a new tab',
-      slogan: 'Your vision. Our code.',
+      slogan: 'Built by Dofra.',
     },
     work: {
       kicker: 'PROJECTS', title: 'Projects that speak for us.', desc: 'Digital solutions designed for real needs.',
