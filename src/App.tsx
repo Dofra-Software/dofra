@@ -91,9 +91,9 @@ const content = {
       kicker: 'PROYECTOS', title: 'Proyectos que hablan por nosotros.', desc: 'Soluciones digitales diseñadas para necesidades reales.',
       view: 'Ver proyecto', newTab: 'se abre en una pestaña nueva',
       items: [
-        { id: 'odonto', name: 'Odonto App', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1600, h: 1000,
+        { id: 'odonto360', name: 'odonto360', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1342, h: 594,
           desc: 'Gestión integral para clínicas odontológicas: pacientes con historia clínica y odontograma, agenda por profesional y consultorio, lista de espera, presupuestos, pagos con cuenta corriente, reportes y un visor 3D de tomografías.',
-          note: 'Captura real · datos sintéticos', alt: 'Pantalla de inicio de Odonto App con casos clínicos recientes, actividad y estado de los módulos, con datos sintéticos.' },
+          note: 'Captura real · datos sintéticos', alt: 'Módulo Pacientes de odonto360 con el listado de pacientes de la clínica y datos sintéticos.' },
         { id: 'spa-gestor', name: 'Spa Gestor', category: 'Estética · Gestión y reservas', url: 'https://spa-gestor.pages.dev/', w: 1600, h: 960,
           desc: 'Software para centros de estética y spas: agenda de turnos, fichas de clientes, tratamientos con catálogo público, pagos y deudas, promociones y reportes. Cada negocio trabaja en su propio espacio dentro de la misma plataforma.',
           note: 'Captura real · datos ficticios', alt: 'Agenda semanal de Spa Gestor con turnos de un centro de estética ficticio.' },
@@ -182,9 +182,9 @@ const content = {
       kicker: 'PROJECTS', title: 'Projects that speak for us.', desc: 'Digital solutions designed for real needs.',
       view: 'View project', newTab: 'opens in a new tab',
       items: [
-        { id: 'odonto', name: 'Odonto App', category: 'Healthcare · Clinic management', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1600, h: 1000,
+        { id: 'odonto360', name: 'odonto360', category: 'Healthcare · Clinic management', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1342, h: 594,
           desc: 'End-to-end management for dental clinics: patients with clinical records and dental charts, scheduling by practitioner and treatment room, waitlist, quotes, payments with account balances, reports and a 3D CT viewer.',
-          note: 'Real screenshot · synthetic data', alt: 'Odonto App home screen with recent clinical cases, activity and module status, using synthetic data.' },
+          note: 'Real screenshot · synthetic data', alt: 'odonto360 Patients module showing the clinic patient list with synthetic data.' },
         { id: 'spa-gestor', name: 'Spa Gestor', category: 'Beauty · Management and bookings', url: 'https://spa-gestor.pages.dev/', w: 1600, h: 960,
           desc: 'Software for beauty clinics and spas: appointment calendar, client records, treatments with a public catalog, payments and balances, promotions and reports. Each business works in its own space within the same platform.',
           note: 'Real screenshot · sample data', alt: 'Spa Gestor weekly calendar with appointments for a fictional beauty clinic.' },

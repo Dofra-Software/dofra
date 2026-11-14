@@ -23,7 +23,7 @@ npm run dev
 1. **Formulario (FormSubmit):** el primer envío hacia `info@dofrasoftware.com` dispara un correo de activación de FormSubmit. Hay que abrirlo y confirmar; hasta entonces el formulario muestra el mensaje de error (nunca uno de éxito falso).
 2. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
 3. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
-4. **Proyectos:** Odonto App, Spa Gestor y AppFotos, con capturas reales en `public/proyectos/` (versión grande y de 800 px). Odonto y Spa Gestor usan datos sintéticos o ficticios; la foto de AppFotos es de Unsplash (uso aprobado). Los enlaces "Ver proyecto" apuntan a las demos y landings públicas.
+4. **Proyectos:** odonto360, Spa Gestor y AppFotos, con capturas reales en `public/proyectos/` (versión grande y de 800 px). odonto360 y Spa Gestor usan datos sintéticos o ficticios; la foto de AppFotos es de Unsplash (uso aprobado). Los enlaces "Ver proyecto" apuntan a las demos y landings públicas.
 5. **Sobre Dofra:** presentación de Franca y Victoria cargada; faltan las fotos (opcional).
 6. **Panel del inicio:** es una demostración con datos ficticios y está identificado como tal.
 
