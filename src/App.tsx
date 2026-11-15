@@ -100,6 +100,9 @@ const content = {
         { id: 'appfotos', name: 'AppFotos', category: 'Fotografía · Galerías y ventas', url: 'https://appfotos.dofrasoftware.workers.dev/', w: 1325, h: 590,
           desc: 'Plataforma para fotógrafos profesionales: galerías con búsqueda y filtros, un sitio web propio con plantillas —incluida una para fotografía deportiva—, carrito y gestión de pedidos. La venta online con Mercado Pago está preparada para activarse.',
           note: 'Captura real', alt: 'Portada de AppFotos con un paisaje de montaña y el título «Cada imagen merece un lugar especial».' },
+        { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Desarrollo web', url: 'https://rio-cine.pages.dev/', w: 700, h: 316,
+          desc: 'Sitio web para una productora audiovisual de Uruguay, con una propuesta visual cinematográfica que destaca su identidad y sus producciones.',
+          note: 'Captura real', alt: 'Portada del sitio de RÍO CINE con cámara cinematográfica, logotipo y navegación sobre fondo oscuro.' },
       ],
     },
     rights: 'Todos los derechos reservados.',
@@ -191,6 +194,9 @@ const content = {
         { id: 'appfotos', name: 'AppFotos', category: 'Photography · Galleries and sales', url: 'https://appfotos.dofrasoftware.workers.dev/', w: 1325, h: 590,
           desc: 'A platform for professional photographers: galleries with search and filters, their own website with templates —including one for sports photography—, cart and order management. Online sales with Mercado Pago are ready to be switched on.',
           note: 'Real screenshot', alt: 'AppFotos home page with a mountain landscape and the headline “Every image deserves a special place”.' },
+        { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Web development', url: 'https://rio-cine.pages.dev/', w: 700, h: 316,
+          desc: 'Website for an audiovisual production company in Uruguay, featuring a cinematic visual experience that highlights its identity and productions.',
+          note: 'Real screenshot', alt: 'RÍO CINE website hero with a cinema camera, brand logo and navigation against a dark background.' },
       ],
     },
     rights: 'All rights reserved.',
@@ -421,7 +427,7 @@ export default function App() {
         <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
         <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
           <figure className="work-shot">
-            <img src={`/proyectos/${item.id}.webp`} srcSet={`/proyectos/${item.id}-800.webp 800w, /proyectos/${item.id}.webp ${item.w}w`} sizes="(max-width: 900px) calc(100vw - 32px), 680px"
+            <img src={`/proyectos/${item.id}.webp`} srcSet={item.id === 'rio-cine' ? undefined : `/proyectos/${item.id}-800.webp 800w, /proyectos/${item.id}.webp ${item.w}w`} sizes="(max-width: 900px) calc(100vw - 32px), 680px"
               width={item.w} height={item.h} alt={item.alt} loading="lazy" decoding="async" />
           </figure>
           <div className="work-copy">
