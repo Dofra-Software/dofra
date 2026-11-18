@@ -102,8 +102,10 @@ export default function DofraParticles({ label }: { label: string }) {
     let focal = 900  // distancia focal de la perspectiva
     let raf = 0
     let last = 0
+    let pixelRatio = 0
+    let fontsSettled = false
     let time = 0
-    let visible = true
+    let visible = false
     let disposed = false
     const pointer = { x: -9999, y: -9999, active: false }
     // Listas reutilizadas por capa de profundidad (evitan crear arrays en cada cuadro).
@@ -153,7 +155,12 @@ export default function DofraParticles({ label }: { label: string }) {
 
     const frame = (now: number) => {
       raf = 0
-      if (disposed || !visible) return
+      if (disposed || reduced || !visible || document.hidden) return
+      const interval = coarseQuery.matches ? 1000 / 30 : 1000 / 60
+      if (last && now - last < interval - 2) {
+        raf = requestAnimationFrame(frame)
+        return
+      }
       const dt = last ? Math.min((now - last) / 16.667, 2.5) : 1
       last = now
       time += dt / 60
@@ -200,20 +207,27 @@ export default function DofraParticles({ label }: { label: string }) {
     }
 
     const start = () => {
-      if (!raf && visible && !reduced && !disposed && particles.length) { last = 0; raf = requestAnimationFrame(frame) }
+      if (!raf && visible && !reduced && !disposed && !document.hidden && particles.length) { last = 0; raf = requestAnimationFrame(frame) }
     }
     const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
     const renderStatic = () => render(-MAX_ANGLE * 0.6, 0) // pose fija que deja ver la profundidad
+    const updatePlayback = () => {
+      if (visible && !document.hidden) start()
+      else stop()
+    }
 
     const build = (animateIn: boolean) => {
       const rect = wrap.getBoundingClientRect()
-      width = rect.width
-      height = rect.height
-      if (width < 2 || height < 2) return
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const nextWidth = Math.round(rect.width)
+      const nextHeight = Math.round(rect.height)
+      const dpr = Math.min(window.devicePixelRatio || 1, coarseQuery.matches ? 1.5 : 2)
+      if (nextWidth < 2 || nextHeight < 2) return
+      width = nextWidth
+      height = nextHeight
+      pixelRatio = dpr
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0)
 
       const sampled = sampleLogo(width, height, width < 420 ? 620 : 1100)
       step = sampled.step
@@ -243,36 +257,42 @@ export default function DofraParticles({ label }: { label: string }) {
     }
 
     const fontsReady = document.fonts?.load ? document.fonts.load(FONT).catch(() => undefined) : Promise.resolve()
-    fontsReady.then(() => { if (!disposed) build(true) })
+    fontsReady.then(() => {
+      if (disposed) return
+      fontsSettled = true
+      build(true)
+    })
 
     let resizeTimer = 0
-    let lastWidth = 0
-    const ro = new ResizeObserver(([entry]) => {
-      // En celulares la barra del navegador cambia la altura al hacer scroll: solo reconstruimos si cambia el ancho.
-      const w = Math.round(entry.contentRect.width)
-      if (w === lastWidth) return
-      lastWidth = w
+    const onResize = () => {
+      if (!fontsSettled) return
       window.clearTimeout(resizeTimer)
-      resizeTimer = window.setTimeout(() => build(particles.length === 0), 120)
-    })
+      resizeTimer = window.setTimeout(() => {
+        const rect = wrap.getBoundingClientRect()
+        const dpr = Math.min(window.devicePixelRatio || 1, coarseQuery.matches ? 1.5 : 2)
+        if (Math.round(rect.width) !== width || Math.round(rect.height) !== height || dpr !== pixelRatio) {
+          build(particles.length === 0)
+        }
+      }, 120)
+    }
+    const ro = new ResizeObserver(onResize)
     ro.observe(wrap)
 
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
-      if (visible) start(); else stop()
+      updatePlayback()
     })
     io.observe(wrap)
 
     // --- Mouse: repulsión magnética ---
     const onMove = (e: PointerEvent) => {
-      if (reduced) return
+      if (reduced || e.pointerType === 'touch') return
       const rect = canvas.getBoundingClientRect()
       pointer.x = e.clientX - rect.left
       pointer.y = e.clientY - rect.top
       pointer.active = true
     }
     const onLeave = () => { pointer.active = false; pointer.x = pointer.y = -9999 }
-    const onUp = (e: PointerEvent) => { if (e.pointerType !== 'mouse') window.setTimeout(onLeave, 300) }
 
     // --- Celular: dispersión leve en X, Y y Z proporcional a la velocidad del scroll ---
     let lastScrollY = window.scrollY
@@ -293,15 +313,17 @@ export default function DofraParticles({ label }: { label: string }) {
       }
     }
 
-    const onMotionChange = () => { reduced = motionQuery.matches; build(false) }
+    const onMotionChange = () => { reduced = motionQuery.matches; if (fontsSettled) build(false) }
 
     wrap.addEventListener('pointermove', onMove)
     wrap.addEventListener('pointerdown', onMove)
-    wrap.addEventListener('pointerup', onUp)
     wrap.addEventListener('pointerleave', onLeave)
     wrap.addEventListener('pointercancel', onLeave)
     window.addEventListener('scroll', onScroll, { passive: true })
     motionQuery.addEventListener('change', onMotionChange)
+    coarseQuery.addEventListener('change', onResize)
+    window.addEventListener('resize', onResize)
+    document.addEventListener('visibilitychange', updatePlayback)
 
     return () => {
       disposed = true
@@ -311,11 +333,13 @@ export default function DofraParticles({ label }: { label: string }) {
       io.disconnect()
       wrap.removeEventListener('pointermove', onMove)
       wrap.removeEventListener('pointerdown', onMove)
-      wrap.removeEventListener('pointerup', onUp)
       wrap.removeEventListener('pointerleave', onLeave)
       wrap.removeEventListener('pointercancel', onLeave)
       window.removeEventListener('scroll', onScroll)
       motionQuery.removeEventListener('change', onMotionChange)
+      coarseQuery.removeEventListener('change', onResize)
+      window.removeEventListener('resize', onResize)
+      document.removeEventListener('visibilitychange', updatePlayback)
     }
   }, [])
 

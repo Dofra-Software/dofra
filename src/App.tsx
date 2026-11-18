@@ -7,6 +7,24 @@ type Faq = { q: string; a: string; /** true = borrador que necesita confirmació
 
 const CONTACT_EMAIL = 'info@dofrasoftware.com'
 
+// sizes replica el contenedor de 1200 px, la grilla 7:5, su separación y
+// el borde de 1 px. Si el navegador admite auto, usa el ancho medido.
+const PROJECT_IMAGE_SIZES = 'auto, (max-width: 900px) calc(100vw - 2 * clamp(16px, 4vw, 40px) - 2px), calc((min(1200px, 100vw - 2 * clamp(16px, 4vw, 40px)) - clamp(24px, 4vw, 56px)) * 0.583333 - 2px)'
+const projectImages: Record<string, { width: number; height: number; variants: readonly number[] }> = {
+  'odonto360': { width: 2400, height: 1268, variants: [480, 800, 1200, 1600, 1920] },
+  'spa-gestor': { width: 1600, height: 960, variants: [480, 800, 1200] },
+  appfotos: { width: 2400, height: 1067, variants: [480, 800, 1200, 1600, 1920] },
+  'rio-cine': { width: 2400, height: 1350, variants: [480, 800, 1200, 1600, 1920] },
+}
+
+function ProjectImage({ id, alt }: { id: string; alt: string }) {
+  const { width, height, variants } = projectImages[id]
+  const path = `/proyectos/${id}`
+  const srcSet = [...variants.map(size => `${path}-${size}.webp ${size}w`), `${path}.webp ${width}w`].join(', ')
+  return <img src={`${path}-800.webp`} srcSet={srcSet} sizes={PROJECT_IMAGE_SIZES}
+    width={width} height={height} alt={alt} loading="lazy" decoding="async" />
+}
+
 /** Redes oficiales. Un ícono solo se muestra si su URL está cargada. */
 const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[] = [
   { id: 'instagram', name: 'Instagram', url: 'https://www.instagram.com/dofra.software/' },
@@ -91,16 +109,16 @@ const content = {
       kicker: 'PROYECTOS', title: 'Proyectos que hablan por nosotros.', desc: 'Soluciones digitales diseñadas para necesidades reales.',
       view: 'Ver proyecto', newTab: 'se abre en una pestaña nueva',
       items: [
-        { id: 'odonto360', name: 'odonto360', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1342, h: 594,
+        { id: 'odonto360', name: 'odonto360', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/',
           desc: 'Gestión integral para clínicas odontológicas: pacientes con historia clínica y odontograma, agenda por profesional y consultorio, lista de espera, presupuestos, pagos con cuenta corriente, reportes y un visor 3D de tomografías.',
           note: 'Captura real · datos sintéticos', alt: 'Módulo Pacientes de odonto360 con el listado de pacientes de la clínica y datos sintéticos.' },
-        { id: 'spa-gestor', name: 'Spa Gestor', category: 'Estética · Gestión y reservas', url: 'https://spa-gestor.pages.dev/', w: 1600, h: 960,
+        { id: 'spa-gestor', name: 'Spa Gestor', category: 'Estética · Gestión y reservas', url: 'https://spa-gestor.pages.dev/',
           desc: 'Software para centros de estética y spas: agenda de turnos, fichas de clientes, tratamientos con catálogo público, pagos y deudas, promociones y reportes. Cada negocio trabaja en su propio espacio dentro de la misma plataforma.',
           note: 'Captura real · datos ficticios', alt: 'Agenda semanal de Spa Gestor con turnos de un centro de estética ficticio.' },
-        { id: 'appfotos', name: 'AppFotos', category: 'Fotografía · Galerías y ventas', url: 'https://appfotos.dofrasoftware.workers.dev/', w: 1325, h: 590,
+        { id: 'appfotos', name: 'AppFotos', category: 'Fotografía · Galerías y ventas', url: 'https://appfotos.dofrasoftware.workers.dev/',
           desc: 'Plataforma para fotógrafos profesionales: galerías con búsqueda y filtros, un sitio web propio con plantillas —incluida una para fotografía deportiva—, carrito y gestión de pedidos. La venta online con Mercado Pago está preparada para activarse.',
           note: 'Captura real', alt: 'Portada de AppFotos con un paisaje de montaña y el título «Cada imagen merece un lugar especial».' },
-        { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Desarrollo web', url: 'https://rio-cine.pages.dev/', w: 700, h: 316,
+        { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Desarrollo web', url: 'https://rio-cine.pages.dev/',
           desc: 'Sitio web para una productora audiovisual de Uruguay, con una propuesta visual cinematográfica que destaca su identidad y sus producciones.',
           note: 'Captura real', alt: 'Portada del sitio de RÍO CINE con cámara cinematográfica, logotipo y navegación sobre fondo oscuro.' },
       ],
@@ -185,16 +203,16 @@ const content = {
       kicker: 'PROJECTS', title: 'Projects that speak for us.', desc: 'Digital solutions designed for real needs.',
       view: 'View project', newTab: 'opens in a new tab',
       items: [
-        { id: 'odonto360', name: 'odonto360', category: 'Healthcare · Clinic management', url: 'https://odonto.dofrasoftware.workers.dev/', w: 1342, h: 594,
+        { id: 'odonto360', name: 'odonto360', category: 'Healthcare · Clinic management', url: 'https://odonto.dofrasoftware.workers.dev/',
           desc: 'End-to-end management for dental clinics: patients with clinical records and dental charts, scheduling by practitioner and treatment room, waitlist, quotes, payments with account balances, reports and a 3D CT viewer.',
           note: 'Real screenshot · synthetic data', alt: 'odonto360 Patients module showing the clinic patient list with synthetic data.' },
-        { id: 'spa-gestor', name: 'Spa Gestor', category: 'Beauty · Management and bookings', url: 'https://spa-gestor.pages.dev/', w: 1600, h: 960,
+        { id: 'spa-gestor', name: 'Spa Gestor', category: 'Beauty · Management and bookings', url: 'https://spa-gestor.pages.dev/',
           desc: 'Software for beauty clinics and spas: appointment calendar, client records, treatments with a public catalog, payments and balances, promotions and reports. Each business works in its own space within the same platform.',
           note: 'Real screenshot · sample data', alt: 'Spa Gestor weekly calendar with appointments for a fictional beauty clinic.' },
-        { id: 'appfotos', name: 'AppFotos', category: 'Photography · Galleries and sales', url: 'https://appfotos.dofrasoftware.workers.dev/', w: 1325, h: 590,
+        { id: 'appfotos', name: 'AppFotos', category: 'Photography · Galleries and sales', url: 'https://appfotos.dofrasoftware.workers.dev/',
           desc: 'A platform for professional photographers: galleries with search and filters, their own website with templates —including one for sports photography—, cart and order management. Online sales with Mercado Pago are ready to be switched on.',
           note: 'Real screenshot', alt: 'AppFotos home page with a mountain landscape and the headline “Every image deserves a special place”.' },
-        { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Web development', url: 'https://rio-cine.pages.dev/', w: 700, h: 316,
+        { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Web development', url: 'https://rio-cine.pages.dev/',
           desc: 'Website for an audiovisual production company in Uruguay, featuring a cinematic visual experience that highlights its identity and productions.',
           note: 'Real screenshot', alt: 'RÍO CINE website hero with a cinema camera, brand logo and navigation against a dark background.' },
       ],
@@ -237,17 +255,16 @@ function Brand({ light = false, label }: { light?: boolean; label: string }) {
 /** Aparición suave de bloques al entrar en pantalla. Sin efecto con movimiento reducido. */
 function useReveal() {
   useEffect(() => {
-    const root = document.documentElement
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return
-    root.classList.add('reveal-on')
     const io = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        // También se muestran los bloques que quedaron arriba tras un salto de navegación.
-        if (entry.isIntersecting || entry.boundingClientRect.top < 0) { entry.target.classList.add('is-visible'); io.unobserve(entry.target) }
+        if (!entry.isIntersecting) continue
+        entry.target.classList.add('is-visible')
+        io.unobserve(entry.target)
       }
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 })
+    })
     document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el))
-    return () => { io.disconnect(); root.classList.remove('reveal-on') }
+    return () => io.disconnect()
   }, [])
 }
 
@@ -406,7 +423,7 @@ export default function App() {
     <main id="contenido" tabIndex={-1}>
       <section className="hero" id="inicio" aria-labelledby="hero-titulo"><div className="container hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow"><span className="eyebrow-line" aria-hidden="true" />{t.eyebrow}</p>
+          <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
           <p className="hero-lead">{t.heroDesc}</p>
           <div className="hero-actions">
@@ -427,8 +444,7 @@ export default function App() {
         <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
         <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
           <figure className="work-shot">
-            <img src={`/proyectos/${item.id}.webp`} srcSet={item.id === 'rio-cine' ? undefined : `/proyectos/${item.id}-800.webp 800w, /proyectos/${item.id}.webp ${item.w}w`} sizes="(max-width: 900px) calc(100vw - 32px), 680px"
-              width={item.w} height={item.h} alt={item.alt} loading="lazy" decoding="async" />
+            <ProjectImage id={item.id} alt={item.alt} />
           </figure>
           <div className="work-copy">
             <p className="work-category">{item.category}</p>
