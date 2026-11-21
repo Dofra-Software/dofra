@@ -6,6 +6,12 @@ type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
 
 const CONTACT_EMAIL = 'info@dofrasoftware.com'
+// Receptor del formulario en Google Apps Script (apps-script/Code.gs, ver docs/FORMULARIO.md).
+// FormSubmit está detrás de IP de Cloudflare que se bloquean en España en horario de partidos.
+// Implementación «Formulario de contacto de dofrasoftware.com (v1)» en la cuenta de Google de Dofra.
+// La URL es pública por diseño (no es un secreto). Si quedara vacía, se usaría FormSubmit.
+const CONTACT_ENDPOINT: string = import.meta.env.VITE_CONTACT_ENDPOINT
+  || 'https://script.google.com/macros/s/AKfycbwSA-ZG04CCYnQYxYMEwPSacMnW5oPlTI-V2UkFLodJk3BRfFY5PvLPFnnzJHdnpc1H/exec'
 
 // sizes replica el contenedor de 1200 px, la grilla 7:5, su separación y
 // el borde de 1 px. Si el navegador admite auto, usa el ancho medido.
@@ -13,6 +19,7 @@ const PROJECT_IMAGE_SIZES = 'auto, (max-width: 900px) calc(100vw - 2 * clamp(16p
 const projectImages: Record<string, { width: number; height: number; variants: readonly number[] }> = {
   'odonto360': { width: 2400, height: 1268, variants: [480, 800, 1200, 1600, 1920] },
   'spa-gestor': { width: 1600, height: 960, variants: [480, 800, 1200] },
+  relevo: { width: 2400, height: 1350, variants: [480, 800, 1200, 1600, 1920] },
   appfotos: { width: 2400, height: 1067, variants: [480, 800, 1200, 1600, 1920] },
   'rio-cine': { width: 2400, height: 1350, variants: [480, 800, 1200, 1600, 1920] },
 }
@@ -115,6 +122,9 @@ const content = {
         { id: 'spa-gestor', name: 'Spa Gestor', category: 'Estética · Gestión y reservas', url: 'https://spa-gestor.pages.dev/',
           desc: 'Software para centros de estética y spas: agenda de turnos, fichas de clientes, tratamientos con catálogo público, pagos y deudas, promociones y reportes. Cada negocio trabaja en su propio espacio dentro de la misma plataforma.',
           note: 'Captura real · datos ficticios', alt: 'Agenda semanal de Spa Gestor con turnos de un centro de estética ficticio.' },
+        { id: 'relevo', name: 'Relevo', category: 'Operaciones · Gestión de turnos', url: 'https://relevo.dofrasoftware.com/',
+          desc: 'Aplicación para organizar la comunicación entre turnos de trabajo: registro de novedades, asignación de responsables, seguimiento de pendientes y entrega y recepción de cada turno, para que los equipos trabajen con información clara y actualizada.',
+          note: 'Captura real · datos ficticios', alt: 'Panel Novedades de Relevo con las novedades abiertas de un hotel ficticio, con prioridad, sector, responsable y estado.' },
         { id: 'appfotos', name: 'AppFotos', category: 'Fotografía · Galerías y ventas', url: 'https://appfotos.dofrasoftware.workers.dev/',
           desc: 'Plataforma para fotógrafos profesionales: galerías con búsqueda y filtros, un sitio web propio con plantillas —incluida una para fotografía deportiva—, carrito y gestión de pedidos. La venta online con Mercado Pago está preparada para activarse.',
           note: 'Captura real', alt: 'Portada de AppFotos con un paisaje de montaña y el título «Cada imagen merece un lugar especial».' },
@@ -209,6 +219,9 @@ const content = {
         { id: 'spa-gestor', name: 'Spa Gestor', category: 'Beauty · Management and bookings', url: 'https://spa-gestor.pages.dev/',
           desc: 'Software for beauty clinics and spas: appointment calendar, client records, treatments with a public catalog, payments and balances, promotions and reports. Each business works in its own space within the same platform.',
           note: 'Real screenshot · sample data', alt: 'Spa Gestor weekly calendar with appointments for a fictional beauty clinic.' },
+        { id: 'relevo', name: 'Relevo', category: 'Operations · Shift management', url: 'https://relevo.dofrasoftware.com/',
+          desc: 'An application for organizing communication between work shifts: recording updates, assigning responsibilities, tracking outstanding tasks and managing each shift handover, so teams work with clear, up-to-date information.',
+          note: 'Real screenshot · sample data', alt: 'Relevo Updates panel showing open items for a fictional hotel, with priority, area, assignee and status.' },
         { id: 'appfotos', name: 'AppFotos', category: 'Photography · Galleries and sales', url: 'https://appfotos.dofrasoftware.workers.dev/',
           desc: 'A platform for professional photographers: galleries with search and filters, their own website with templates —including one for sports photography—, cart and order management. Online sales with Mercado Pago are ready to be switched on.',
           note: 'Real screenshot', alt: 'AppFotos home page with a mountain landscape and the headline “Every image deserves a special place”.' },
@@ -384,17 +397,26 @@ export default function App() {
     const controller = new AbortController()
     const timeout = window.setTimeout(() => controller.abort(), 15000)
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-        signal: controller.signal,
-      })
+      // Apps Script: cuerpo urlencoded y sin cabeceras propias, para que sea una petición simple
+      // (sin verificación previa CORS) y el script reciba los campos en e.parameter.
+      const service = CONTACT_ENDPOINT ? 'Apps Script' : 'FormSubmit'
+      const response = CONTACT_ENDPOINT
+        ? await fetch(CONTACT_ENDPOINT, {
+            method: 'POST',
+            body: new URLSearchParams([...data.entries()].map(([k, v]) => [k, String(v)])),
+            signal: controller.signal,
+          })
+        : await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+            method: 'POST',
+            body: data,
+            headers: { Accept: 'application/json' },
+            signal: controller.signal,
+          })
       let result: { success?: boolean | string; message?: string } = {}
-      try { result = await response.json() } catch { throw new Error(`Respuesta no válida de FormSubmit (HTTP ${response.status})`) }
+      try { result = await response.json() } catch { throw new Error(`Respuesta no válida de ${service} (HTTP ${response.status})`) }
       // Éxito solo si el servicio confirma que aceptó el envío. Ej.: success "false" = formulario sin activar.
       if (!response.ok || String(result.success) !== 'true') {
-        throw new Error(`FormSubmit rechazó el envío (HTTP ${response.status}): ${result.message ?? 'sin detalle'}`)
+        throw new Error(`${service} rechazó el envío (HTTP ${response.status}): ${result.message ?? 'sin detalle'}`)
       }
       form.reset()
       setFormStatus('success')
