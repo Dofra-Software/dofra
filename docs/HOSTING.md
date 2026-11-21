@@ -21,24 +21,25 @@ Dofra-Software/dofra (privado o no, sin cambios)  ──build:site──►  dis
 - GitHub Pages redirige automáticamente `dofrasoftware.com` → `www.dofrasoftware.com` (la URL canónica del sitio).
 - Cloudflare Pages (`dofra`) sigue desplegando igual que hoy: sirve para vistas previas y para volver atrás.
 
-## Pasos para el cambio (requieren autorización)
+## Estado: aplicado el 21/11/2026
 
-1. Crear el repositorio público `Dofra-Software/dofra-sitio` con README, publicar con los dos comandos de arriba y activar
-   Pages (rama `main`, raíz). Antes del DNS, comprobar con
-   `curl.exe -I --resolve www.dofrasoftware.com:80:185.199.108.153 http://www.dofrasoftware.com/`.
-2. DNS en Cloudflare (dofrasoftware.com → DNS), todos en **solo DNS (nube gris)**:
+1. Repositorio público `Dofra-Software/dofra-sitio` creado y publicado desde `dofra@762ad92`; Pages activo (rama `main`, raíz).
+2. DNS en Cloudflare (dofrasoftware.com → DNS), ambos en **solo DNS (nube gris)**:
    - `www`: `CNAME → dofra-software.github.io`.
-   - Raíz `dofrasoftware.com`: reemplazar el `CNAME → dofra.pages.dev` por
-     `A 185.199.108.153`, `A 185.199.109.153`, `A 185.199.110.153`, `A 185.199.111.153` y
-     `AAAA 2606:50c0:8000::153`, `AAAA 2606:50c0:8001::153`, `AAAA 2606:50c0:8002::153`, `AAAA 2606:50c0:8003::153`.
-   - **No tocar** los registros MX, TXT (SPF, DKIM) ni `relevo`.
-3. Esperar el certificado de GitHub (unos 10 minutos para Relevo) y activar «Enforce HTTPS».
-4. Verificar desde Movistar, otro operador y un iPhone, en horario de partido.
+   - Raíz `dofrasoftware.com`: `CNAME → dofra-software.github.io`. Cloudflare lo «aplana» y responde con las IP de GitHub
+     (185.199.108–111.153), así que no hizo falta reemplazarlo por registros A/AAAA.
+   - Sin cambios: MX, SPF, DKIM y `relevo`.
+3. Certificado de GitHub (Let's Encrypt) emitido a los ~12 minutos, cubre `dofrasoftware.com` y `www.dofrasoftware.com`.
+   «Enforce HTTPS» activado. `http://` y la raíz redirigen a `https://www.dofrasoftware.com/`.
+
+### Publicar cambios del sitio
+
+Hasta automatizarlo: `npm run build:site` y luego `node scripts/publish-static-site.mjs --confirm`.
+Cloudflare Pages sigue desplegando `main` en `dofra.pages.dev` (útil para revisar antes de publicar).
 
 ## Volver atrás
 
-Restaurar `www → CNAME dofra.pages.dev` y la raíz `→ CNAME dofra.pages.dev`, ambos con proxy (nube naranja), y borrar
-los A/AAAA de GitHub. Cloudflare Pages sigue con el sitio publicado.
+Editar `www` y la raíz a `CNAME → dofra.pages.dev` con proxy (nube naranja). Cloudflare Pages sigue con el sitio publicado.
 
 ## Dependencias externas que siguen en Cloudflare (pendiente)
 
