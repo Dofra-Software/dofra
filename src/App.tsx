@@ -8,8 +8,10 @@ type Faq = { q: string; a: string; /** true = borrador que necesita confirmació
 const CONTACT_EMAIL = 'info@dofrasoftware.com'
 // Receptor del formulario en Google Apps Script (apps-script/Code.gs, ver docs/FORMULARIO.md).
 // FormSubmit está detrás de IP de Cloudflare que se bloquean en España en horario de partidos.
-// Mientras esté vacío se sigue usando FormSubmit, como hasta ahora.
-const CONTACT_ENDPOINT: string = import.meta.env.VITE_CONTACT_ENDPOINT || ''
+// Implementación «Formulario de contacto de dofrasoftware.com (v1)» en la cuenta de Google de Dofra.
+// La URL es pública por diseño (no es un secreto). Si quedara vacía, se usaría FormSubmit.
+const CONTACT_ENDPOINT: string = import.meta.env.VITE_CONTACT_ENDPOINT
+  || 'https://script.google.com/macros/s/AKfycbwSA-ZG04CCYnQYxYMEwPSacMnW5oPlTI-V2UkFLodJk3BRfFY5PvLPFnnzJHdnpc1H/exec'
 
 // sizes replica el contenedor de 1200 px, la grilla 7:5, su separación y
 // el borde de 1 px. Si el navegador admite auto, usa el ancho medido.

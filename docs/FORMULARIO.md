@@ -30,7 +30,7 @@ de Google de Dofra y no guarda los mensajes: sólo los reenvía por correo.
    - Quién tiene acceso: **Cualquier persona**.
    Copiar la URL que termina en `/exec`.
 5. Abrir esa URL en el navegador: debe mostrar `{"ok":true}`.
-6. En `src/App.tsx`, poner la URL en `CONTACT_ENDPOINT` (reemplazando `''`), compilar y publicar:
+6. En `src/App.tsx`, poner la URL en `CONTACT_ENDPOINT`, compilar y publicar (hecho el 21/11/2026 con la versión 1):
    `npm run build:site` y `node scripts/publish-static-site.mjs --confirm`.
 7. Enviar una consulta real desde https://www.dofrasoftware.com/#contacto y confirmar que llega el correo.
 
@@ -42,3 +42,11 @@ adelante: **Implementar → Gestionar implementaciones → Editar → Nueva vers
 Chromium contra un servidor local que imita a Apps Script (redirección 302 a otro origen con CORS, como Google):
 envío correcto, rechazo del receptor, conexión bloqueada (error a los 15 s con enlace de correo) y caída a FormSubmit
 sin URL configurada. 12/12 superadas. Falta repetir la prueba contra el Apps Script real una vez implementado (paso 7).
+
+## Estado (21/11/2026)
+
+- Proyecto «Formulario dofrasoftware.com» en la cuenta de Google de Dofra, autorizado y publicado como aplicación web
+  (versión 1, ejecuta como dofrasoftware@gmail.com, acceso: cualquier usuario).
+- `GET /exec` responde `{"ok":true}`. Un POST inválido responde `{"success":false,"message":"invalid"}` sin enviar correo.
+  El 302 de Google incluye `Access-Control-Allow-Origin: *`, igual que el servidor de prueba.
+- Envío real desde el sitio compilado: éxito en ~5,6 s y correo de prueba enviado a info@dofrasoftware.com.
