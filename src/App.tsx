@@ -6,6 +6,10 @@ type Lang = 'es' | 'en'
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
 
 const CONTACT_EMAIL = 'info@dofrasoftware.com'
+// Receptor del formulario en Google Apps Script (apps-script/Code.gs, ver docs/FORMULARIO.md).
+// FormSubmit está detrás de IP de Cloudflare que se bloquean en España en horario de partidos.
+// Mientras esté vacío se sigue usando FormSubmit, como hasta ahora.
+const CONTACT_ENDPOINT: string = import.meta.env.VITE_CONTACT_ENDPOINT || ''
 
 // sizes replica el contenedor de 1200 px, la grilla 7:5, su separación y
 // el borde de 1 px. Si el navegador admite auto, usa el ancho medido.
@@ -384,17 +388,26 @@ export default function App() {
     const controller = new AbortController()
     const timeout = window.setTimeout(() => controller.abort(), 15000)
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-        signal: controller.signal,
-      })
+      // Apps Script: cuerpo urlencoded y sin cabeceras propias, para que sea una petición simple
+      // (sin verificación previa CORS) y el script reciba los campos en e.parameter.
+      const service = CONTACT_ENDPOINT ? 'Apps Script' : 'FormSubmit'
+      const response = CONTACT_ENDPOINT
+        ? await fetch(CONTACT_ENDPOINT, {
+            method: 'POST',
+            body: new URLSearchParams([...data.entries()].map(([k, v]) => [k, String(v)])),
+            signal: controller.signal,
+          })
+        : await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+            method: 'POST',
+            body: data,
+            headers: { Accept: 'application/json' },
+            signal: controller.signal,
+          })
       let result: { success?: boolean | string; message?: string } = {}
-      try { result = await response.json() } catch { throw new Error(`Respuesta no válida de FormSubmit (HTTP ${response.status})`) }
+      try { result = await response.json() } catch { throw new Error(`Respuesta no válida de ${service} (HTTP ${response.status})`) }
       // Éxito solo si el servicio confirma que aceptó el envío. Ej.: success "false" = formulario sin activar.
       if (!response.ok || String(result.success) !== 'true') {
-        throw new Error(`FormSubmit rechazó el envío (HTTP ${response.status}): ${result.message ?? 'sin detalle'}`)
+        throw new Error(`${service} rechazó el envío (HTTP ${response.status}): ${result.message ?? 'sin detalle'}`)
       }
       form.reset()
       setFormStatus('success')
