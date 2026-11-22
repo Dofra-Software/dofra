@@ -17,10 +17,10 @@ const CONTACT_ENDPOINT: string = import.meta.env.VITE_CONTACT_ENDPOINT
 // el borde de 1 px. Si el navegador admite auto, usa el ancho medido.
 const PROJECT_IMAGE_SIZES = 'auto, (max-width: 900px) calc(100vw - 2 * clamp(16px, 4vw, 40px) - 2px), calc((min(1200px, 100vw - 2 * clamp(16px, 4vw, 40px)) - clamp(24px, 4vw, 56px)) * 0.583333 - 2px)'
 const projectImages: Record<string, { width: number; height: number; variants: readonly number[] }> = {
-  'odonto360': { width: 2400, height: 1268, variants: [480, 800, 1200, 1600, 1920] },
+  'odonto360': { width: 1904, height: 908, variants: [480, 800, 1200, 1600] },
   'spa-gestor': { width: 1600, height: 960, variants: [480, 800, 1200] },
   relevo: { width: 2400, height: 1350, variants: [480, 800, 1200, 1600, 1920] },
-  appfotos: { width: 2400, height: 1067, variants: [480, 800, 1200, 1600, 1920] },
+  'r-mas-arquitectura': { width: 1905, height: 913, variants: [480, 800, 1200, 1600] },
   'rio-cine': { width: 2400, height: 1350, variants: [480, 800, 1200, 1600, 1920] },
 }
 
@@ -80,7 +80,6 @@ const content = {
       examples: ['Aplicaciones para tu equipo o tus clientes', 'Herramientas internas', 'Integraciones con otros sistemas', 'Automatizaciones de tareas repetitivas'],
       links: [
         { label: 'Ver proyecto · Relevo', url: 'https://relevo.dofrasoftware.com/' },
-        { label: 'Ver proyecto · AppFotos', url: 'https://appfotos.dofrasoftware.workers.dev/' },
       ],
       cta: 'Pedir presupuesto a medida',
     },
@@ -98,8 +97,8 @@ const content = {
       'Combinamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas con una forma de trabajar cercana: escuchamos, preguntamos y buscamos entender qué necesita cada proyecto. Así, desarrollamos soluciones a medida que tienen sentido para tu negocio y son fáciles de usar.',
     ],
     people: [
-      { name: 'Franca', role: 'Contadora', desc: 'Aporta la mirada de negocio: costos, cobros y procesos administrativos, para que cada solución responda a necesidades reales.' },
-      { name: 'Victoria', role: 'Ingeniera en software', desc: 'Se ocupa del diseño técnico y el desarrollo, para que cada herramienta funcione bien y sea fácil de usar.' },
+      { name: 'Franca', role: 'Contadora Pública', desc: 'Analiza los procesos administrativos y comerciales de cada cliente y define el alcance funcional de los proyectos.' },
+      { name: 'Victoria', role: 'Ingeniera en Software', desc: 'Lidera el diseño técnico de las soluciones y su desarrollo, desde la arquitectura hasta la implementación.' },
     ],
     faqKicker: 'PREGUNTAS FRECUENTES', faqTitle: 'Antes de empezar.',
     faqs: [
@@ -145,19 +144,19 @@ const content = {
       items: [
         { id: 'odonto360', name: 'odonto360', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/',
           desc: 'Gestión integral para clínicas odontológicas: pacientes con historia clínica y odontograma, agenda por profesional y consultorio, lista de espera, presupuestos, pagos con cuenta corriente, reportes y un visor 3D de tomografías.',
-          note: 'Captura real · datos sintéticos', alt: 'Módulo Pacientes de odonto360 con el listado de pacientes de la clínica y datos sintéticos.' },
+          alt: 'Odontograma de odonto360 con piezas marcadas como realizadas, pendientes y ausentes.' },
         { id: 'spa-gestor', name: 'Spa Gestor', category: 'Estética · Gestión y reservas', url: 'https://spa-gestor.pages.dev/',
           desc: 'Software para centros de estética y spas: agenda de turnos, fichas de clientes, tratamientos con catálogo público, pagos y deudas, promociones y reportes. Cada negocio trabaja en su propio espacio dentro de la misma plataforma.',
-          note: 'Captura real · datos ficticios', alt: 'Agenda semanal de Spa Gestor con turnos de un centro de estética ficticio.' },
+          alt: 'Agenda semanal de Spa Gestor con turnos de un centro de estética ficticio.' },
         { id: 'relevo', name: 'Relevo', category: 'Operaciones · Gestión de turnos', url: 'https://relevo.dofrasoftware.com/',
           desc: 'Aplicación para organizar la comunicación entre turnos de trabajo: registro de novedades, asignación de responsables, seguimiento de pendientes y entrega y recepción de cada turno, para que los equipos trabajen con información clara y actualizada.',
-          note: 'Captura real · datos ficticios', alt: 'Panel Novedades de Relevo con las novedades abiertas de un hotel ficticio, con prioridad, sector, responsable y estado.' },
-        { id: 'appfotos', name: 'AppFotos', category: 'Fotografía · Galerías y ventas', url: 'https://appfotos.dofrasoftware.workers.dev/',
-          desc: 'Plataforma para fotógrafos profesionales: galerías con búsqueda y filtros, un sitio web propio con plantillas —incluida una para fotografía deportiva—, carrito y gestión de pedidos. La venta online con Mercado Pago está preparada para activarse.',
-          note: 'Captura real', alt: 'Portada de AppFotos con un paisaje de montaña y el título «Cada imagen merece un lugar especial».' },
+          alt: 'Panel Novedades de Relevo con las novedades abiertas de un hotel ficticio, con prioridad, sector, responsable y estado.' },
+        { id: 'r-mas-arquitectura', name: 'R+ Arquitectura', category: 'Arquitectura · Desarrollo web', url: 'https://r-mas-arquitectura.pages.dev/',
+          desc: 'Landing page para un estudio de arquitectura de Uruguay y Argentina. Presenta el estudio, sus servicios y una selección de obras, con acceso directo al contacto.',
+          alt: 'Portada de R+ Arquitectura con el logotipo del estudio sobre un plano arquitectónico.' },
         { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Desarrollo web', url: 'https://rio-cine.pages.dev/',
           desc: 'Sitio web para una productora audiovisual de Uruguay, con una propuesta visual cinematográfica que destaca su identidad y sus producciones.',
-          note: 'Captura real', alt: 'Portada del sitio de RÍO CINE con cámara cinematográfica, logotipo y navegación sobre fondo oscuro.' },
+          alt: 'Portada del sitio de RÍO CINE con cámara cinematográfica, logotipo y navegación sobre fondo oscuro.' },
       ],
     },
     rights: 'Todos los derechos reservados.',
@@ -204,7 +203,6 @@ const content = {
       examples: ['Apps for your team or your customers', 'Internal tools', 'Integrations with other systems', 'Automation of repetitive tasks'],
       links: [
         { label: 'View project · Relevo', url: 'https://relevo.dofrasoftware.com/' },
-        { label: 'View project · AppFotos', url: 'https://appfotos.dofrasoftware.workers.dev/' },
       ],
       cta: 'Request a custom quote',
     },
@@ -222,8 +220,8 @@ const content = {
       'We bring together experience at international companies and more than 4 years working in software systems with a hands-on, personal approach: we listen, ask questions and make sure we understand what each project needs. That way, we build tailored solutions that make sense for your business and are easy to use.',
     ],
     people: [
-      { name: 'Franca', role: 'Accountant', desc: 'Brings the business perspective: costs, payments and admin processes, so every solution meets real needs.' },
-      { name: 'Victoria', role: 'Software engineer', desc: 'Leads the technical design and development, so every tool works well and is easy to use.' },
+      { name: 'Franca', role: 'Public Accountant', desc: 'Analyzes each client’s administrative and business processes and defines the functional scope of each project.' },
+      { name: 'Victoria', role: 'Software Engineer', desc: 'Leads the technical design and development of each solution, from architecture to implementation.' },
     ],
     faqKicker: 'FREQUENTLY ASKED QUESTIONS', faqTitle: 'Before we begin.',
     faqs: [
@@ -269,19 +267,19 @@ const content = {
       items: [
         { id: 'odonto360', name: 'odonto360', category: 'Healthcare · Clinic management', url: 'https://odonto.dofrasoftware.workers.dev/',
           desc: 'End-to-end management for dental clinics: patients with clinical records and dental charts, scheduling by practitioner and treatment room, waitlist, quotes, payments with account balances, reports and a 3D CT viewer.',
-          note: 'Real screenshot · synthetic data', alt: 'odonto360 Patients module showing the clinic patient list with synthetic data.' },
+          alt: 'odonto360 dental chart showing completed and pending treatments and missing teeth.' },
         { id: 'spa-gestor', name: 'Spa Gestor', category: 'Beauty · Management and bookings', url: 'https://spa-gestor.pages.dev/',
           desc: 'Software for beauty clinics and spas: appointment calendar, client records, treatments with a public catalog, payments and balances, promotions and reports. Each business works in its own space within the same platform.',
-          note: 'Real screenshot · sample data', alt: 'Spa Gestor weekly calendar with appointments for a fictional beauty clinic.' },
+          alt: 'Spa Gestor weekly calendar with appointments for a fictional beauty clinic.' },
         { id: 'relevo', name: 'Relevo', category: 'Operations · Shift management', url: 'https://relevo.dofrasoftware.com/',
           desc: 'An application for organizing communication between work shifts: recording updates, assigning responsibilities, tracking outstanding tasks and managing each shift handover, so teams work with clear, up-to-date information.',
-          note: 'Real screenshot · sample data', alt: 'Relevo Updates panel showing open items for a fictional hotel, with priority, area, assignee and status.' },
-        { id: 'appfotos', name: 'AppFotos', category: 'Photography · Galleries and sales', url: 'https://appfotos.dofrasoftware.workers.dev/',
-          desc: 'A platform for professional photographers: galleries with search and filters, their own website with templates —including one for sports photography—, cart and order management. Online sales with Mercado Pago are ready to be switched on.',
-          note: 'Real screenshot', alt: 'AppFotos home page with a mountain landscape and the headline “Every image deserves a special place”.' },
+          alt: 'Relevo Updates panel showing open items for a fictional hotel, with priority, area, assignee and status.' },
+        { id: 'r-mas-arquitectura', name: 'R+ Arquitectura', category: 'Architecture · Web development', url: 'https://r-mas-arquitectura.pages.dev/',
+          desc: 'Landing page for an architecture studio working in Uruguay and Argentina. It introduces the studio, its services and selected projects, with a direct link to get in touch.',
+          alt: 'R+ Arquitectura homepage with the studio logo over an architectural floor plan.' },
         { id: 'rio-cine', name: 'RÍO CINE', category: 'Audiovisual · Web development', url: 'https://rio-cine.pages.dev/',
           desc: 'Website for an audiovisual production company in Uruguay, featuring a cinematic visual experience that highlights its identity and productions.',
-          note: 'Real screenshot', alt: 'RÍO CINE website hero with a cinema camera, brand logo and navigation against a dark background.' },
+          alt: 'RÍO CINE website hero with a cinema camera, brand logo and navigation against a dark background.' },
       ],
     },
     rights: 'All rights reserved.',
@@ -491,7 +489,7 @@ export default function App() {
           <a href="#apps-a-medida">{t.apps.title}<Icon name="arrow" size={18} /></a>
         </nav>
 
-        <section className="svc-block" id="paginas-web" aria-labelledby="paginas-web-titulo">
+        <section className="svc-block svc-web" id="paginas-web" aria-labelledby="paginas-web-titulo">
           <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo">{t.web.title}</h3><p>{t.web.desc}</p></header>
           <div className="plan-controls" role="group" aria-label={t.web.plansLabel}>
             {t.web.plans.map((plan, index) => <button type="button" key={plan.id}
@@ -549,7 +547,6 @@ export default function App() {
             <p className="work-category">{item.category}</p>
             <h3 id={`proyecto-${item.id}`}>{item.name}</h3>
             <p className="work-desc">{item.desc}</p>
-            <p className="work-note">{item.note}</p>
             <a className="work-link" href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.work.view}: ${item.name} (${t.work.newTab})`}>{t.work.view}<Icon name="arrow" size={18} /></a>
           </div>
         </article>)}</div>
