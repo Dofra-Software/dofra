@@ -48,7 +48,7 @@ const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[
 const content = {
   es: {
     skip: 'Saltar al contenido',
-    nav: ['Inicio', 'Proyectos', 'Servicios', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
     navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Elegir idioma', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
@@ -174,7 +174,7 @@ const content = {
   },
   en: {
     skip: 'Skip to content',
-    nav: ['Home', 'Projects', 'Services', 'About us', 'Contact'], talk: "Let's talk",
+    nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
     navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Choose language', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
@@ -451,7 +451,7 @@ export default function App() {
     return () => document.removeEventListener('keydown', onEscape)
   }, [menuOpen])
 
-  const navIds = ['inicio', 'proyectos', 'servicios', 'nosotras', 'contacto']
+  const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
 
@@ -558,21 +558,6 @@ export default function App() {
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
       </div></section>
 
-      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
-        <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
-        <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
-          <figure className="work-shot">
-            <ProjectImage id={item.id} alt={item.alt} />
-          </figure>
-          <div className="work-copy">
-            <p className="work-category">{item.category}</p>
-            <h3 id={`proyecto-${item.id}`}>{item.name}</h3>
-            <p className="work-desc">{item.desc}</p>
-            <a className="work-link" href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.work.view}: ${item.name} (${t.work.newTab})`}>{t.work.view}<Icon name="arrow" size={18} /></a>
-          </div>
-        </article>)}</div>
-      </div></section>
-
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
         <nav className="svc-jump" aria-label={t.serviceJumpLabel} data-reveal>
@@ -626,6 +611,21 @@ export default function App() {
             </div>
           </div>
         </section>
+      </div></section>
+
+      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+        <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
+        <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
+          <figure className="work-shot">
+            <ProjectImage id={item.id} alt={item.alt} />
+          </figure>
+          <div className="work-copy">
+            <p className="work-category">{item.category}</p>
+            <h3 id={`proyecto-${item.id}`}>{item.name}</h3>
+            <p className="work-desc">{item.desc}</p>
+            <a className="work-link" href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.work.view}: ${item.name} (${t.work.newTab})`}>{t.work.view}<Icon name="arrow" size={18} /></a>
+          </div>
+        </article>)}</div>
       </div></section>
 
       <section className="section section-soft section-compact" aria-labelledby="proceso-titulo"><div className="container">
