@@ -1,5 +1,5 @@
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
 
 type Lang = 'es' | 'en'
@@ -344,6 +344,8 @@ function readStoredLang(): Lang {
 export default function App() {
   const [lang, setLang] = useState<Lang>(readStoredLang)
   const [menuOpen, setMenuOpen] = useState(false)
+  const plansRef = useRef<HTMLUListElement>(null)
+  const [activePlan, setActivePlan] = useState(0)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [projectType, setProjectType] = useState('')
@@ -473,7 +475,23 @@ export default function App() {
 
         <section className="svc-block" id="paginas-web" aria-labelledby="paginas-web-titulo">
           <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo">{t.web.title}</h3><p>{t.web.desc}</p></header>
-          <ul className="plans" aria-label={t.web.plansLabel} data-reveal>{t.web.plans.map(plan => <li className={`plan${plan.featured ? ' is-featured' : ''}`} key={plan.id} aria-labelledby={`plan-${plan.id}`}>
+          <div className="plan-controls" role="group" aria-label={t.web.plansLabel}>
+            {t.web.plans.map((plan, index) => <button type="button" key={plan.id}
+              aria-controls="planes-web" aria-current={index === activePlan ? 'true' : undefined}
+              onClick={() => {
+                const track = plansRef.current
+                const card = track?.children[index] as HTMLElement | undefined
+                if (track && card) track.scrollTo({ left: card.offsetLeft })
+              }}>{plan.name}</button>)}
+          </div>
+          <ul className="plans" id="planes-web" ref={plansRef} aria-label={t.web.plansLabel} data-reveal
+            onScroll={event => {
+              const track = event.currentTarget
+              const nextCard = track.children[1] as HTMLElement | undefined
+              if (nextCard && nextCard.offsetLeft > 0) {
+                setActivePlan(Math.max(0, Math.min(track.children.length - 1, Math.round(track.scrollLeft / nextCard.offsetLeft))))
+              }
+            }}>{t.web.plans.map(plan => <li className={`plan${plan.featured ? ' is-featured' : ''}`} key={plan.id} aria-labelledby={`plan-${plan.id}`}>
             <div className="plan-head"><h4 id={`plan-${plan.id}`}>{plan.name}</h4>{plan.featured && <span className="plan-badge">{t.web.recommended}</span>}</div>
             <p className="plan-tagline">{plan.tagline}</p>
             <p className="plan-desc">{plan.desc}</p>
