@@ -28,21 +28,33 @@ export const frenchContent = {
     plans: [
       {
         id: 'esencial', name: 'Essentiel', tagline: 'Un site pour présenter votre activité.',
-        desc: 'Un site sur mesure pour mobile et ordinateur, avec vos services, vos photos, vos horaires et un contact sur WhatsApp.',
+        features: [
+          'Site sur mesure pour mobile et ordinateur.',
+          'Présentation de vos services, de vos photos et de vos horaires.',
+          'Prise de contact sur WhatsApp.',
+        ],
         changes: 'Les modifications ponctuelles sont facturées séparément.',
         link: { label: 'Voir le projet · RÍO CINE', url: 'https://rio-cine.pages.dev/' },
         cta: 'Demander un devis Essentiel',
       },
       {
         id: 'pro', name: 'Pro', tagline: 'Votre site avec réservation en ligne.', featured: true,
-        desc: 'Tout ce qui est inclus dans l’offre Essentiel, avec la réservation par service, professionnel et créneau, ainsi qu’un espace privé pour gérer votre planning.',
+        features: [
+          'Tout ce qui est inclus dans l’offre Essentiel.',
+          'Réservation par service, professionnel et créneau.',
+          'Espace privé pour gérer le planning et les rendez-vous.',
+        ],
         changes: 'Une modification simple par mois incluse.',
         link: { label: 'Voir un exemple de planning · Spa Gestor', url: 'https://spa-gestor.pages.dev/' },
         cta: 'Demander un devis Pro',
       },
       {
         id: 'advanced', name: 'Advanced', tagline: 'Votre site avec réservation en ligne et espace de gestion.',
-        desc: 'Tout ce qui est inclus dans l’offre Pro, avec les dossiers et l’historique client, le suivi des soins, les devis, les paiements et les soldes à régler. Les modules s’adaptent à votre métier.',
+        features: [
+          'Tout ce qui est inclus dans l’offre Pro.',
+          'Dossiers et historique client, suivi des soins et devis.',
+          'Paiements et soldes à régler, avec des modules adaptés à votre métier.',
+        ],
         changes: 'Jusqu’à trois modifications simples par mois incluses.',
         link: { label: 'Voir un exemple de gestion · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' },
         cta: 'Demander un devis Advanced',
