@@ -344,6 +344,8 @@ function readStoredLang(): Lang {
 export default function App() {
   const [lang, setLang] = useState<Lang>(readStoredLang)
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLElement>(null)
+  const menuToggleRef = useRef<HTMLButtonElement>(null)
   const plansRef = useRef<HTMLUListElement>(null)
   const [activePlan, setActivePlan] = useState(0)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
@@ -359,6 +361,21 @@ export default function App() {
     try { window.localStorage.setItem('dofra-lang', lang) } catch { /* sin almacenamiento disponible */ }
     document.title = lang === 'es' ? 'Dofra Software | Páginas web y sistemas a medida' : 'Dofra Software | Websites and custom systems'
   }, [lang])
+
+  function closeMenu() {
+    setMenuOpen(false)
+    menuToggleRef.current?.focus()
+  }
+
+  useEffect(() => {
+    if (!menuOpen) return
+    menuRef.current?.querySelector('a')?.focus({ preventScroll: true })
+    function onEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') closeMenu()
+    }
+    document.addEventListener('keydown', onEscape)
+    return () => document.removeEventListener('keydown', onEscape)
+  }, [menuOpen])
 
   const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
@@ -443,11 +460,12 @@ export default function App() {
     <a className="skip-link" href="#contenido">{t.skip}</a>
     <header className="header"><div className="container nav-inner">
       <Brand label={t.brandLabel} />
-      <nav id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
+      {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
+      <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
       <div className="nav-actions">
         <button type="button" className="lang-switch" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label={t.langSwitch} lang={lang === 'es' ? 'en' : 'es'}><Icon name="globe" size={16} /><span aria-hidden="true">{lang === 'es' ? 'EN' : 'ES'}</span></button>
         <a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={16} /></a>
-        <button type="button" className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="menu-principal"><Icon name={menuOpen ? 'close' : 'menu'} size={24} /></button>
+        <button type="button" className="menu-toggle" ref={menuToggleRef} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="menu-principal"><Icon name={menuOpen ? 'close' : 'menu'} size={20} /></button>
       </div>
     </div></header>
 
