@@ -20,9 +20,20 @@ export default function ProcessTimeline({ steps, label }: { steps: ProcessStep[]
 
     const desktop = window.matchMedia(DESKTOP)
     const reduced = window.matchMedia(REDUCED_MOTION)
-    const section = timeline.closest('section') ?? timeline
+    const section = timeline.closest('section')
+    const stage = timeline.parentElement
+    if (!section || !stage) return
     const header = document.querySelector<HTMLElement>('.header')
-    let headerHeight = header?.offsetHeight ?? 0
+    let headerHeight = 0
+    let pinnedDistance = 0
+
+    function measure() {
+      headerHeight = header?.offsetHeight ?? 0
+      if (!section || !stage) return
+      const hold = parseFloat(getComputedStyle(section).getPropertyValue('--process-end-hold')) || 0
+      // The section includes a spacer. Its child can stay sticky for that distance.
+      pinnedDistance = hold > 0 ? Math.max(0, section.offsetHeight - stage.offsetHeight - hold) : 0
+    }
     let visible = false
     let frame = 0
     let scrolled = false
@@ -31,13 +42,16 @@ export default function ProcessTimeline({ steps, label }: { steps: ProcessStep[]
       frame = 0
       const fromScroll = scrolled
       scrolled = false
-      if (!timeline || !rail || !visible || !desktop.matches || reduced.matches) return
+      if (!timeline || !rail || !section || !visible || !desktop.matches || reduced.matches) return
 
-      // Advance while the rail crosses a short band in the middle of the viewport.
+      // Use the section's scroll position while its contents are pinned.
       const available = window.innerHeight - headerHeight
       const start = headerHeight + available * 0.55
       const distance = Math.min(420, available * 0.34)
-      const progress = Math.max(0, Math.min(1, (start - rail.getBoundingClientRect().top) / distance))
+      const rawProgress = pinnedDistance > 0
+        ? (headerHeight - section.getBoundingClientRect().top) / pinnedDistance
+        : (start - rail.getBoundingClientRect().top) / distance
+      const progress = Math.max(0, Math.min(1, rawProgress))
       const stage = Math.min(lastStep, Math.floor(progress * lastStep + 0.0001))
       scrollStep.current = stage
 
@@ -64,19 +78,23 @@ export default function ProcessTimeline({ steps, label }: { steps: ProcessStep[]
     }
 
     function onResize() {
-      headerHeight = header?.offsetHeight ?? 0
+      measure()
       schedule()
     }
 
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
-      if (visible && desktop.matches) timeline.dataset.entered = 'true'
+      if (visible && desktop.matches) {
+        timeline.dataset.entered = 'true'
+        measure()
+      }
       schedule()
     })
     observer.observe(section)
 
     function onMediaChange() {
       if (visible && desktop.matches && timeline) timeline.dataset.entered = 'true'
+      measure()
       schedule()
     }
 

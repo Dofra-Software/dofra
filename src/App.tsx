@@ -559,7 +559,7 @@ export default function App() {
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
       </div></section>
 
-      <section className="section section-soft section-compact" aria-labelledby="proceso-titulo"><div className="container">
+      <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
         <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
         <ProcessTimeline steps={t.process} label={t.processKicker} />
