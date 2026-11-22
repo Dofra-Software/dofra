@@ -489,7 +489,7 @@ export default function App() {
           <a href="#apps-a-medida">{t.apps.title}<Icon name="arrow" size={18} /></a>
         </nav>
 
-        <section className="svc-block svc-web" id="paginas-web" aria-labelledby="paginas-web-titulo">
+        <section className="svc-block" id="paginas-web" aria-labelledby="paginas-web-titulo">
           <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo">{t.web.title}</h3><p>{t.web.desc}</p></header>
           <div className="plan-controls" role="group" aria-label={t.web.plansLabel}>
             {t.web.plans.map((plan, index) => <button type="button" key={plan.id}
@@ -552,12 +552,12 @@ export default function App() {
         </article>)}</div>
       </div></section>
 
-      <section className="section section-soft" aria-labelledby="proceso-titulo"><div className="container">
+      <section className="section section-soft section-compact" aria-labelledby="proceso-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
         <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
       </div></section>
 
-      <section className="section section-dark" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
+      <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
         <div className="about-copy">
           <h2 id="nosotras-titulo">{t.aboutTitle}</h2>
           {t.aboutDesc.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
@@ -565,7 +565,7 @@ export default function App() {
         <ul className="people">{t.people.map(person => <li className="person-card" key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul>
       </div></section>
 
-      <section className="section section-soft" aria-labelledby="faq-titulo"><div className="container">
+      <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></header>
         <div className="faq-list" data-reveal>{faqs.map((item, i) => <div className={`faq-item ${faqOpen === i ? 'expanded' : ''}`} key={item.q}>
           <h3><button type="button" id={`faq-q-${i}`} aria-expanded={faqOpen === i} aria-controls={`faq-a-${i}`} onClick={() => setFaqOpen(faqOpen === i ? null : i)}><span>{item.q}</span><span className="faq-icon" aria-hidden="true"><Icon name={faqOpen === i ? 'minus' : 'plus'} size={18} /></span></button></h3>
@@ -573,7 +573,7 @@ export default function App() {
         </div>)}</div>
       </div></section>
 
-      <section className="section contact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal>
+      <section className="section contact section-compact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal>
         <div className="contact-intro">
           <p className="kicker">{t.contactKicker}</p>
           <h2 id="contacto-titulo">{t.contactTitle}</h2>

@@ -124,6 +124,15 @@ main:focus { outline: none; }
 
 /* ---------- Encabezados de sección ---------- */
 .section { padding-block: var(--section-y); }
+
+/* Las secciones breves ganan espacio en escritorio sin limitar su contenido. */
+@media (min-width: 901px) and (min-height: 720px) {
+  .section-compact {
+    display: grid;
+    align-content: center;
+    min-block-size: calc(100svh - var(--header-h));
+  }
+}
 .section-soft { background: var(--bg-soft); }
 .section-dark { background: var(--navy-900); color: #fff; }
 .section-head { max-width: 680px; margin: 0 auto var(--head-gap); text-align: center; }
@@ -190,12 +199,6 @@ main:focus { outline: none; }
 
 /* Bloques de servicio */
 .svc-block { margin-top: clamp(48px, 6vw, 80px); }
-.svc-web {
-  --svc-line: #CBD5E1;
-  padding: clamp(20px, 2.8vw, 40px);
-  border-radius: var(--radius);
-  background: #EEF2F7;
-}
 .svc-apps { padding-top: clamp(40px, 5vw, 64px); border-top: 1px solid var(--svc-line); }
 .svc-block-head { max-width: 720px; }
 .svc-block-head h3 { font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 2.4vw, 30px); line-height: 1.2; letter-spacing: -.8px; color: var(--brand-bg); }
@@ -206,7 +209,7 @@ main:focus { outline: none; }
 .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto 1fr auto auto auto; gap: 12px var(--svc-gap); margin-top: clamp(22px, 2.6vw, 30px); }
 .plan { grid-row: span 6; display: grid; grid-template-rows: subgrid; min-width: 0; padding: 26px 24px 24px; background: #fff; border: 1px solid var(--svc-line); border-radius: 10px; transition: border-color .25s ease, box-shadow .25s ease; }
 .plan:hover { border-color: #d3cec3; box-shadow: 0 6px 18px #0b19300a; }
-.plan.is-featured { border-color: color-mix(in srgb, var(--brand-dot) 70%, #FFFFFF); box-shadow: inset 0 3px 0 var(--brand-dot); background: #F7EFED; }
+.plan.is-featured { border-color: color-mix(in srgb, var(--brand-dot) 70%, #FFFFFF); box-shadow: inset 0 3px 0 var(--brand-dot); }
 .plan-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 28px; }
 .plan h4 { margin: 0; font-family: var(--font-display); font-size: 21px; font-weight: 800; letter-spacing: -.4px; color: var(--brand-bg); }
 .plan-badge { font-size: 12px; font-weight: 700; letter-spacing: .3px; color: var(--brand-bg); background: color-mix(in srgb, var(--brand-dot) 22%, #FFFFFF); border: 1px solid color-mix(in srgb, var(--brand-dot) 55%, #FFFFFF); border-radius: 100px; padding: 3px 10px; white-space: nowrap; }
@@ -430,7 +433,6 @@ main:focus { outline: none; }
   .plus { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  .svc-web { margin-inline: calc(-1 * var(--gutter)); padding: 24px 16px; border-radius: 0; }
   .svc-jump { grid-template-columns: 1fr; gap: 10px; }
   .svc-jump a { min-height: 54px; padding: 14px 16px; }
   .plan { padding: 18px 16px; }
