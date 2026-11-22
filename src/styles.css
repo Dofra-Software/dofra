@@ -626,3 +626,86 @@ main:focus { outline: none; }
 
 @keyframes timeline-draw { from { transform: scaleX(0); } }
 @keyframes timeline-enter { from { opacity: .45; transform: translateY(8px); } }
+
+/* ---------- Línea de tiempo mobile de Cómo trabajamos ---------- */
+.mobile-process-timeline { display: none; }
+
+@media (max-width: 767px) {
+  .process-grid { display: none; }
+
+  .mobile-process-timeline {
+    position: relative;
+    display: grid;
+    gap: clamp(24px, 7vw, 32px);
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  .mobile-process-timeline::before,
+  .mobile-process-timeline::after {
+    content: '';
+    position: absolute;
+    inset: 22px auto auto 21px;
+    width: 2px;
+    height: var(--mobile-process-rail, 0px);
+    pointer-events: none;
+  }
+
+  .mobile-process-timeline::before { background: #0B19302E; }
+  .mobile-process-timeline::after {
+    background: var(--brand-dot);
+    transform: scaleY(var(--mobile-process-progress, 0));
+    transform-origin: top;
+  }
+
+  .mobile-process-step {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 15px;
+  }
+
+  .mobile-process-node {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--brand-bg);
+    font: 800 14px/1 var(--font-display);
+    transition: background-color .24s ease, color .24s ease;
+  }
+
+  .mobile-process-node[aria-current="step"] {
+    color: var(--brand-bg);
+    background: var(--brand-dot);
+  }
+
+  .mobile-process-copy { padding-block: 2px; }
+  .mobile-process-copy h3 {
+    color: var(--brand-bg);
+    font: 800 clamp(19px, 5vw, 22px)/1.25 var(--font-display);
+    letter-spacing: -.02em;
+  }
+  .mobile-process-copy p {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .mobile-process-node[aria-current="step"] + .mobile-process-copy {
+    animation: mobile-process-enter .28s ease-out both;
+  }
+}
+
+@keyframes mobile-process-enter {
+  from { opacity: .85; transform: translateY(5px); }
+}

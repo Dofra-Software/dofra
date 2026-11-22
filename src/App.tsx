@@ -2,6 +2,7 @@ import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
 import ProcessTimeline from './components/ProcessTimeline'
+import MobileProcessTimeline from './components/MobileProcessTimeline'
 import { frenchContent } from './content.fr'
 
 const LANGUAGES = {
@@ -563,6 +564,7 @@ export default function App() {
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
         <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
         <ProcessTimeline steps={t.process} label={t.processKicker} />
+        <MobileProcessTimeline steps={t.process} label={t.processKicker} />
       </div></section>
 
       <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
