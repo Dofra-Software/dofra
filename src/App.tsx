@@ -65,14 +65,17 @@ const content = {
       plans: [
         { id: 'esencial', name: 'Esencial', tagline: 'Tu web para mostrar lo que hacés.',
           desc: 'Página a medida para celular y computadora, con servicios, fotos, horarios y consultas por WhatsApp.',
+          features: ["Página a medida para celular y computadora.","Servicios, fotos y horarios.","Consultas por WhatsApp."],
           changes: 'Cambios puntuales con cargo.',
           link: { label: 'Ver proyecto · RÍO CINE', url: 'https://rio-cine.pages.dev/' }, cta: 'Cotizar Esencial' },
         { id: 'pro', name: 'Pro', tagline: 'Tu web con reservas online.', featured: true,
           desc: 'Todo lo de Esencial, más reservas por servicio, profesional y horario, y un panel privado para administrar la agenda y los turnos.',
+          features: ["Todo lo incluido en Esencial.","Reservas por servicio, profesional y horario.","Panel privado para gestionar agenda y turnos."],
           changes: '1 cambio simple al mes incluido.',
           link: { label: 'Ver ejemplo de agenda · Spa Gestor', url: 'https://spa-gestor.pages.dev/' }, cta: 'Cotizar Pro' },
         { id: 'advanced', name: 'Advanced', tagline: 'Tu web con reservas online y un panel de gestión.',
           desc: 'Todo lo de Pro, más fichas e historial de clientes, seguimiento de tratamientos, presupuestos, registro de pagos y saldos pendientes. Módulos según el rubro.',
+          features: ["Todo lo incluido en Pro.","Fichas e historial de clientes; seguimiento de tratamientos y presupuestos.","Registro de pagos y saldos pendientes; módulos según el rubro."],
           changes: 'Hasta 3 cambios simples al mes incluidos.',
           link: { label: 'Ver ejemplo de gestión · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' }, cta: 'Cotizar Advanced' },
       ],
@@ -188,14 +191,17 @@ const content = {
       plans: [
         { id: 'esencial', name: 'Essential', tagline: 'A website to show what you do.',
           desc: 'A custom site for mobile and desktop, with your services, photos, opening hours and WhatsApp inquiries.',
+          features: ["Custom website for mobile and desktop.","Services, photos and opening hours.","Customer enquiries through WhatsApp."],
           changes: 'One-off changes billed separately.',
           link: { label: 'View project · RÍO CINE', url: 'https://rio-cine.pages.dev/' }, cta: 'Get an Essential quote' },
         { id: 'pro', name: 'Pro', tagline: 'Your website with online booking.', featured: true,
           desc: 'Everything in Essential, plus booking by service, professional and time slot, and a private dashboard to manage your schedule and appointments.',
+          features: ["Everything included in Essential.","Bookings by service, professional and time.","Private dashboard to manage appointments."],
           changes: '1 simple change per month included.',
           link: { label: 'See a booking example · Spa Gestor', url: 'https://spa-gestor.pages.dev/' }, cta: 'Get a Pro quote' },
         { id: 'advanced', name: 'Advanced', tagline: 'Your website with online booking and a management dashboard.',
           desc: 'Everything in Pro, plus client records and history, treatment tracking, quotes, payment records and outstanding balances. Modules tailored to your industry.',
+          features: ["Everything included in Pro.","Client records, treatment tracking and estimates.","Payment records and outstanding balances; modules tailored to your industry."],
           changes: 'Up to 3 simple changes per month included.',
           link: { label: 'See a management example · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' }, cta: 'Get an Advanced quote' },
       ],
@@ -580,7 +586,7 @@ export default function App() {
             }}>{t.web.plans.map(plan => <li className={`plan${plan.featured ? ' is-featured' : ''}`} key={plan.id} aria-labelledby={`plan-${plan.id}`}>
             <div className="plan-head"><h4 id={`plan-${plan.id}`}>{plan.name}</h4>{plan.featured && <span className="plan-badge">{t.web.recommended}</span>}</div>
             <p className="plan-tagline">{plan.tagline}</p>
-            <p className="plan-desc">{plan.desc}</p>
+            <ul className="plan-features">{plan.features.map(feature => <li key={feature}><Icon name="check" size={16} /><span>{feature}</span></li>)}</ul>
             <p className="plan-changes"><Icon name="check" size={16} />{plan.changes}</p>
             <a className="plan-link" href={plan.link.url} target="_blank" rel="noopener noreferrer" aria-label={linkLabel(plan.link.label)}>{plan.link.label}<Icon name="arrow" size={15} /></a>
             <a className={`button plan-cta${plan.featured ? ' button-primary' : ''}`} href="#contacto" onClick={quote(plan.id as keyof typeof QUOTE_TYPES)}>{plan.cta}<Icon name="arrow" size={16} /></a>

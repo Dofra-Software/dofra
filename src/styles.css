@@ -477,3 +477,40 @@ main:focus { outline: none; }
   html, .plans { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* DOFRA plan comparison refresh: preserve existing font and mobile carousel. */
+.svc-intro { max-width: 900px; }
+.svc-jump a { min-height: 72px; padding: 20px 24px; border-radius: 14px; box-shadow: 0 5px 16px #0b193006; }
+.svc-jump a:first-child { background: color-mix(in srgb, var(--brand-dot) 13%, white); }
+.svc-block { margin-top: clamp(34px, 4vw, 58px); }
+.plans { gap: 16px var(--svc-gap); }
+.plan { padding: clamp(22px, 2.2vw, 32px); border-radius: 16px; row-gap: 14px; box-shadow: 0 8px 28px #0b193008; }
+.plan-head { align-items: flex-start; }
+.plan h4 { font-size: clamp(22px, 1.7vw, 26px); }
+.plan-tagline { font-size: 16px; line-height: 1.45; }
+.plan-features { display: flex; flex-direction: column; gap: 13px; list-style: none; padding: 0; margin: 0; font-size: 15px; line-height: 1.55; color: var(--svc-ink); }
+.plan-features li { display: flex; align-items: flex-start; gap: 11px; }
+.plan-features svg { flex: 0 0 16px; margin-top: 4px; color: var(--brand-dot); }
+.plan-changes { border: 0; padding-top: 4px; font-size: 13px; }
+.plan-link { line-height: 1.5; }
+.plan-cta { margin-top: 8px; min-height: 50px; }
+.plan.is-featured { background: var(--brand-bg); color: #fff; border-color: var(--brand-bg); box-shadow: 0 12px 32px #0b193020; }
+.plan.is-featured h4, .plan.is-featured .plan-tagline, .plan.is-featured .plan-features, .plan.is-featured .plan-changes, .plan.is-featured .plan-link { color: #fff; }
+.plan.is-featured .plan-features svg, .plan.is-featured .plan-changes svg { color: var(--brand-dot); }
+.plan.is-featured .plan-badge { color: var(--brand-bg); background: var(--brand-dot); border-color: var(--brand-dot); }
+.plan.is-featured .plan-link { text-decoration-color: var(--brand-dot); }
+.plan.is-featured .plan-link:hover { text-decoration-color: #fff; }
+.plan.is-featured .plan-cta.button-primary { background: var(--brand-dot); border-color: var(--brand-dot); color: var(--brand-bg); }
+.plan.is-featured .plan-cta.button-primary:hover { background: #d4a6a1; border-color: #d4a6a1; }
+.plan.is-featured .plan-cta.button-primary:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+@media (max-width: 900px) {
+  .plans { gap: 12px; }
+  .plan { grid-template-rows: auto auto 1fr auto auto auto; row-gap: 14px; scroll-snap-align: start; }
+  .plan-features { gap: 12px; }
+}
+@media (max-width: 560px) {
+  .svc-jump a { min-height: 60px; padding: 16px; }
+  .plan { padding: 22px 18px; }
+  .plan h4 { font-size: 23px; }
+  .plan-features { font-size: 14px; }
+}
