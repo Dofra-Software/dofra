@@ -1,8 +1,15 @@
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
+import { frenchContent } from './content.fr'
 
-type Lang = 'es' | 'en'
+const LANGUAGES = {
+  es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida' },
+  en: { label: 'English', flag: 'us', formLabel: 'Inglés', title: 'Websites and custom systems' },
+  fr: { label: 'Français', flag: 'fr', formLabel: 'Francés', title: 'Sites web et logiciels sur mesure' },
+} as const
+
+type Lang = keyof typeof LANGUAGES
 type Faq = { q: string; a: string; /** true = borrador que necesita confirmación; no se publica */ pending?: boolean }
 
 const CONTACT_EMAIL = 'info@dofrasoftware.com'
@@ -42,7 +49,7 @@ const content = {
   es: {
     skip: 'Saltar al contenido',
     nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
-    navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Switch to English', brandLabel: 'Dofra Software, ir al inicio',
+    navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Elegir idioma', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
     heroDesc: 'Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo con tecnología adaptada a sus necesidades.',
@@ -165,7 +172,7 @@ const content = {
   en: {
     skip: 'Skip to content',
     nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
-    navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Cambiar a español', brandLabel: 'Dofra Software, go to top',
+    navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Choose language', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
     heroDesc: 'We help startups, independent professionals and small businesses showcase their services, organize their work and save time with technology tailored to their needs.',
@@ -285,6 +292,7 @@ const content = {
     rights: 'All rights reserved.',
     heroVisual: 'Dofra logo made of white and terracotta particles.',
   },
+  fr: frenchContent,
 }
 
 /** Valores que llegan en el correo: siempre en español, sin importar el idioma del visitante. */
@@ -305,6 +313,7 @@ function Icon({ name, size = 22 }: { name: string; size?: number }) {
     minus: <path d="M5 12h14" />,
     menu: <path d="M4 7h16M4 12h16M4 17h16" />,
     close: <path d="M5 5l14 14M19 5 5 19" />,
+    chevronDown: <path d="m6 9 6 6 6-6" />,
     globe: <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c6 5 6 13 0 18M12 3c-6 5-6 13 0 18" /></>,
     calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></>,
     users: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5" /></>,
@@ -336,7 +345,68 @@ function useReveal() {
 }
 
 function readStoredLang(): Lang {
-  try { return window.localStorage.getItem('dofra-lang') === 'en' ? 'en' : 'es' } catch { return 'es' }
+  try {
+    const stored = window.localStorage.getItem('dofra-lang')
+    if (stored === 'en' || stored === 'fr') return stored
+  } catch { /* sin almacenamiento disponible */ }
+  return 'es'
+}
+
+function LanguagePicker({ lang, label, onChange }: { lang: Lang; label: string; onChange: (lang: Lang) => void }) {
+  const [open, setOpen] = useState(false)
+  const root = useRef<HTMLDivElement>(null)
+  const toggle = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function onOutsidePointer(event: PointerEvent) {
+      if (event.target instanceof Node && !root.current?.contains(event.target)) setOpen(false)
+    }
+    document.addEventListener('pointerdown', onOutsidePointer)
+    return () => document.removeEventListener('pointerdown', onOutsidePointer)
+  }, [open])
+
+  function closeAndFocus() {
+    setOpen(false)
+    toggle.current?.focus()
+  }
+
+  return <div
+    className="lang-picker"
+    ref={root}
+    onBlur={event => {
+      if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false)
+    }}
+    onKeyDown={event => {
+      if (event.key === 'Escape' && open) {
+        event.stopPropagation()
+        closeAndFocus()
+      }
+    }}
+  >
+    <button type="button" className="lang-switch" ref={toggle} aria-label={`${label} · ${LANGUAGES[lang].label}`}
+      aria-expanded={open} aria-controls="language-options" onClick={() => setOpen(value => !value)}>
+      <img className="lang-flag" src={`/flags/${LANGUAGES[lang].flag}.png`} width="20" height="14" alt="" />
+      <span aria-hidden="true">{lang.toUpperCase()}</span>
+      <Icon name="chevronDown" size={14} />
+    </button>
+    <ul className="lang-options" id="language-options" aria-label={label} hidden={!open}>
+      {(Object.keys(LANGUAGES) as Lang[]).map(option => {
+        const language = LANGUAGES[option]
+        return <li key={option}>
+          <button type="button" lang={option} aria-current={option === lang ? 'true' : undefined}
+            onClick={() => {
+              onChange(option)
+              closeAndFocus()
+            }}>
+            <img className="lang-flag" src={`/flags/${language.flag}.png`} width="20" height="14" alt="" />
+            {language.label}
+            {option === lang && <Icon name="check" size={16} />}
+          </button>
+        </li>
+      })}
+    </ul>
+  </div>
 }
 
 export default function App() {
@@ -351,13 +421,13 @@ export default function App() {
   const [projectType, setProjectType] = useState('')
   const t = content[lang]
   const f = t.form
-  const faqs = t.faqs.filter(item => !item.pending)
+  const faqs = t.faqs.filter((item: Faq) => !item.pending)
   useReveal()
 
   useEffect(() => {
     document.documentElement.lang = lang
     try { window.localStorage.setItem('dofra-lang', lang) } catch { /* sin almacenamiento disponible */ }
-    document.title = lang === 'es' ? 'Dofra Software | Páginas web y sistemas a medida' : 'Dofra Software | Websites and custom systems'
+    document.title = `Dofra Software | ${LANGUAGES[lang].title}`
   }, [lang])
 
   function closeMenu() {
@@ -461,7 +531,7 @@ export default function App() {
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
       <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
       <div className="nav-actions">
-        <button type="button" className="lang-switch" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label={t.langSwitch} lang={lang === 'es' ? 'en' : 'es'}><Icon name="globe" size={16} /><span aria-hidden="true">{lang === 'es' ? 'EN' : 'ES'}</span></button>
+        <LanguagePicker lang={lang} label={t.langSwitch} onChange={setLang} />
         <a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={16} /></a>
         <button type="button" className="menu-toggle" ref={menuToggleRef} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="menu-principal"><Icon name={menuOpen ? 'close' : 'menu'} size={20} /></button>
       </div>
@@ -584,7 +654,7 @@ export default function App() {
         <form className="quote-form" onSubmit={submitQuote} aria-describedby="form-required-note">
           <input type="hidden" name="_subject" value={f.subject} />
           <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="idioma" value={lang === 'es' ? 'Español' : 'Inglés'} />
+          <input type="hidden" name="idioma" value={LANGUAGES[lang].formLabel} />
           <div className="quote-honey" aria-hidden="true"><label>Website<input name="_honey" tabIndex={-1} autoComplete="off" /></label></div>
           <p className="quote-required" id="form-required-note">{f.requiredNote}</p>
           <div className="quote-grid">
