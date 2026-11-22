@@ -1,5 +1,5 @@
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
 
 type Lang = 'es' | 'en'
@@ -48,15 +48,42 @@ const content = {
     heroDesc: 'Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo con tecnología adaptada a sus necesidades.',
     heroContact: 'Contanos qué necesitás', seeWork: 'Ver servicios',
     trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'En todo el mundo',
-    serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Cuatro formas de usar la tecnología a tu favor, explicadas sin tecnicismos.',
-    examplesLabel: 'Ejemplos',
-    carousel: { label: 'Servicios', prev: 'Ver servicios anteriores', next: 'Ver más servicios', of: 'de', goTo: 'Ir al servicio' },
-    services: [
-      { icon: 'code', title: 'Páginas web', desc: 'Mostrá tus servicios y facilitá que tus próximos clientes te contacten.', examples: ['Páginas de presentación', 'Sitios profesionales', 'Webs para empresas'] },
-      { icon: 'layers', title: 'Aplicaciones web', desc: 'Herramientas que se usan desde el navegador para que tus clientes o tu equipo puedan realizar gestiones.', examples: ['Reservas online', 'Portales de clientes', 'Paneles de seguimiento'] },
-      { icon: 'cpu', title: 'Sistemas a medida', desc: 'Organizá la información y los procesos de tu negocio en una herramienta adaptada a tu forma de trabajar.', examples: ['Gestión de clientes', 'Turnos', 'Cobros', 'Tareas internas'] },
-      { icon: 'zap', title: 'Automatizaciones', desc: 'Reducí tareas repetitivas y evitá cargar la misma información en distintos lugares.', examples: ['Recordatorios', 'Formularios conectados con planillas', 'Avisos automáticos'] },
-    ],
+    serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Elegí por dónde empezar: una web para tu negocio o una herramienta hecha a medida.',
+    serviceJumpLabel: 'Ir a cada servicio',
+    web: {
+      title: 'Páginas web',
+      desc: 'Primero entendemos cómo trabaja tu negocio y después diseñamos tu web, para que tus clientes conozcan tus servicios, te contacten o reserven online.',
+      plansLabel: 'Planes de páginas web',
+      recommended: 'Recomendado',
+      plans: [
+        { id: 'esencial', name: 'Esencial', tagline: 'Tu web para mostrar lo que hacés.',
+          desc: 'Página a medida para celular y computadora, con servicios, fotos, horarios y consultas por WhatsApp.',
+          changes: 'Cambios puntuales con cargo.',
+          link: { label: 'Ver proyecto · RÍO CINE', url: 'https://rio-cine.pages.dev/' }, cta: 'Cotizar Esencial' },
+        { id: 'pro', name: 'Pro', tagline: 'Tu web con reservas online.', featured: true,
+          desc: 'Todo lo de Esencial, más reservas por servicio, profesional y horario, y un panel privado para administrar la agenda y los turnos.',
+          changes: '1 cambio simple al mes incluido.',
+          link: { label: 'Ver ejemplo de agenda · Spa Gestor', url: 'https://spa-gestor.pages.dev/' }, cta: 'Cotizar Pro' },
+        { id: 'advanced', name: 'Advanced', tagline: 'Tu web con reservas online y un panel de gestión.',
+          desc: 'Todo lo de Pro, más fichas e historial de clientes, seguimiento de tratamientos, presupuestos, registro de pagos y saldos pendientes. Módulos según el rubro.',
+          changes: 'Hasta 3 cambios simples al mes incluidos.',
+          link: { label: 'Ver ejemplo de gestión · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' }, cta: 'Cotizar Advanced' },
+      ],
+      plus: { title: 'Actualizaciones Plus', tag: 'Adicional opcional',
+        desc: 'Sumá hasta 2 cambios simples de contenido al mes a cualquiera de nuestros planes. Por ejemplo, actualizar horarios, reemplazar una foto o cambiar los precios de una sección.' },
+    },
+    apps: {
+      title: 'Apps y sistemas a medida',
+      desc: 'Cuando el negocio necesita más que una web, desarrollamos aplicaciones, herramientas internas, integraciones y automatizaciones pensadas para su forma de trabajar.',
+      note: 'También podemos conectar la agenda que ya usás o sumar reservas online a la web que ya tenés.',
+      examplesLabel: 'Algunos ejemplos',
+      examples: ['Aplicaciones para tu equipo o tus clientes', 'Herramientas internas', 'Integraciones con otros sistemas', 'Automatizaciones de tareas repetitivas'],
+      links: [
+        { label: 'Ver proyecto · Relevo', url: 'https://relevo.dofrasoftware.com/' },
+        { label: 'Ver proyecto · AppFotos', url: 'https://appfotos.dofrasoftware.workers.dev/' },
+      ],
+      cta: 'Pedir presupuesto a medida',
+    },
     processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
     process: [
       { title: 'Escuchamos', desc: 'Nos contás cómo funciona tu negocio, qué necesitás y qué te gustaría resolver.' },
@@ -94,7 +121,7 @@ const content = {
       name: 'Nombre y apellido', namePh: 'Tu nombre',
       email: 'Correo electrónico', emailPh: 'nombre@ejemplo.com',
       type: 'Qué necesitás', typePh: 'Elegí una opción',
-      types: ['Página web', 'Aplicación web', 'Sistema a medida', 'Automatización', 'No sé qué necesito, quiero asesoramiento', 'Otro'],
+      types: ['Página web · Plan Esencial', 'Página web · Plan Pro', 'Página web · Plan Advanced', 'Proyecto a medida', 'Página web', 'Aplicación web', 'Sistema a medida', 'Automatización', 'No sé qué necesito, quiero asesoramiento', 'Otro'],
       budget: 'Presupuesto aproximado (opcional)', budgetNone: 'Prefiero conversarlo',
       budgets: ['Menos de USD 500', 'USD 500 – 1.500', 'USD 1.500 – 5.000', 'Más de USD 5.000'],
       message: 'Contanos sobre tu proyecto', messagePh: 'Qué hace tu negocio, qué te gustaría resolver y cualquier detalle que quieras compartir.', messageEmpty: 'Escribí tu mensaje.',
@@ -145,15 +172,42 @@ const content = {
     heroDesc: 'We help startups, independent professionals and small businesses showcase their services, organize their work and save time with technology tailored to their needs.',
     heroContact: 'Tell us what you need', seeWork: 'View services',
     trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Worldwide',
-    serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Four ways to put technology to work for you, explained without jargon.',
-    examplesLabel: 'Examples',
-    carousel: { label: 'Services', prev: 'Show previous services', next: 'Show more services', of: 'of', goTo: 'Go to service' },
-    services: [
-      { icon: 'code', title: 'Websites', desc: 'Showcase your services and make it easy for new customers to get in touch.', examples: ['Single-page business sites', 'Professional websites', 'Company websites'] },
-      { icon: 'layers', title: 'Web apps', desc: 'Tools that run in the browser so your customers or your team can get things done online.', examples: ['Online booking', 'Customer portals', 'Progress tracking panels'] },
-      { icon: 'cpu', title: 'Custom systems', desc: 'Organize your business information and processes in a tool built around the way you work.', examples: ['Customer management', 'Appointments', 'Payments', 'Internal tasks'] },
-      { icon: 'zap', title: 'Automation', desc: 'Cut down on repetitive tasks and stop entering the same information in different places.', examples: ['Reminders', 'Forms linked to spreadsheets', 'Automatic notifications'] },
-    ],
+    serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Choose where to start: a website for your business or a tool built just for you.',
+    serviceJumpLabel: 'Go to each service',
+    web: {
+      title: 'Websites',
+      desc: 'We start by understanding how your business works, then design your website so your customers can learn about your services, get in touch or book online.',
+      plansLabel: 'Website plans',
+      recommended: 'Recommended',
+      plans: [
+        { id: 'esencial', name: 'Essential', tagline: 'A website to show what you do.',
+          desc: 'A custom site for mobile and desktop, with your services, photos, opening hours and WhatsApp inquiries.',
+          changes: 'One-off changes billed separately.',
+          link: { label: 'View project · RÍO CINE', url: 'https://rio-cine.pages.dev/' }, cta: 'Get an Essential quote' },
+        { id: 'pro', name: 'Pro', tagline: 'Your website with online booking.', featured: true,
+          desc: 'Everything in Essential, plus booking by service, professional and time slot, and a private dashboard to manage your schedule and appointments.',
+          changes: '1 simple change per month included.',
+          link: { label: 'See a booking example · Spa Gestor', url: 'https://spa-gestor.pages.dev/' }, cta: 'Get a Pro quote' },
+        { id: 'advanced', name: 'Advanced', tagline: 'Your website with online booking and a management dashboard.',
+          desc: 'Everything in Pro, plus client records and history, treatment tracking, quotes, payment records and outstanding balances. Modules tailored to your industry.',
+          changes: 'Up to 3 simple changes per month included.',
+          link: { label: 'See a management example · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' }, cta: 'Get an Advanced quote' },
+      ],
+      plus: { title: 'Plus Updates', tag: 'Optional add-on',
+        desc: 'Add up to 2 simple content changes per month to any of our plans. For example, updating opening hours, replacing a photo or changing the prices in a section.' },
+    },
+    apps: {
+      title: 'Apps and custom systems',
+      desc: 'When a business needs more than a website, we build apps, internal tools, integrations and automations designed around the way it works.',
+      note: 'We can also connect the booking calendar you already use or add online booking to your existing website.',
+      examplesLabel: 'Some examples',
+      examples: ['Apps for your team or your customers', 'Internal tools', 'Integrations with other systems', 'Automation of repetitive tasks'],
+      links: [
+        { label: 'View project · Relevo', url: 'https://relevo.dofrasoftware.com/' },
+        { label: 'View project · AppFotos', url: 'https://appfotos.dofrasoftware.workers.dev/' },
+      ],
+      cta: 'Request a custom quote',
+    },
     processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
     process: [
       { title: 'We listen', desc: 'You tell us how your business works, what you need and what you would like to solve.' },
@@ -191,7 +245,7 @@ const content = {
       name: 'Full name', namePh: 'Your name',
       email: 'Email', emailPh: 'name@example.com',
       type: 'What do you need?', typePh: 'Choose an option',
-      types: ['Website', 'Web app', 'Custom system', 'Automation', "I'm not sure what I need, I'd like some advice", 'Other'],
+      types: ['Website · Essential plan', 'Website · Pro plan', 'Website · Advanced plan', 'Custom project', 'Website', 'Web app', 'Custom system', 'Automation', "I'm not sure what I need, I'd like some advice", 'Other'],
       budget: 'Estimated budget (optional)', budgetNone: "I'd rather discuss it",
       budgets: ['Under USD 500', 'USD 500 – 1,500', 'USD 1,500 – 5,000', 'Over USD 5,000'],
       message: 'Tell us about your project', messagePh: "What your business does, what you'd like to solve and any other details you want to share.", messageEmpty: 'Please write your message.',
@@ -238,6 +292,8 @@ const content = {
 /** Valores que llegan en el correo: siempre en español, sin importar el idioma del visitante. */
 const TYPE_VALUES = content.es.form.types
 const BUDGET_VALUES = content.es.form.budgets
+/** Opción del formulario que preselecciona cada botón de cotización de Servicios. */
+const QUOTE_TYPES: Record<string, string> = { esencial: TYPE_VALUES[0], pro: TYPE_VALUES[1], advanced: TYPE_VALUES[2], custom: TYPE_VALUES[3] }
 
 function Icon({ name, size = 22 }: { name: string; size?: number }) {
   const paths: Record<string, ReactNode> = {
@@ -281,68 +337,6 @@ function useReveal() {
   }, [])
 }
 
-type Service = { icon: string; title: string; desc: string; examples: string[] }
-type CarouselText = { label: string; prev: string; next: string; of: string; goTo: string }
-
-/**
- * Carrusel de servicios: desplazamiento horizontal nativo (scroll-snap), sin librerías.
- * Las tarjetas son informativas: no se abren ni enlazan a nada.
- */
-function ServicesCarousel({ services, examplesLabel, text }: { services: Service[]; examplesLabel: string; text: CarouselText }) {
-  const trackRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(0)
-  const [atStart, setAtStart] = useState(true)
-  const [atEnd, setAtEnd] = useState(false)
-
-  const update = useCallback(() => {
-    const track = trackRef.current
-    if (!track) return
-    const cards = [...track.children] as HTMLElement[]
-    const left = track.scrollLeft
-    let best = 0
-    cards.forEach((card, i) => { if (Math.abs(card.offsetLeft - left) < Math.abs(cards[best].offsetLeft - left)) best = i })
-    setActive(best)
-    setAtStart(left <= 2)
-    setAtEnd(left + track.clientWidth >= track.scrollWidth - 2)
-  }, [])
-
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    let frame = 0
-    const onScroll = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update) }
-    track.addEventListener('scroll', onScroll, { passive: true })
-    const ro = new ResizeObserver(update)
-    ro.observe(track)
-    update()
-    return () => { cancelAnimationFrame(frame); track.removeEventListener('scroll', onScroll); ro.disconnect() }
-  }, [update])
-
-  const goTo = (index: number) => {
-    const track = trackRef.current
-    const card = track?.children[Math.max(0, Math.min(services.length - 1, index))] as HTMLElement | undefined
-    if (!track || !card) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    track.scrollTo({ left: card.offsetLeft, behavior: reduce ? 'instant' : 'smooth' })
-  }
-
-  return <div className="svc-carousel" role="region" aria-roledescription="carrusel" aria-label={text.label}>
-    <div className="svc-nav">
-      <button type="button" className="svc-arrow svc-arrow-prev" onClick={() => goTo(active - 1)} disabled={atStart} aria-label={text.prev}><Icon name="arrow" size={18} /></button>
-      <button type="button" className="svc-arrow" onClick={() => goTo(active + 1)} disabled={atEnd} aria-label={text.next}><Icon name="arrow" size={18} /></button>
-    </div>
-    <div className="svc-track" ref={trackRef} tabIndex={0} aria-label={text.label}>
-      {services.map((s, i) => <article className="svc-card" key={s.title} role="group" aria-roledescription="slide" aria-label={`${i + 1} ${text.of} ${services.length}: ${s.title}`}>
-        <span className="svc-icon" aria-hidden="true"><Icon name={s.icon} size={20} /></span>
-        <h3>{s.title}</h3>
-        <p className="svc-desc">{s.desc}</p>
-        <p className="svc-examples"><span className="svc-label">{examplesLabel}:</span> {s.examples.map((ex, j) => <span key={ex}>{j > 0 && <span className="svc-sep" aria-hidden="true"> · </span>}{ex}</span>)}</p>
-      </article>)}
-    </div>
-    <div className="svc-dots">{services.map((s, i) => <button type="button" key={s.title} className={i === active ? 'is-active' : ''} aria-label={`${text.goTo} ${i + 1} ${text.of} ${services.length}`} aria-current={i === active ? 'true' : undefined} onClick={() => goTo(i)} />)}</div>
-  </div>
-}
-
 function readStoredLang(): Lang {
   try { return window.localStorage.getItem('dofra-lang') === 'en' ? 'en' : 'es' } catch { return 'es' }
 }
@@ -352,6 +346,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [projectType, setProjectType] = useState('')
   const t = content[lang]
   const f = t.form
   const faqs = t.faqs.filter(item => !item.pending)
@@ -378,6 +373,17 @@ export default function App() {
     window.history.replaceState(null, '', '#contacto')
     window.setTimeout(() => field.focus({ preventScroll: true }), reduce ? 0 : 600)
   }
+
+  /** Botones de cotización: preseleccionan el plan o el proyecto a medida y llevan al formulario. */
+  function quote(kind: keyof typeof QUOTE_TYPES) {
+    return (event: MouseEvent<HTMLAnchorElement>) => {
+      setProjectType(QUOTE_TYPES[kind])
+      if (formStatus !== 'sending') setFormStatus('idle')
+      goToContactForm(event)
+    }
+  }
+
+  const linkLabel = (label: string) => `${label} (${t.work.newTab})`
 
   async function submitQuote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -419,6 +425,7 @@ export default function App() {
         throw new Error(`${service} rechazó el envío (HTTP ${response.status}): ${result.message ?? 'sin detalle'}`)
       }
       form.reset()
+      setProjectType('')
       setFormStatus('success')
     } catch (error) {
       // Diagnóstico técnico solo en la consola; el visitante ve un mensaje genérico y conserva sus datos.
@@ -459,7 +466,41 @@ export default function App() {
 
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
-        <div data-reveal><ServicesCarousel services={t.services} examplesLabel={t.examplesLabel} text={t.carousel} /></div>
+        <nav className="svc-jump" aria-label={t.serviceJumpLabel} data-reveal>
+          <a href="#paginas-web">{t.web.title}<Icon name="arrow" size={18} /></a>
+          <a href="#apps-a-medida">{t.apps.title}<Icon name="arrow" size={18} /></a>
+        </nav>
+
+        <section className="svc-block" id="paginas-web" aria-labelledby="paginas-web-titulo">
+          <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo">{t.web.title}</h3><p>{t.web.desc}</p></header>
+          <ul className="plans" aria-label={t.web.plansLabel} data-reveal>{t.web.plans.map(plan => <li className={`plan${plan.featured ? ' is-featured' : ''}`} key={plan.id} aria-labelledby={`plan-${plan.id}`}>
+            <div className="plan-head"><h4 id={`plan-${plan.id}`}>{plan.name}</h4>{plan.featured && <span className="plan-badge">{t.web.recommended}</span>}</div>
+            <p className="plan-tagline">{plan.tagline}</p>
+            <p className="plan-desc">{plan.desc}</p>
+            <p className="plan-changes"><Icon name="check" size={16} />{plan.changes}</p>
+            <a className="plan-link" href={plan.link.url} target="_blank" rel="noopener noreferrer" aria-label={linkLabel(plan.link.label)}>{plan.link.label}<Icon name="arrow" size={15} /></a>
+            <a className={`button plan-cta${plan.featured ? ' button-primary' : ''}`} href="#contacto" onClick={quote(plan.id as keyof typeof QUOTE_TYPES)}>{plan.cta}<Icon name="arrow" size={16} /></a>
+          </li>)}</ul>
+          <aside className="plus" aria-labelledby="plus-titulo" data-reveal>
+            <p className="plus-head"><strong id="plus-titulo">{t.web.plus.title}</strong><span>{t.web.plus.tag}</span></p>
+            <p>{t.web.plus.desc}</p>
+          </aside>
+        </section>
+
+        <section className="svc-block svc-apps" id="apps-a-medida" aria-labelledby="apps-a-medida-titulo" data-reveal>
+          <header className="svc-block-head"><h3 id="apps-a-medida-titulo">{t.apps.title}</h3><p>{t.apps.desc}</p></header>
+          <div className="apps-grid">
+            <div>
+              <p className="apps-label">{t.apps.examplesLabel}</p>
+              <ul className="apps-list">{t.apps.examples.map(item => <li key={item}><Icon name="check" size={16} />{item}</li>)}</ul>
+              <p className="apps-note">{t.apps.note}</p>
+            </div>
+            <div className="apps-actions">
+              {t.apps.links.map(link => <a className="plan-link" key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={linkLabel(link.label)}>{link.label}<Icon name="arrow" size={15} /></a>)}
+              <a className="button button-primary button-large" href="#contacto" onClick={quote('custom')}>{t.apps.cta}<Icon name="arrow" size={18} /></a>
+            </div>
+          </div>
+        </section>
       </div></section>
 
       <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
@@ -516,7 +557,7 @@ export default function App() {
           <div className="quote-grid">
             <label><span>{f.name} <span aria-hidden="true">*</span></span><input name="name" required maxLength={100} autoComplete="name" placeholder={f.namePh} /></label>
             <label><span>{f.email} <span aria-hidden="true">*</span></span><input type="email" name="email" required maxLength={150} autoComplete="email" placeholder={f.emailPh} /></label>
-            <label><span>{f.type} <span aria-hidden="true">*</span></span><select name="project_type" required defaultValue=""><option value="" disabled>{f.typePh}</option>{f.types.map((label, i) => <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>{label}</option>)}</select></label>
+            <label><span>{f.type} <span aria-hidden="true">*</span></span><select name="project_type" required value={projectType} onChange={event => setProjectType(event.target.value)}><option value="" disabled>{f.typePh}</option>{f.types.map((label, i) => <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>{label}</option>)}</select></label>
             <label><span>{f.budget}</span><select name="budget" defaultValue=""><option value="">{f.budgetNone}</option>{f.budgets.map((label, i) => <option key={BUDGET_VALUES[i]} value={BUDGET_VALUES[i]}>{label}</option>)}</select></label>
           </div>
           <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required maxLength={3000} rows={4} placeholder={f.messagePh} onInput={event => event.currentTarget.setCustomValidity('')} /></label>
