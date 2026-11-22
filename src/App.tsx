@@ -558,6 +558,26 @@ export default function App() {
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
       </div></section>
 
+      <section className="section section-soft section-compact" aria-labelledby="proceso-titulo"><div className="container">
+        <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
+        <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
+      </div></section>
+
+      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+        <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
+        <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
+          <figure className="work-shot">
+            <ProjectImage id={item.id} alt={item.alt} />
+          </figure>
+          <div className="work-copy">
+            <p className="work-category">{item.category}</p>
+            <h3 id={`proyecto-${item.id}`}>{item.name}</h3>
+            <p className="work-desc">{item.desc}</p>
+            <a className="work-link" href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.work.view}: ${item.name} (${t.work.newTab})`}>{t.work.view}<Icon name="arrow" size={18} /></a>
+          </div>
+        </article>)}</div>
+      </div></section>
+
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
         <nav className="svc-jump" aria-label={t.serviceJumpLabel} data-reveal>
@@ -611,26 +631,6 @@ export default function App() {
             </div>
           </div>
         </section>
-      </div></section>
-
-      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
-        <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
-        <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
-          <figure className="work-shot">
-            <ProjectImage id={item.id} alt={item.alt} />
-          </figure>
-          <div className="work-copy">
-            <p className="work-category">{item.category}</p>
-            <h3 id={`proyecto-${item.id}`}>{item.name}</h3>
-            <p className="work-desc">{item.desc}</p>
-            <a className="work-link" href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.work.view}: ${item.name} (${t.work.newTab})`}>{t.work.view}<Icon name="arrow" size={18} /></a>
-          </div>
-        </article>)}</div>
-      </div></section>
-
-      <section className="section section-soft section-compact" aria-labelledby="proceso-titulo"><div className="container">
-        <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
-        <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
       </div></section>
 
       <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
