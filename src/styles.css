@@ -263,7 +263,7 @@ main:focus { outline: none; }
 
 /* ---------- Proyectos: composición editorial ---------- */
 .work { background: var(--brand-bg); color: #fff; }
-.work-head { max-width: 680px; margin-bottom: clamp(36px, 5vw, 64px); }
+.work-head { max-width: 100%; margin-bottom: clamp(36px, 5vw, 64px); }
 .work-kicker { font-size: 12px; font-weight: 700; letter-spacing: 2.2px; text-transform: uppercase; color: var(--brand-dot); }
 .work-head h2 { margin-top: 12px; font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.035em; color: #fff; }
 .work-head > p:last-child { margin-top: 12px; font-size: 16px; line-height: 1.6; color: #FFFFFFB3; }
@@ -513,4 +513,9 @@ main:focus { outline: none; }
   .plan { padding: 22px 18px; }
   .plan h4 { font-size: 23px; }
   .plan-features { font-size: 14px; }
+}
+
+/* Keep the portfolio heading on one line when desktop width permits. */
+@media (min-width: 1100px) {
+  .work-head h2 { font-size: clamp(30px, 2.9vw, 44px); white-space: nowrap; }
 }

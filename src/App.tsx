@@ -149,7 +149,7 @@ const content = {
       slogan: 'Built by Dofra.',
     },
     work: {
-      kicker: 'PROYECTOS', title: 'Proyectos que hablan por nosotros.', desc: 'Soluciones digitales diseñadas para necesidades reales.',
+      kicker: 'PROYECTOS', title: 'Proyectos que hablan por nosotras.', desc: 'Soluciones digitales diseñadas para necesidades reales.',
       view: 'Ver proyecto', newTab: 'se abre en una pestaña nueva',
       items: [
         { id: 'odonto360', name: 'odonto360', category: 'Salud · Gestión clínica', url: 'https://odonto.dofrasoftware.workers.dev/',
