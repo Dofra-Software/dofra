@@ -775,7 +775,7 @@ export default function App() {
         <nav className="footer-links" aria-label={t.footer.navLabel}>{t.nav.slice(1).map((label, i) => <a key={label} href={`#${navIds[i + 1]}`}>{label}</a>)}</nav>
         <ul className="footer-social" aria-label={t.footer.socialLabel}>{SOCIAL_LINKS.filter(link => link.url).map(link => <li key={link.id}>
           <a href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`${link.name} (${t.footer.newTab})`}><Icon name={link.id} size={18} /></a>
-        </li>)}</ul>
+        </li>)}<li className="footer-email-item"><a href={`mailto:${CONTACT_EMAIL}`} aria-label={`Email: ${CONTACT_EMAIL}`}><Icon name="mail" size={18} /></a></li></ul>
       </div>
       <div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span className="footer-slogan" lang="en">{t.footer.slogan}</span></div>
     </div></footer>
