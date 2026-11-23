@@ -1,156 +1,143 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import type { RefObject } from 'react'
 
-const DESKTOP_MOTION = '(min-width: 1100px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
-const properties = ['shape', 'copy', 'mask', 'frame-opacity', 'opacity', 'description', 'link'] as const
-const clamp = (value: number) => Math.max(0, Math.min(1, value))
+const DESKTOP = '(min-width: 1100px) and (hover: hover) and (pointer: fine)'
+const DESKTOP_MOTION = `${DESKTOP} and (prefers-reduced-motion: no-preference)`
+const TRIGGER_RATIO = .45
+const FINISH_FALLBACK_MS = 640
+const geometry = ['copy-x', 'copy-y', 'frame-x', 'frame-y'] as const
 
-function ease(value: number) {
-  const progress = clamp(value)
-  return progress * progress * (3 - 2 * progress)
+function clearGeometry(article: HTMLElement) {
+  for (const property of geometry) article.style.removeProperty(`--opening-${property}`)
 }
 
 export default function useProjectOpening(listRef: RefObject<HTMLDivElement>) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const list = listRef.current
-    if (!list || !('IntersectionObserver' in window) || !('ResizeObserver' in window) || !CSS.supports('clip-path', 'inset(0)')) return
+    if (!list || !('IntersectionObserver' in window) || !('ResizeObserver' in window)) return
 
     const media = window.matchMedia(DESKTOP_MOTION)
-    const projects = Array.from(list.querySelectorAll<HTMLElement>('[data-project-motion]'), article => ({
+    const projects = Array.from(list.querySelectorAll<HTMLElement>('.work-item'), article => ({
       article,
       copy: article.querySelector<HTMLElement>('.work-copy')!,
-      shot: article.querySelector<HTMLElement>('.work-shot')!,
       description: article.querySelector<HTMLElement>('.work-desc')!,
-      progress: 0,
-      lastPaint: '',
-      complete: false,
+      expanded: false,
+      fallback: 0,
     }))
-    let stop = () => {}
+    type Project = typeof projects[number]
+    const byArticle = new Map(projects.map(project => [project.article, project]))
+    let observer: IntersectionObserver | undefined
+    let resize: ResizeObserver | undefined
+
+    function measure({ article, copy, description }: Project) {
+      if (!article.offsetWidth || !article.offsetHeight) return
+      const textHeight = description.offsetTop + description.offsetHeight
+      const width = article.offsetWidth
+      const height = article.offsetHeight
+      article.style.setProperty('--opening-copy-x', `${(width - copy.offsetWidth) / 2 - copy.offsetLeft}px`)
+      article.style.setProperty('--opening-copy-y', `${(height - textHeight) / 2 - copy.offsetTop}px`)
+      article.style.setProperty('--opening-frame-x', String(Math.min(1, (copy.offsetWidth + 64) / width)))
+      article.style.setProperty('--opening-frame-y', String(Math.min(1, (textHeight + 48) / height)))
+    }
+
+    function expand(project: Project) {
+      window.clearTimeout(project.fallback)
+      project.expanded = true
+      project.article.dataset.projectOpening = 'expanded'
+      clearGeometry(project.article)
+      observer?.unobserve(project.article)
+      resize?.unobserve(project.article)
+      resize?.unobserve(project.copy)
+    }
+
+    function start(project: Project) {
+      if (project.article.dataset.projectOpening !== 'compact') return
+      observer?.unobserve(project.article)
+      project.article.dataset.projectOpening = 'opening'
+      project.fallback = window.setTimeout(() => expand(project), FINISH_FALLBACK_MS)
+    }
+
+    function observeActivation() {
+      observer?.disconnect()
+      const viewport = document.documentElement.clientHeight
+      const inset = Math.min(185, Math.round(viewport * .24))
+      // Include cards already above the trigger so a large jump cannot skip them.
+      const past = document.documentElement.scrollHeight
+      observer = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting || entry.intersectionRatio < TRIGGER_RATIO) continue
+          const project = byArticle.get(entry.target as HTMLElement)
+          if (project) start(project)
+        }
+      }, { rootMargin: `${past}px 0px -${inset}px 0px`, threshold: TRIGGER_RATIO })
+      for (const { article } of projects) {
+        if (article.dataset.projectOpening === 'compact') observer.observe(article)
+      }
+    }
+
+    function onAnimationEnd(event: AnimationEvent) {
+      if (event.animationName !== 'project-opening-frame') return
+      const project = byArticle.get(event.target as HTMLElement)
+      if (project?.article.dataset.projectOpening === 'opening') expand(project)
+    }
+
+    function onFocus(event: FocusEvent) {
+      const article = (event.target as HTMLElement).closest<HTMLElement>('.work-item')
+      const project = article && byArticle.get(article)
+      if (project && !project.expanded) expand(project)
+    }
+
+    function cleanup() {
+      observer?.disconnect()
+      resize?.disconnect()
+      window.removeEventListener('resize', observeActivation)
+      list?.removeEventListener('animationend', onAnimationEnd)
+      list?.removeEventListener('focusin', onFocus)
+      for (const project of projects) {
+        if (project.article.dataset.projectOpening === 'opening') project.expanded = true
+        window.clearTimeout(project.fallback)
+        delete project.article.dataset.projectOpening
+        clearGeometry(project.article)
+      }
+    }
 
     function configure() {
-      stop()
+      cleanup()
       if (!media.matches) return
 
-      const visible = new Set<HTMLElement>()
-      let frame = 0
-
-      function finish(project: typeof projects[number]) {
-        project.complete = true
-        project.article.setAttribute('data-project-opening', 'complete')
-        for (const property of properties) project.article.style.removeProperty(`--opening-${property}`)
-        resize.unobserve(project.article)
-        resize.unobserve(project.copy)
-        visible.delete(project.article)
-        observer.unobserve(project.article)
-      }
-
-      function paint() {
-        frame = 0
-        const height = document.documentElement.clientHeight
-        const start = height - Math.min(184, height * .20)
-        const distance = Math.min(290, Math.max(180, height * .29))
-
-        // Measure first, then write only for projects with new scroll progress or dimensions.
-        const measurements = projects.filter(({ article }) => visible.has(article)).map(project => {
-          const { article, copy, description, shot } = project
-          const row = article.getBoundingClientRect()
-          return {
-            project,
-            progress: Math.max(project.progress, clamp((start - row.top - row.height / 2) / distance)),
-            centerX: row.width / 2 - copy.offsetLeft - copy.offsetWidth / 2,
-            centerY: row.height / 2 - copy.offsetTop - (description.offsetTop + description.offsetHeight) / 2,
-            frameSide: Math.max(0, (row.width - copy.offsetWidth - 64) / 2),
-            frameEdge: Math.max(0, (row.height - description.offsetTop - description.offsetHeight - 56) / 2),
-            width: row.width,
-            height: row.height,
-            shotTop: shot.offsetTop,
-          }
-        })
-
-        for (const { project, progress, centerX, centerY, frameSide, frameEdge, width, height, shotTop } of measurements) {
-          if (progress >= 1) {
-            finish(project)
-            continue
-          }
-          const measurement = [progress, centerX, centerY, frameSide, frameEdge, width, height, shotTop].join(',')
-          if (measurement === project.lastPaint) continue
-          project.lastPaint = measurement
-          project.progress = progress
-          const move = ease(progress / .86)
-          const expand = ease(progress / .91)
-          const reveal = ease((progress - .22) / .72)
-          const link = ease((progress - .83) / .17)
-          const shadow = -96 * ease((progress - .72) / .24)
-          const mask = `calc(${(1 - reveal) * 100}% + ${shadow}px)`
-          const { style, classList } = project.article
-          const side = frameSide * (1 - expand)
-          const edge = frameEdge * (1 - expand)
-          style.setProperty('--opening-shape', `scale(${1 - 2 * side / width}, ${1 - 2 * edge / height})`)
-          style.setProperty('--opening-copy', `translate3d(${centerX * (1 - move)}px, ${centerY * (1 - move) + 7 * (1 - ease(progress / .16))}px, 0)`)
-          // Keep the reveal within the expanding frame, then uncover the original shadow.
-          const outer = Math.max(0, side) + shadow
-          const vertical = Math.max(0, edge - shotTop) + shadow
-          const left = classList.contains('is-reverse') ? mask : `${outer}px`
-          const right = classList.contains('is-reverse') ? `${outer}px` : mask
-          style.setProperty('--opening-mask', `inset(${vertical}px ${right} ${vertical}px ${left})`)
-          style.setProperty('--opening-frame-opacity', String(1 - ease((progress - .44) / .49)))
-          style.setProperty('--opening-opacity', String(.95 + .05 * ease(progress / .18)))
-          style.setProperty('--opening-link', String(link))
-          style.setProperty('--opening-description', `${ease((progress - .35) / .65) * 100}%`)
+      resize = new ResizeObserver(() => {
+        for (const project of projects) {
+          if (!project.expanded) measure(project)
         }
-      }
-
-      function schedule() {
-        if (visible.size && !frame) frame = requestAnimationFrame(paint)
-      }
-
-      const observer = new IntersectionObserver(entries => {
-        for (const { target, isIntersecting } of entries) {
-          const article = target as HTMLElement
-          if (isIntersecting) visible.add(article)
-          else visible.delete(article)
-        }
-        schedule()
-      }, { rootMargin: '120px 0px' })
-
-      const resize = new ResizeObserver(schedule)
-      const onFocus = (event: FocusEvent) => {
-        const project = projects.find(({ article }) => article.contains(event.target as Node))
-        if (project && !project.complete) finish(project)
-      }
-
+      })
       for (const project of projects) {
-        project.article.setAttribute('data-project-opening', project.complete ? 'complete' : 'pending')
-        if (project.complete) continue
-        observer.observe(project.article)
+        project.article.dataset.projectOpening = project.expanded ? 'expanded' : 'compact'
+        if (project.expanded) continue
+        measure(project)
         resize.observe(project.article)
         resize.observe(project.copy)
       }
+      observeActivation()
+      window.addEventListener('resize', observeActivation)
+      list?.addEventListener('animationend', onAnimationEnd)
       list?.addEventListener('focusin', onFocus)
-      window.addEventListener('scroll', schedule, { passive: true })
-      window.addEventListener('resize', schedule)
-
-      stop = () => {
-        observer.disconnect()
-        resize.disconnect()
-        cancelAnimationFrame(frame)
-        list?.removeEventListener('focusin', onFocus)
-        window.removeEventListener('scroll', schedule)
-        window.removeEventListener('resize', schedule)
-        for (const project of projects) {
-          project.article.removeAttribute('data-project-opening')
-          for (const property of properties) project.article.style.removeProperty(`--opening-${property}`)
-          project.progress = 0
-          project.lastPaint = ''
-        }
-      }
     }
 
     configure()
     media.addEventListener('change', configure)
+    // The fragment can be visited before React has inserted its destination.
+    const initialNavigation = window.location.hash === '#proyectos' && window.matchMedia(DESKTOP).matches
+      ? requestAnimationFrame(() => {
+        if (window.scrollY === 0 && window.location.hash === '#proyectos') {
+          list.closest('#proyectos')?.scrollIntoView({ behavior: 'instant' })
+        }
+      })
+      : 0
+
     return () => {
-      stop()
+      cancelAnimationFrame(initialNavigation)
       media.removeEventListener('change', configure)
+      cleanup()
     }
   }, [listRef])
 }
