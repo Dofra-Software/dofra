@@ -82,7 +82,7 @@
   main :is(h1, h2)[id$="-titulo"]:hover::before { opacity: 1; transform: none; }
   .hero h1[data-size]::after {
     content: attr(data-size); position: absolute; left: calc(100% + 24px); bottom: -10px; white-space: nowrap; pointer-events: none;
-    padding: 3px 6px; background: var(--brand-dot); color: var(--brand-bg);
+    padding: 3px 6px; background: var(--brand-dot); color: var(--brand-bg); font-family: var(--font-mono);
     font-size: 10px; font-weight: 700; line-height: 1; letter-spacing: .06em; font-variant-numeric: tabular-nums;
     opacity: 0; transform: translateY(-3px); transition: opacity .3s ease .05s, transform .35s ease .05s;
   }
