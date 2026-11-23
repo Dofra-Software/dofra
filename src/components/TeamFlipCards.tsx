@@ -34,7 +34,8 @@ function FlipIcon() {
 
 /**
  * Sección «Nosotras»: introducción centrada y dos tarjetas que giran en 3D.
- * El scroll sólo dispara la secuencia (una vez por visita); después, cada tarjeta se controla a mano.
+ * El scroll sólo dispara la secuencia; después, cada tarjeta se controla a mano.
+ * Al salir por completo de la sección, todo vuelve al inicio y la secuencia se repite al regresar.
  */
 export default function TeamFlipCards({ title, titleId, paragraphs, people, moreLabel, backLabel }: Props) {
   // Sin observer o con movimiento reducido no hay estados ocultos de entrada.
@@ -51,6 +52,32 @@ export default function TeamFlipCards({ title, titleId, paragraphs, people, more
   const settled = useRef<boolean[]>(people.map(() => false))
   const cardsEnteredAt = useRef<number | null>(animate ? null : 0)
   const focusAfterFlip = useRef<number | null>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  /** Cada vuelta a la sección arma de nuevo los observers de entrada y de giro. */
+  const [cycle, setCycle] = useState(0)
+  /** Si la sección estuvo en pantalla en esta visita (para no girar tarjetas que nunca se vieron). */
+  const visited = useRef(false)
+
+  // Reinicio: cuando la sección sale completamente de la pantalla, vuelve al estado inicial.
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root || !hasObserver()) return
+    let seen = false
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { seen = true; visited.current = true; return }
+      if (!seen) return
+      seen = false
+      visited.current = false
+      settled.current = people.map(() => false)
+      cardsEnteredAt.current = animate ? null : 0
+      focusAfterFlip.current = null
+      setFlipped(people.map(() => false))
+      if (animate) { setIntroIn(false); setCardsIn(false) }
+      setCycle(c => c + 1)
+    })
+    io.observe(root)
+    return () => io.disconnect()
+  }, [animate, people])
 
   const setFace = (index: number, value: boolean) =>
     setFlipped(prev => (prev[index] === value ? prev : prev.map((f, i) => (i === index ? value : f))))
@@ -72,7 +99,7 @@ export default function TeamFlipCards({ title, titleId, paragraphs, people, more
     if (introRef.current) io.observe(introRef.current)
     if (listRef.current) io.observe(listRef.current)
     return () => io.disconnect()
-  }, [animate])
+  }, [animate, cycle])
 
   // Fase 3: giro automático al llegar a la zona central de la pantalla.
   useEffect(() => {
@@ -83,7 +110,7 @@ export default function TeamFlipCards({ title, titleId, paragraphs, people, more
       const ready = entries
         .filter(entry => {
           // También cuenta una tarjeta que se pasó de largo con un scroll rápido.
-          const passed = entry.rootBounds && entry.boundingClientRect.bottom < entry.rootBounds.top
+          const passed = visited.current && entry.rootBounds && entry.boundingClientRect.bottom < entry.rootBounds.top
           return entry.isIntersecting || passed
         })
         .map(entry => cardRefs.current.indexOf(entry.target as HTMLElement))
@@ -102,7 +129,7 @@ export default function TeamFlipCards({ title, titleId, paragraphs, people, more
       io.disconnect()
       timers.forEach(window.clearTimeout)
     }
-  }, [])
+  }, [cycle])
 
   // Al girar con teclado, el foco pasa al control de la cara que queda visible.
   useEffect(() => {
@@ -119,7 +146,7 @@ export default function TeamFlipCards({ title, titleId, paragraphs, people, more
   }
 
   return (
-    <div className={`container team${animate ? ' team-animated' : ''}`}>
+    <div ref={rootRef} className={`container team${animate ? ' team-animated' : ''}`}>
       <header ref={introRef} className={`team-intro${introIn ? ' is-in' : ''}`}>
         <h2 id={titleId}>{title}</h2>
         {paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}

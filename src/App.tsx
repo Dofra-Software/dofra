@@ -350,6 +350,9 @@ function Brand({ light = false, label }: { light?: boolean; label: string }) {
   return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><img className="brand-logo" src="/dofra-logo.png" alt="" width="48" height="48" /></a>
 }
 
+/** Secciones cuyas apariciones se repiten: al salir por completo de la sección vuelven al inicio. */
+const REPLAY_SECTIONS = '.process-section, #proyectos'
+
 /** Aparición suave de bloques al entrar en pantalla. Sin efecto con movimiento reducido. */
 function useReveal() {
   useEffect(() => {
@@ -361,8 +364,19 @@ function useReveal() {
         io.unobserve(entry.target)
       }
     })
+    const replaySections = Array.from(document.querySelectorAll(REPLAY_SECTIONS))
+    const sectionIo = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) continue
+        entry.target.querySelectorAll('[data-reveal].is-visible').forEach(el => {
+          el.classList.remove('is-visible')
+          io.observe(el)
+        })
+      }
+    })
     document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el))
-    return () => io.disconnect()
+    replaySections.forEach(section => sectionIo.observe(section))
+    return () => { io.disconnect(); sectionIo.disconnect() }
   }, [])
 }
 

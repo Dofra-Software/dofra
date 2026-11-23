@@ -28,6 +28,9 @@ export default function useProjectOpening(listRef: RefObject<HTMLDivElement>) {
     const byArticle = new Map(projects.map(project => [project.article, project]))
     let observer: IntersectionObserver | undefined
     let resize: ResizeObserver | undefined
+    let section: IntersectionObserver | undefined
+    let seen = false
+    const onResize = () => { if (seen) observeActivation() }
 
     function measure({ article, copy, description }: Project) {
       if (!article.offsetWidth || !article.offsetHeight) return
@@ -87,10 +90,25 @@ export default function useProjectOpening(listRef: RefObject<HTMLDivElement>) {
       if (project && !project.expanded) expand(project)
     }
 
+    /** Fuera de la sección, los proyectos vuelven a su estado inicial para abrirse otra vez al regresar. */
+    function reset() {
+      observer?.disconnect()
+      for (const project of projects) {
+        if (project.article.dataset.projectOpening === 'compact') continue
+        window.clearTimeout(project.fallback)
+        project.expanded = false
+        project.article.dataset.projectOpening = 'compact'
+        measure(project)
+        resize?.observe(project.article)
+        resize?.observe(project.copy)
+      }
+    }
+
     function cleanup() {
+      section?.disconnect()
       observer?.disconnect()
       resize?.disconnect()
-      window.removeEventListener('resize', observeActivation)
+      window.removeEventListener('resize', onResize)
       list?.removeEventListener('animationend', onAnimationEnd)
       list?.removeEventListener('focusin', onFocus)
       for (const project of projects) {
@@ -118,7 +136,18 @@ export default function useProjectOpening(listRef: RefObject<HTMLDivElement>) {
         resize.observe(project.copy)
       }
       observeActivation()
-      window.addEventListener('resize', observeActivation)
+      seen = false
+      section = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          if (!seen) { seen = true; observeActivation() }
+          return
+        }
+        if (!seen) return
+        seen = false
+        reset()
+      })
+      section.observe(list?.closest('section') ?? list!)
+      window.addEventListener('resize', onResize)
       list?.addEventListener('animationend', onAnimationEnd)
       list?.addEventListener('focusin', onFocus)
     }

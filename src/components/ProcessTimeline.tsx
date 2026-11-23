@@ -84,6 +84,12 @@ export default function ProcessTimeline({ steps, label }: { steps: ProcessStep[]
 
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
+      if (!visible) {
+        // Fuera de la sección: vuelve al inicio para repetir la entrada al regresar.
+        delete timeline.dataset.entered
+        delete timeline.dataset.manual
+        manualScrollStep.current = null
+      }
       if (visible && desktop.matches) {
         timeline.dataset.entered = 'true'
         measure()

@@ -69,6 +69,15 @@ export default function MobileProcessTimeline({ steps, label }: { steps: Process
       if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) interruptScroll()
     }
 
+    // Al salir por completo de la sección se olvida la selección manual: al volver, manda el scroll.
+    const section = list.closest('section') ?? list
+    const leave = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) return
+      manualStep.current = null
+      smoothTarget.current = null
+      schedule()
+    })
+    leave.observe(section)
     const resize = new ResizeObserver(measure)
     rows.forEach(row => resize.observe(row))
     mobile.addEventListener('change', measure)
@@ -82,6 +91,7 @@ export default function MobileProcessTimeline({ steps, label }: { steps: Process
 
     return () => {
       resize.disconnect()
+      leave.disconnect()
       window.cancelAnimationFrame(frame)
       mobile.removeEventListener('change', measure)
       motion.removeEventListener('change', schedule)
