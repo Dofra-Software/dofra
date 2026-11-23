@@ -93,6 +93,8 @@ export const frenchContent = {
   ],
   aboutKicker: 'À PROPOS DE DOFRA',
   aboutTitle: 'À propos de Dofra',
+  peopleMore: 'Voir plus',
+  peopleBack: 'Retour',
   aboutDesc: [
     'Nous sommes Franca et Victoria, comptable et ingénieure en logiciel. Nous avons créé Dofra pour aider les entreprises et les indépendants à transformer leurs idées et leurs besoins en outils numériques qui facilitent leur travail.',
     'Nous réunissons une expérience en entreprise internationale et plus de quatre ans dans les systèmes logiciels. Nous prenons le temps de vous écouter, de poser des questions et de comprendre votre projet pour concevoir une solution adaptée à votre activité et facile à utiliser.',

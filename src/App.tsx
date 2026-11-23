@@ -4,6 +4,7 @@ import DofraParticles from './components/DofraParticles'
 import ProcessTimeline from './components/ProcessTimeline'
 import MobileProcessTimeline from './components/MobileProcessTimeline'
 import useProjectOpening from './components/useProjectOpening'
+import TeamFlipCards from './components/TeamFlipCards'
 import { frenchContent } from './content.fr'
 
 const LANGUAGES = {
@@ -110,7 +111,7 @@ const content = {
       { title: 'Revisamos y ajustamos', desc: 'Te mostramos los avances, escuchamos tu opinión y realizamos los ajustes acordados.' },
       { title: 'Entregamos y acompañamos', desc: 'Ponemos en marcha la solución y te explicamos cómo usarla. También podemos acordar soporte, mantenimiento y futuras mejoras.' },
     ],
-    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Nosotras',
+    aboutKicker: 'SOBRE DOFRA', aboutTitle: 'Nosotras', peopleMore: 'Ver más', peopleBack: 'Volver',
     aboutDesc: [
       'Somos Franca y Victoria, contadora pública e ingeniera en software. Creamos Dofra para ayudar a negocios y profesionales a transformar sus ideas y necesidades en herramientas digitales que les faciliten el trabajo.',
       'Combinamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas con una forma de trabajar cercana: escuchamos, preguntamos y buscamos entender qué necesita cada proyecto. Así, desarrollamos soluciones a medida que tienen sentido para tu negocio y son fáciles de usar.',
@@ -242,7 +243,7 @@ const content = {
       { title: 'We review and refine', desc: 'We show you our progress, listen to your feedback and make the agreed adjustments.' },
       { title: 'We deliver and support', desc: 'We launch the solution and show you how to use it. We can also arrange support, maintenance and future improvements.' },
     ],
-    aboutKicker: 'ABOUT DOFRA', aboutTitle: 'About Dofra',
+    aboutKicker: 'ABOUT DOFRA', aboutTitle: 'About Dofra', peopleMore: 'See more', peopleBack: 'Back',
     aboutDesc: [
       'We are Franca and Victoria, a certified public accountant and a software engineer. We created Dofra to help businesses and professionals turn their ideas and needs into digital tools that make their work easier.',
       'We bring together experience at international companies and more than 4 years working in software systems with a hands-on, personal approach: we listen, ask questions and make sure we understand what each project needs. That way, we build tailored solutions that make sense for your business and are easy to use.',
@@ -697,13 +698,10 @@ export default function App() {
         </section>
       </div></section>
 
-      <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo"><div className="container about-grid" data-reveal>
-        <div className="about-copy">
-          <h2 id="nosotras-titulo">{t.aboutTitle}</h2>
-          {t.aboutDesc.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
-        </div>
-        <ul className="people">{t.people.map(person => <li className="person-card" key={person.name}><span className="person-initial" aria-hidden="true">{person.name[0]}</span><div><h3>{person.name}<span>{person.role}</span></h3><p>{person.desc}</p></div></li>)}</ul>
-      </div></section>
+      <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
+        <TeamFlipCards title={t.aboutTitle} titleId="nosotras-titulo" paragraphs={t.aboutDesc} people={t.people}
+          moreLabel={t.peopleMore} backLabel={t.peopleBack} />
+      </section>
 
       <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></header>
