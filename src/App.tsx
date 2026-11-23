@@ -54,7 +54,7 @@ const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[
 const content = {
   es: {
     skip: 'Saltar al contenido',
-    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    nav: ['Inicio', 'Proyectos', 'Servicios', 'Nosotras', 'Contacto'], talk: 'Hablemos',
     navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Elegir idioma', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
@@ -177,7 +177,7 @@ const content = {
   },
   en: {
     skip: 'Skip to content',
-    nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
+    nav: ['Home', 'Projects', 'Services', 'About us', 'Contact'], talk: "Let's talk",
     navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Choose language', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
@@ -465,7 +465,7 @@ export default function App() {
     return () => document.removeEventListener('keydown', onEscape)
   }, [menuOpen])
 
-  const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
+  const navIds = ['inicio', 'proyectos', 'servicios', 'nosotras', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
 
@@ -596,8 +596,8 @@ export default function App() {
 
       <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
 
-      <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
-        <TechGuides />
+      <section className="section section-soft section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
+        <TechGuides tone="light" />
         <TeamFlipCards title={t.aboutTitle} titleId="nosotras-titulo" paragraphs={t.aboutDesc} people={t.people}
           moreLabel={t.peopleMore} backLabel={t.peopleBack} />
       </section>

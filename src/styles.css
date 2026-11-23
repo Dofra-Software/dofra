@@ -323,8 +323,8 @@ main:focus { outline: none; }
   display: grid; gap: clamp(36px, 4.5vw, 56px);
 }
 .team-intro { max-width: 720px; margin-inline: auto; text-align: center; }
-.team-intro h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -1.2px; color: #fff; }
-.team-intro p { margin-top: 18px; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.8; color: var(--muted-dark); }
+.team-intro h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -1.2px; color: var(--ink); }
+.team-intro p { margin-top: 18px; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.8; color: var(--muted); }
 .team-intro h2 + p { margin-top: clamp(16px, 2vw, 22px); }
 
 .team-cards { width: 100%; max-width: 940px; margin-inline: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
@@ -342,7 +342,7 @@ main:focus { outline: none; }
 }
 .team-face > :first-child { margin-top: auto; }
 .team-front { background: var(--team-card); border-color: var(--team-line); transform: rotateY(0deg); transition: border-color .25s; }
-.team-back { background: #FFFFFF; border-color: #FFFFFF; color: var(--navy-900); transform: rotateY(180deg); }
+.team-back { background: #FFFFFF; border-color: var(--line); color: var(--navy-900); transform: rotateY(180deg); }
 .team-card:not(.is-flipped):hover .team-front { border-color: color-mix(in srgb, var(--brand-dot) 55%, var(--team-line)); }
 
 .team-initial { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-dot); color: var(--navy-900); font-family: var(--font-display); font-weight: 800; font-size: 26px; margin-bottom: 18px; }
@@ -360,7 +360,7 @@ main:focus { outline: none; }
 .team-card:hover .team-toggle svg { transform: rotate(-90deg); }
 .team-toggle svg { transition: transform .35s var(--team-ease); }
 .team-front .team-toggle:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.section-dark .team-back .team-toggle:focus-visible { outline: 2px solid var(--navy-900); outline-offset: 2px; }
+.team-back .team-toggle:focus-visible { outline: 2px solid var(--navy-900); outline-offset: 2px; }
 
 /* Entrada: sólo cuando hay animación (sin observer o con movimiento reducido, todo es visible). */
 .team-animated .team-intro > * { opacity: 0; transform: translateY(12px); transition: opacity .55s var(--team-ease), transform .55s var(--team-ease); }
@@ -396,6 +396,7 @@ main:focus { outline: none; }
 /* ---------- Contacto ---------- */
 .contact-panel { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 56px); align-items: start; background: var(--brand-bg); color: #fff; border-radius: 22px; padding: clamp(28px, 4.5vw, 56px); position: relative; overflow: hidden; }
 .contact-panel > * { min-width: 0; }
+.contact { background: var(--bg-soft); }
 .contact .kicker { color: var(--accent-on-dark); }
 .contact-intro > p:not(.kicker) { margin-top: 14px; font-size: 16px; line-height: 1.75; color: #FFFFFFBF; }
 .contact-intro .quote-email { margin-top: 22px; font-size: 15px; }
