@@ -61,7 +61,11 @@ const content = {
     heroContact: 'Contanos qué necesitás', seeWork: 'Ver servicios',
     trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'En todo el mundo',
     serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Elegí por dónde empezar: una web para tu negocio o una herramienta hecha a medida.',
-    serviceJumpLabel: 'Ir a cada servicio',
+    serviceJumpLabel: 'Explorar servicios',
+    servicePaths: {
+      web: { desc: 'Mostrá tus servicios, recibí consultas o tomá reservas online.', cta: 'Ver planes web' },
+      apps: { desc: 'Organizá turnos, clientes o tareas con una herramienta diseñada para tu negocio.', cta: 'Ver ejemplos de sistemas' },
+    },
     web: {
       title: 'Páginas web',
       desc: 'Primero entendemos cómo trabaja tu negocio y después diseñamos tu web, para que tus clientes conozcan tus servicios, te contacten o reserven online.',
@@ -92,11 +96,11 @@ const content = {
       desc: 'Cuando el negocio necesita más que una web, desarrollamos aplicaciones, herramientas internas, integraciones y automatizaciones pensadas para su forma de trabajar.',
       note: 'También podemos conectar la agenda que ya usás o sumar reservas online a la web que ya tenés.',
       examplesLabel: 'Algunos ejemplos',
-      examples: ['Aplicaciones para tu equipo o tus clientes', 'Herramientas internas', 'Integraciones con otros sistemas', 'Automatizaciones de tareas repetitivas'],
+      examples: ['Agendas de turnos y reservas', 'Fichas e historial de clientes', 'Registro de novedades entre turnos', 'Automatización de tareas repetitivas'],
       links: [
         { label: 'Ver proyecto · Relevo', url: 'https://relevo.dofrasoftware.com/' },
       ],
-      cta: 'Pedir presupuesto a medida',
+      cta: 'Contanos qué necesitás',
     },
     processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
     process: [
@@ -187,7 +191,11 @@ const content = {
     heroContact: 'Tell us what you need', seeWork: 'View services',
     trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Worldwide',
     serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Choose where to start: a website for your business or a tool built just for you.',
-    serviceJumpLabel: 'Go to each service',
+    serviceJumpLabel: 'Explore services',
+    servicePaths: {
+      web: { desc: 'Showcase your services, receive enquiries or take online bookings.', cta: 'View website plans' },
+      apps: { desc: 'Manage appointments, clients or tasks with a tool built for your business.', cta: 'See examples of custom systems' },
+    },
     web: {
       title: 'Websites',
       desc: 'We start by understanding how your business works, then design your website so your customers can learn about your services, get in touch or book online.',
@@ -218,11 +226,11 @@ const content = {
       desc: 'When a business needs more than a website, we build apps, internal tools, integrations and automations designed around the way it works.',
       note: 'We can also connect the booking calendar you already use or add online booking to your existing website.',
       examplesLabel: 'Some examples',
-      examples: ['Apps for your team or your customers', 'Internal tools', 'Integrations with other systems', 'Automation of repetitive tasks'],
+      examples: ['Appointment and booking calendars', 'Client records and history', 'Handover logs for shift teams', 'Automation of repetitive tasks'],
       links: [
         { label: 'View project · Relevo', url: 'https://relevo.dofrasoftware.com/' },
       ],
-      cta: 'Request a custom quote',
+      cta: 'Tell us what you need',
     },
     processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
     process: [
@@ -355,6 +363,40 @@ function useReveal() {
   }, [])
 }
 
+/** Destaca el destino cuando su encabezado entra en el área visible. */
+function useServiceDestination() {
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) return
+    let observer: IntersectionObserver | undefined
+    let heading: HTMLElement | null = null
+
+    function watchDestination() {
+      observer?.disconnect()
+      heading?.classList.remove('svc-arrival')
+      const id = window.location.hash.slice(1)
+      if (id !== 'paginas-web' && id !== 'apps-a-medida') return
+
+      const destination = document.getElementById(`${id}-titulo`)
+      if (!destination) return
+      heading = destination
+      observer = new IntersectionObserver(([entry], currentObserver) => {
+        if (!entry.isIntersecting || heading !== destination) return
+        destination.classList.add('svc-arrival')
+        currentObserver.disconnect()
+      }, { rootMargin: `0px 0px -${Math.round(window.innerHeight * .15)}px`, threshold: 1 })
+      observer.observe(destination)
+    }
+
+    watchDestination()
+    window.addEventListener('hashchange', watchDestination)
+    return () => {
+      window.removeEventListener('hashchange', watchDestination)
+      observer?.disconnect()
+      heading?.classList.remove('svc-arrival')
+    }
+  }, [])
+}
+
 function readStoredLang(): Lang {
   try {
     const stored = window.localStorage.getItem('dofra-lang')
@@ -436,6 +478,7 @@ export default function App() {
   const faqs = t.faqs.filter((item: Faq) => !item.pending)
   useReveal()
   useProjectOpening(projectsRef)
+  useServiceDestination()
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -590,12 +633,20 @@ export default function App() {
       <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
         <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
         <nav className="svc-jump" aria-label={t.serviceJumpLabel} data-reveal>
-          <a href="#paginas-web">{t.web.title}<Icon name="arrow" size={18} /></a>
-          <a href="#apps-a-medida">{t.apps.title}<Icon name="arrow" size={18} /></a>
+          {[
+            { id: 'paginas-web', title: t.web.title, ...t.servicePaths.web },
+            { id: 'apps-a-medida', title: t.apps.title, ...t.servicePaths.apps },
+          ].map(({ id, title, desc, cta }) => (
+            <a key={id} href={`#${id}`} aria-labelledby={`${id}-enlace ${id}-accion`} aria-describedby={`${id}-resumen`}>
+              <strong id={`${id}-enlace`}>{title}</strong>
+              <span className="svc-jump-description" id={`${id}-resumen`}>{desc}</span>
+              <span className="svc-jump-action" id={`${id}-accion`}>{cta}<Icon name="arrow" size={16} /></span>
+            </a>
+          ))}
         </nav>
 
-        <section className="svc-block" id="paginas-web" aria-labelledby="paginas-web-titulo">
-          <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo">{t.web.title}</h3><p>{t.web.desc}</p></header>
+        <section className="svc-block" id="paginas-web" tabIndex={-1} aria-labelledby="paginas-web-titulo">
+          <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo"><span>{t.web.title}</span></h3><p>{t.web.desc}</p></header>
           <div className="plan-controls" role="group" aria-label={t.web.plansLabel}>
             {t.web.plans.map((plan, index) => <button type="button" key={plan.id}
               aria-controls="planes-web" aria-current={index === activePlan ? 'true' : undefined}
@@ -626,8 +677,8 @@ export default function App() {
           </aside>
         </section>
 
-        <section className="svc-block svc-apps" id="apps-a-medida" aria-labelledby="apps-a-medida-titulo" data-reveal>
-          <header className="svc-block-head"><h3 id="apps-a-medida-titulo">{t.apps.title}</h3><p>{t.apps.desc}</p></header>
+        <section className="svc-block svc-apps" id="apps-a-medida" tabIndex={-1} aria-labelledby="apps-a-medida-titulo" data-reveal>
+          <header className="svc-block-head"><h3 id="apps-a-medida-titulo"><span>{t.apps.title}</span></h3><p>{t.apps.desc}</p></header>
           <div className="apps-grid">
             <div>
               <p className="apps-label">{t.apps.examplesLabel}</p>
