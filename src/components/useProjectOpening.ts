@@ -5,7 +5,7 @@ const DESKTOP = '(min-width: 1100px) and (hover: hover) and (pointer: fine)'
 const DESKTOP_MOTION = `${DESKTOP} and (prefers-reduced-motion: no-preference)`
 const TRIGGER_RATIO = .45
 const FINISH_FALLBACK_MS = 640
-const geometry = ['copy-x', 'copy-y', 'frame-x', 'frame-y'] as const
+const geometry = ['copy-x', 'copy-y', 'frame-inline', 'frame-block'] as const
 
 function clearGeometry(article: HTMLElement) {
   for (const property of geometry) article.style.removeProperty(`--opening-${property}`)
@@ -36,8 +36,8 @@ export default function useProjectOpening(listRef: RefObject<HTMLDivElement>) {
       const height = article.offsetHeight
       article.style.setProperty('--opening-copy-x', `${(width - copy.offsetWidth) / 2 - copy.offsetLeft}px`)
       article.style.setProperty('--opening-copy-y', `${(height - textHeight) / 2 - copy.offsetTop}px`)
-      article.style.setProperty('--opening-frame-x', String(Math.min(1, (copy.offsetWidth + 64) / width)))
-      article.style.setProperty('--opening-frame-y', String(Math.min(1, (textHeight + 48) / height)))
+      article.style.setProperty('--opening-frame-inline', `${Math.max(0, (width - copy.offsetWidth - 64) / 2)}px`)
+      article.style.setProperty('--opening-frame-block', `${Math.max(0, (height - textHeight - 48) / 2)}px`)
     }
 
     function expand(project: Project) {

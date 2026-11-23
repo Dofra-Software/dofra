@@ -87,16 +87,18 @@ const content = {
           link: { label: 'Ver ejemplo de gestión · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' }, cta: 'Cotizar Advanced' },
       ],
       plus: { title: 'Actualizaciones Plus', tag: 'Adicional opcional',
-        desc: 'Sumá hasta 2 cambios simples de contenido al mes a cualquiera de nuestros planes. Por ejemplo, actualizar horarios, reemplazar una foto o cambiar los precios de una sección.' },
+        lead: 'Sumá hasta 2 cambios simples de contenido al mes', desc: 'a cualquiera de nuestros planes. Por ejemplo, actualizar horarios, reemplazar una foto o cambiar los precios de una sección.' },
     },
     apps: {
       title: 'Apps y sistemas a medida',
       desc: 'Cuando el negocio necesita más que una web, desarrollamos aplicaciones, herramientas internas, integraciones y automatizaciones pensadas para su forma de trabajar.',
-      note: 'También podemos conectar la agenda que ya usás o sumar reservas online a la web que ya tenés.',
-      examplesLabel: 'Algunos ejemplos',
-      examples: ['Agendas de turnos y reservas', 'Fichas e historial de clientes', 'Registro de novedades entre turnos', 'Automatización de tareas repetitivas'],
-      links: [
-        { label: 'Ver proyecto · Relevo', url: 'https://relevo.dofrasoftware.com/' },
+      cards: [
+        { title: 'Turnos y reservas', desc: 'Agendas por profesional, gestión de horarios y reservas online.',
+          link: { label: 'Ver ejemplo · Spa Gestor', url: 'https://spa-gestor.pages.dev/' } },
+        { title: 'Gestión interna', desc: 'Fichas de clientes, seguimiento de pendientes y registro de novedades entre turnos.',
+          link: { label: 'Ver ejemplo · Relevo', url: 'https://relevo.dofrasoftware.com/' } },
+        { title: 'Integraciones y automatización', desc: 'Conectá las herramientas que ya usás, como tu agenda, y automatizá tareas repetitivas.',
+          link: null },
       ],
       cta: 'Contanos qué necesitás',
     },
@@ -217,16 +219,18 @@ const content = {
           link: { label: 'See a management example · odonto360', url: 'https://odonto.dofrasoftware.workers.dev/' }, cta: 'Get an Advanced quote' },
       ],
       plus: { title: 'Plus Updates', tag: 'Optional add-on',
-        desc: 'Add up to 2 simple content changes per month to any of our plans. For example, updating opening hours, replacing a photo or changing the prices in a section.' },
+        lead: 'Add up to 2 simple content changes per month', desc: 'to any of our plans. For example, updating opening hours, replacing a photo or changing the prices in a section.' },
     },
     apps: {
       title: 'Apps and custom systems',
       desc: 'When a business needs more than a website, we build apps, internal tools, integrations and automations designed around the way it works.',
-      note: 'We can also connect the booking calendar you already use or add online booking to your existing website.',
-      examplesLabel: 'Some examples',
-      examples: ['Appointment and booking calendars', 'Client records and history', 'Handover logs for shift teams', 'Automation of repetitive tasks'],
-      links: [
-        { label: 'View project · Relevo', url: 'https://relevo.dofrasoftware.com/' },
+      cards: [
+        { title: 'Appointments and bookings', desc: 'Staff calendars, scheduling and online bookings.',
+          link: { label: 'See an example · Spa Gestor', url: 'https://spa-gestor.pages.dev/' } },
+        { title: 'Internal operations', desc: 'Client records, task tracking and shift handover logs.',
+          link: { label: 'See an example · Relevo', url: 'https://relevo.dofrasoftware.com/' } },
+        { title: 'Integrations and automation', desc: 'Connect the tools you already use, such as your calendar, and automate repetitive tasks.',
+          link: null },
       ],
       cta: 'Tell us what you need',
     },
@@ -671,22 +675,24 @@ export default function App() {
           </li>)}</ul>
           <aside className="plus" aria-labelledby="plus-titulo" data-reveal>
             <p className="plus-head"><strong id="plus-titulo">{t.web.plus.title}</strong><span>{t.web.plus.tag}</span></p>
-            <p>{t.web.plus.desc}</p>
+            <p><strong>{t.web.plus.lead}</strong> {t.web.plus.desc}</p>
           </aside>
         </section>
 
         <section className="svc-block svc-apps" id="apps-a-medida" tabIndex={-1} aria-labelledby="apps-a-medida-titulo" data-reveal>
           <header className="svc-block-head"><h3 id="apps-a-medida-titulo"><span>{t.apps.title}</span></h3><p>{t.apps.desc}</p></header>
-          <div className="apps-grid">
-            <div>
-              <p className="apps-label">{t.apps.examplesLabel}</p>
-              <ul className="apps-list">{t.apps.examples.map(item => <li key={item}><Icon name="check" size={16} />{item}</li>)}</ul>
-              <p className="apps-note">{t.apps.note}</p>
-            </div>
-            <div className="apps-actions">
-              {t.apps.links.map(link => <a className="plan-link" key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={linkLabel(link.label)}>{link.label}<Icon name="arrow" size={15} /></a>)}
-              <a className="button button-primary button-large" href="#contacto" onClick={quote('custom')}>{t.apps.cta}<Icon name="arrow" size={18} /></a>
-            </div>
+          <ul className="apps-grid">
+            {t.apps.cards.map(({ title, desc, link }) => (
+              <li className="apps-card" key={title}>
+                <h4>{title}</h4>
+                <p>{desc}</p>
+                {link && <a className="plan-link" href={link.url} target="_blank" rel="noopener noreferrer"
+                  aria-label={linkLabel(link.label)}>{link.label}<Icon name="arrow" size={15} /></a>}
+              </li>
+            ))}
+          </ul>
+          <div className="apps-action">
+            <a className="button button-primary button-large" href="#contacto" onClick={quote('custom')}>{t.apps.cta}<Icon name="arrow" size={18} /></a>
           </div>
         </section>
       </div></section>
