@@ -280,6 +280,51 @@ main:focus { outline: none; }
 .work-link:hover { background: #EEF2F7; }
 .work-link:focus-visible { outline: 3px solid var(--brand-dot); outline-offset: 3px; }
 
+/* La grilla de cada proyecto conserva su geometría durante la apertura. */
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .work-item[data-project-opening].is-visible { animation: none; }
+
+  .work-item[data-project-opening="pending"] {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .work-item[data-project-opening="pending"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--brand-bg);
+    border: 2px solid #C4938E85;
+    border-radius: 22px;
+    box-shadow: 0 14px 32px #0003;
+    transform: var(--opening-shape, none);
+    opacity: var(--opening-frame-opacity, 0);
+    pointer-events: none;
+  }
+
+  .work-item[data-project-opening="pending"] .work-shot {
+    clip-path: var(--opening-mask, inset(50%));
+  }
+
+  .work-item[data-project-opening="pending"] .work-copy {
+    position: relative;
+    z-index: 1;
+    transform: var(--opening-copy, none);
+    opacity: var(--opening-opacity, 0);
+  }
+
+  .work-item[data-project-opening="pending"] .work-desc {
+    color: #E0E6F0;
+    color: color-mix(in srgb, #FFFFFFB8 var(--opening-description, 0%), #E0E6F0);
+  }
+
+  .work-item[data-project-opening="pending"] .work-link {
+    opacity: var(--opening-link, 0);
+    pointer-events: none;
+  }
+}
+
 /* ---------- Proceso ---------- */
 .process-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .process-card { padding: 22px; }

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import DofraParticles from './components/DofraParticles'
 import ProcessTimeline from './components/ProcessTimeline'
 import MobileProcessTimeline from './components/MobileProcessTimeline'
+import useProjectOpening from './components/useProjectOpening'
 import { frenchContent } from './content.fr'
 
 const LANGUAGES = {
@@ -32,6 +33,8 @@ const projectImages: Record<string, { width: number; height: number; variants: r
   'r-mas-arquitectura': { width: 1905, height: 913, variants: [480, 800, 1200, 1600] },
   'rio-cine': { width: 2400, height: 1350, variants: [480, 800, 1200, 1600, 1920] },
 }
+
+const PROJECT_OPENINGS = new Set(['odonto360', 'spa-gestor', 'rio-cine'])
 
 function ProjectImage({ id, alt }: { id: string; alt: string }) {
   const { width, height, variants } = projectImages[id]
@@ -422,6 +425,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLElement>(null)
   const menuToggleRef = useRef<HTMLButtonElement>(null)
+  const projectsRef = useRef<HTMLDivElement>(null)
   const plansRef = useRef<HTMLUListElement>(null)
   const [activePlan, setActivePlan] = useState(0)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
@@ -431,6 +435,7 @@ export default function App() {
   const f = t.form
   const faqs = t.faqs.filter((item: Faq) => !item.pending)
   useReveal()
+  useProjectOpening(projectsRef)
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -569,7 +574,7 @@ export default function App() {
 
       <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
         <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
-        <div className="work-list">{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
+        <div className="work-list" ref={projectsRef}>{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal data-project-motion={PROJECT_OPENINGS.has(item.id) || undefined} aria-labelledby={`proyecto-${item.id}`}>
           <figure className="work-shot">
             <ProjectImage id={item.id} alt={item.alt} />
           </figure>
