@@ -5,6 +5,7 @@ import ProcessTimeline from './components/ProcessTimeline'
 import MobileProcessTimeline from './components/MobileProcessTimeline'
 import useProjectOpening from './components/useProjectOpening'
 import TeamFlipCards from './components/TeamFlipCards'
+import ServicesSection from './components/ServicesSection'
 import { frenchContent } from './content.fr'
 
 const LANGUAGES = {
@@ -60,20 +61,17 @@ const content = {
     heroContact: 'Contanos qué necesitás', seeWork: 'Ver servicios',
     trust1: 'Pensado para crecer', trust2: 'Diseño + desarrollo', trust3: 'En todo el mundo',
     serviceKicker: 'QUÉ HACEMOS', serviceTitle: '¿Cómo podemos ayudar a tu negocio?', serviceDesc: 'Elegí por dónde empezar: una web para tu negocio o una herramienta hecha a medida.',
-    serviceJumpLabel: 'Explorar servicios',
-    servicePaths: {
-      web: { desc: 'Mostrá tus servicios, recibí consultas o tomá reservas online.', cta: 'Ver planes web' },
-      apps: { desc: 'Organizá turnos, clientes o tareas con una herramienta diseñada para tu negocio.', cta: 'Ver ejemplos de sistemas' },
-    },
+    serviceTabsLabel: 'Elegir tipo de servicio',
     web: {
       title: 'Páginas web',
-      desc: 'Primero entendemos cómo trabaja tu negocio y después diseñamos tu web, para que tus clientes conozcan tus servicios, te contacten o reserven online.',
+      plansTitle: 'Planes web',
+      plansDesc: 'Elegí el punto de partida para tu negocio. Cada plan incorpora nuevas herramientas y funcionalidades.',
       plansLabel: 'Planes de páginas web',
       recommended: 'Recomendado',
       plans: [
         { id: 'esencial', name: 'Esencial', tagline: 'Tu web para mostrar lo que hacés.',
-          desc: 'Página a medida para celular y computadora, con servicios, fotos, horarios y consultas por WhatsApp.',
-          features: ["Página a medida para celular y computadora.","Servicios, fotos y horarios.","Consultas por WhatsApp."],
+          desc: 'Página a medida para celular y computadora, con servicios, fotos, horarios y consultas por WhatsApp, correo electrónico u otros canales de contacto.',
+          features: ["Página a medida para celular y computadora.","Servicios, fotos y horarios.","Consultas por WhatsApp, correo electrónico u otros canales de contacto."],
           changes: 'Cambios puntuales con cargo.',
           link: { label: 'Ver proyecto · RÍO CINE', url: 'https://rio-cine.pages.dev/' }, cta: 'Cotizar Esencial' },
         { id: 'pro', name: 'Pro', tagline: 'Tu web con reservas online.', featured: true,
@@ -91,17 +89,11 @@ const content = {
         lead: 'Sumá hasta 2 cambios simples de contenido al mes', desc: 'a cualquiera de nuestros planes. Por ejemplo, actualizar horarios, reemplazar una foto o cambiar los precios de una sección.' },
     },
     apps: {
-      title: 'Apps y sistemas a medida',
-      desc: 'Cuando el negocio necesita más que una web, desarrollamos aplicaciones, herramientas internas, integraciones y automatizaciones pensadas para su forma de trabajar.',
-      cards: [
-        { title: 'Turnos y reservas', desc: 'Agendas por profesional, gestión de horarios y reservas online.',
-          link: { label: 'Ver ejemplo · Spa Gestor', url: 'https://spa-gestor.pages.dev/' } },
-        { title: 'Gestión interna', desc: 'Fichas de clientes, seguimiento de pendientes y registro de novedades entre turnos.',
-          link: { label: 'Ver ejemplo · Relevo', url: 'https://relevo.dofrasoftware.com/' } },
-        { title: 'Integraciones y automatización', desc: 'Conectá las herramientas que ya usás, como tu agenda, y automatizá tareas repetitivas.',
-          link: null },
-      ],
-      cta: 'Contanos qué necesitás',
+      title: 'Sistemas a medida',
+      kicker: 'DESARROLLO A MEDIDA',
+      heading: ['Contanos qué necesitás.', 'Nosotros lo desarrollamos.'],
+      desc: 'Diseñamos herramientas que se adaptan a la forma de trabajar de tu negocio, desde agendas y gestión de clientes hasta soluciones personalizadas.',
+      cta: 'Hablemos de tu proyecto',
     },
     processKicker: 'CÓMO TRABAJAMOS', processTitle: 'Un proceso simple y claro.',
     process: [
@@ -192,20 +184,17 @@ const content = {
     heroContact: 'Tell us what you need', seeWork: 'View services',
     trust1: 'Built to grow', trust2: 'Design + development', trust3: 'Worldwide',
     serviceKicker: 'WHAT WE DO', serviceTitle: 'How can we help your business?', serviceDesc: 'Choose where to start: a website for your business or a tool built just for you.',
-    serviceJumpLabel: 'Explore services',
-    servicePaths: {
-      web: { desc: 'Showcase your services, receive enquiries or take online bookings.', cta: 'View website plans' },
-      apps: { desc: 'Manage appointments, clients or tasks with a tool built for your business.', cta: 'See examples of custom systems' },
-    },
+    serviceTabsLabel: 'Choose a type of service',
     web: {
       title: 'Websites',
-      desc: 'We start by understanding how your business works, then design your website so your customers can learn about your services, get in touch or book online.',
+      plansTitle: 'Website plans',
+      plansDesc: 'Choose the right starting point for your business. Each plan adds new tools and features.',
       plansLabel: 'Website plans',
       recommended: 'Recommended',
       plans: [
         { id: 'esencial', name: 'Essential', tagline: 'A website to show what you do.',
-          desc: 'A custom site for mobile and desktop, with your services, photos, opening hours and WhatsApp inquiries.',
-          features: ["Custom website for mobile and desktop.","Services, photos and opening hours.","Customer enquiries through WhatsApp."],
+          desc: 'A custom site for mobile and desktop, with your services, photos, opening hours and enquiries through WhatsApp, email or other contact channels.',
+          features: ["Custom website for mobile and desktop.","Services, photos and opening hours.","Customer enquiries through WhatsApp, email or other contact channels."],
           changes: 'One-off changes billed separately.',
           link: { label: 'View project · RÍO CINE', url: 'https://rio-cine.pages.dev/' }, cta: 'Get an Essential quote' },
         { id: 'pro', name: 'Pro', tagline: 'Your website with online booking.', featured: true,
@@ -223,17 +212,11 @@ const content = {
         lead: 'Add up to 2 simple content changes per month', desc: 'to any of our plans. For example, updating opening hours, replacing a photo or changing the prices in a section.' },
     },
     apps: {
-      title: 'Apps and custom systems',
-      desc: 'When a business needs more than a website, we build apps, internal tools, integrations and automations designed around the way it works.',
-      cards: [
-        { title: 'Appointments and bookings', desc: 'Staff calendars, scheduling and online bookings.',
-          link: { label: 'See an example · Spa Gestor', url: 'https://spa-gestor.pages.dev/' } },
-        { title: 'Internal operations', desc: 'Client records, task tracking and shift handover logs.',
-          link: { label: 'See an example · Relevo', url: 'https://relevo.dofrasoftware.com/' } },
-        { title: 'Integrations and automation', desc: 'Connect the tools you already use, such as your calendar, and automate repetitive tasks.',
-          link: null },
-      ],
-      cta: 'Tell us what you need',
+      title: 'Custom systems',
+      kicker: 'CUSTOM DEVELOPMENT',
+      heading: ['Tell us what you need.', 'We will build it.'],
+      desc: 'We design tools that adapt to the way your business works, from calendars and client management to fully tailored solutions.',
+      cta: 'Let’s talk about your project',
     },
     processKicker: 'HOW WE WORK', processTitle: 'A simple, clear process.',
     process: [
@@ -380,40 +363,6 @@ function useReveal() {
   }, [])
 }
 
-/** Destaca el destino cuando su encabezado entra en el área visible. */
-function useServiceDestination() {
-  useEffect(() => {
-    if (!('IntersectionObserver' in window)) return
-    let observer: IntersectionObserver | undefined
-    let heading: HTMLElement | null = null
-
-    function watchDestination() {
-      observer?.disconnect()
-      heading?.classList.remove('svc-arrival')
-      const id = window.location.hash.slice(1)
-      if (id !== 'paginas-web' && id !== 'apps-a-medida') return
-
-      const destination = document.getElementById(`${id}-titulo`)
-      if (!destination) return
-      heading = destination
-      observer = new IntersectionObserver(([entry], currentObserver) => {
-        if (!entry.isIntersecting || heading !== destination) return
-        destination.classList.add('svc-arrival')
-        currentObserver.disconnect()
-      }, { rootMargin: `0px 0px -${Math.round(window.innerHeight * .15)}px`, threshold: 1 })
-      observer.observe(destination)
-    }
-
-    watchDestination()
-    window.addEventListener('hashchange', watchDestination)
-    return () => {
-      window.removeEventListener('hashchange', watchDestination)
-      observer?.disconnect()
-      heading?.classList.remove('svc-arrival')
-    }
-  }, [])
-}
-
 function readStoredLang(): Lang {
   try {
     const stored = window.localStorage.getItem('dofra-lang')
@@ -485,8 +434,6 @@ export default function App() {
   const menuRef = useRef<HTMLElement>(null)
   const menuToggleRef = useRef<HTMLButtonElement>(null)
   const projectsRef = useRef<HTMLDivElement>(null)
-  const plansRef = useRef<HTMLUListElement>(null)
-  const [activePlan, setActivePlan] = useState(0)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [projectType, setProjectType] = useState('')
@@ -495,7 +442,6 @@ export default function App() {
   const faqs = t.faqs.filter((item: Faq) => !item.pending)
   useReveal()
   useProjectOpening(projectsRef)
-  useServiceDestination()
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -647,70 +593,7 @@ export default function App() {
         </article>)}</div>
       </div></section>
 
-      <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
-        <header className="svc-intro" data-reveal><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2><p>{t.serviceDesc}</p></header>
-        <nav className="svc-jump" aria-label={t.serviceJumpLabel} data-reveal>
-          {[
-            { id: 'paginas-web', title: t.web.title, ...t.servicePaths.web },
-            { id: 'apps-a-medida', title: t.apps.title, ...t.servicePaths.apps },
-          ].map(({ id, title, desc, cta }) => (
-            <a key={id} href={`#${id}`} aria-labelledby={`${id}-enlace ${id}-accion`} aria-describedby={`${id}-resumen`}>
-              <strong id={`${id}-enlace`}>{title}</strong>
-              <span className="svc-jump-description" id={`${id}-resumen`}>{desc}</span>
-              <span className="svc-jump-action" id={`${id}-accion`}>{cta}<Icon name="arrow" size={16} /></span>
-            </a>
-          ))}
-        </nav>
-
-        <section className="svc-block" id="paginas-web" tabIndex={-1} aria-labelledby="paginas-web-titulo">
-          <header className="svc-block-head" data-reveal><h3 id="paginas-web-titulo"><span>{t.web.title}</span></h3><p>{t.web.desc}</p></header>
-          <div className="plan-controls" role="group" aria-label={t.web.plansLabel}>
-            {t.web.plans.map((plan, index) => <button type="button" key={plan.id}
-              aria-controls="planes-web" aria-current={index === activePlan ? 'true' : undefined}
-              onClick={() => {
-                const track = plansRef.current
-                const card = track?.children[index] as HTMLElement | undefined
-                if (track && card) track.scrollTo({ left: card.offsetLeft })
-              }}>{plan.name}</button>)}
-          </div>
-          <ul className="plans" id="planes-web" ref={plansRef} aria-label={t.web.plansLabel} data-reveal
-            onScroll={event => {
-              const track = event.currentTarget
-              const nextCard = track.children[1] as HTMLElement | undefined
-              if (nextCard && nextCard.offsetLeft > 0) {
-                setActivePlan(Math.max(0, Math.min(track.children.length - 1, Math.round(track.scrollLeft / nextCard.offsetLeft))))
-              }
-            }}>{t.web.plans.map(plan => <li className={`plan${plan.featured ? ' is-featured' : ''}`} key={plan.id} aria-labelledby={`plan-${plan.id}`}>
-            <div className="plan-head"><h4 id={`plan-${plan.id}`}>{plan.name}</h4>{plan.featured && <span className="plan-badge">{t.web.recommended}</span>}</div>
-            <p className="plan-tagline">{plan.tagline}</p>
-            <ul className="plan-features">{plan.features.map(feature => <li key={feature}><Icon name="check" size={16} /><span>{feature}</span></li>)}</ul>
-            <p className="plan-changes"><Icon name="check" size={16} />{plan.changes}</p>
-            <a className="plan-link" href={plan.link.url} target="_blank" rel="noopener noreferrer" aria-label={linkLabel(plan.link.label)}>{plan.link.label}<Icon name="arrow" size={15} /></a>
-            <a className={`button plan-cta${plan.featured ? ' button-primary' : ''}`} href="#contacto" onClick={quote(plan.id as keyof typeof QUOTE_TYPES)}>{plan.cta}<Icon name="arrow" size={16} /></a>
-          </li>)}</ul>
-          <aside className="plus" aria-labelledby="plus-titulo" data-reveal>
-            <p className="plus-head"><strong id="plus-titulo">{t.web.plus.title}</strong><span>{t.web.plus.tag}</span></p>
-            <p><strong>{t.web.plus.lead}</strong> {t.web.plus.desc}</p>
-          </aside>
-        </section>
-
-        <section className="svc-block svc-apps" id="apps-a-medida" tabIndex={-1} aria-labelledby="apps-a-medida-titulo" data-reveal>
-          <header className="svc-block-head"><h3 id="apps-a-medida-titulo"><span>{t.apps.title}</span></h3><p>{t.apps.desc}</p></header>
-          <ul className="apps-grid">
-            {t.apps.cards.map(({ title, desc, link }) => (
-              <li className="apps-card" key={title}>
-                <h4>{title}</h4>
-                <p>{desc}</p>
-                {link && <a className="plan-link" href={link.url} target="_blank" rel="noopener noreferrer"
-                  aria-label={linkLabel(link.label)}>{link.label}<Icon name="arrow" size={15} /></a>}
-              </li>
-            ))}
-          </ul>
-          <div className="apps-action">
-            <a className="button button-primary button-large" href="#contacto" onClick={quote('custom')}>{t.apps.cta}<Icon name="arrow" size={18} /></a>
-          </div>
-        </section>
-      </div></section>
+      <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
 
       <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
         <TeamFlipCards title={t.aboutTitle} titleId="nosotras-titulo" paragraphs={t.aboutDesc} people={t.people}
