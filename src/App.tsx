@@ -6,6 +6,7 @@ import MobileProcessTimeline from './components/MobileProcessTimeline'
 import useProjectOpening from './components/useProjectOpening'
 import TeamFlipCards from './components/TeamFlipCards'
 import ServicesSection from './components/ServicesSection'
+import TechGuides, { TechMeasure } from './components/TechGuides'
 import { frenchContent } from './content.fr'
 
 const LANGUAGES = {
@@ -557,7 +558,7 @@ export default function App() {
     </div></header>
 
     <main id="contenido" tabIndex={-1}>
-      <section className="hero" id="inicio" aria-labelledby="hero-titulo"><div className="container hero-grid">
+      <section className="hero" id="inicio" aria-labelledby="hero-titulo"><TechGuides hero /><div className="container hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
@@ -568,17 +569,17 @@ export default function App() {
           </div>
           <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
         </div>
-        <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
+        <div className="hero-visual"><DofraParticles label={t.heroVisual} /><TechMeasure label={t.footer.slogan} /></div>
       </div></section>
 
-      <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><div className="container">
+      <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><TechGuides tone="light" /><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
         <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
         <ProcessTimeline steps={t.process} label={t.processKicker} />
         <MobileProcessTimeline steps={t.process} label={t.processKicker} />
       </div></section>
 
-      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><TechGuides /><div className="container">
         <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
         <div className="work-list" ref={projectsRef}>{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
           <figure className="work-shot">
@@ -596,11 +597,12 @@ export default function App() {
       <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
 
       <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
+        <TechGuides />
         <TeamFlipCards title={t.aboutTitle} titleId="nosotras-titulo" paragraphs={t.aboutDesc} people={t.people}
           moreLabel={t.peopleMore} backLabel={t.peopleBack} />
       </section>
 
-      <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><div className="container">
+      <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><TechGuides tone="light" grid={false} /><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></header>
         <div className="faq-list" data-reveal>{faqs.map((item, i) => <div className={`faq-item ${faqOpen === i ? 'expanded' : ''}`} key={item.q}>
           <h3><button type="button" id={`faq-q-${i}`} aria-expanded={faqOpen === i} aria-controls={`faq-a-${i}`} onClick={() => setFaqOpen(faqOpen === i ? null : i)}><span>{item.q}</span><span className="faq-icon" aria-hidden="true"><Icon name={faqOpen === i ? 'minus' : 'plus'} size={18} /></span></button></h3>
@@ -608,7 +610,7 @@ export default function App() {
         </div>)}</div>
       </div></section>
 
-      <section className="section contact section-compact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal>
+      <section className="section contact section-compact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal><TechGuides />
         <div className="contact-intro">
           <p className="kicker">{t.contactKicker}</p>
           <h2 id="contacto-titulo">{t.contactTitle}</h2>
@@ -641,7 +643,7 @@ export default function App() {
       </div></div></section>
     </main>
 
-    <footer className="footer" aria-labelledby="footer-titulo"><div className="container">
+    <footer className="footer" aria-labelledby="footer-titulo"><TechGuides /><div className="container">
       <div className="footer-cta">
         <div>
           <p className="footer-kicker">{t.footer.kicker}</p>

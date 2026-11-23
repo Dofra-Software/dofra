@@ -1,6 +1,7 @@
 import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import './services.css'
+import TechGuides from './TechGuides'
 
 type Plan = {
   id: string; name: string; tagline: string; featured?: boolean
@@ -61,7 +62,7 @@ export default function ServicesSection({ t, quote, linkLabel, icon }: Props) {
 
   const tabLabel: Record<Tab, string> = { web: t.web.title, apps: t.apps.title }
 
-  return <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><div className="container">
+  return <section className="section services" id="servicios" aria-labelledby="servicios-titulo"><TechGuides /><div className="container">
     <header className="svc-intro" data-reveal>
       <div><p className="svc-kicker">{t.serviceKicker}</p><h2 id="servicios-titulo">{t.serviceTitle}</h2></div>
       <p>{t.serviceDesc}</p>
