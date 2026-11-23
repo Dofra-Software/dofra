@@ -81,7 +81,7 @@ button { cursor: pointer; }
 main:focus { outline: none; }
 
 .container { width: min(var(--container), 100% - 2 * var(--gutter)); margin-inline: auto; }
-.hero-grid, .services > .container, .nav-inner, .footer > .container { width: min(var(--wide-container), 100% - 2 * var(--gutter)); }
+.services > .container, .nav-inner, .footer > .container { width: min(var(--wide-container), 100% - 2 * var(--gutter)); }
 
 .skip-link { position: absolute; left: 16px; top: -60px; z-index: 100; background: #fff; color: var(--navy-950); padding: 12px 18px; border-radius: 8px; font-weight: 700; font-size: 14px; transition: top .2s; }
 .skip-link:focus { top: 12px; }
@@ -169,33 +169,7 @@ main:focus { outline: none; }
 .tag-list li { font-size: 13px; color: var(--ink); background: #F2F2F2; border-radius: 6px; padding: 5px 9px; }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; overflow: hidden; background: var(--brand-bg); color: #fff; }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); align-items: center; gap: clamp(24px, 4vw, 56px); padding-block: clamp(48px, min(6vw, 40px + 5vh), 136px); }
 .eyebrow { color: var(--accent-on-dark); margin-bottom: 20px; }
-.hero h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(34px, 4.3vw, 66px); line-height: 1.1; letter-spacing: -.045em; }
-.hero h1 span { color: var(--brand-dot); }
-.hero-lead { margin-top: 20px; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.7; color: var(--muted-dark); max-width: 540px; }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-/* Botones del hero: mismo estilo para ambos (blanco con texto azul oscuro), en todas las pantallas */
-.hero-actions .button,
-.hero-actions .button-primary,
-.hero-actions .button-ghost {
-  flex: 0 1 auto; min-inline-size: min(100%, 208px); min-height: 48px; padding: 12px 18px; gap: 10px;
-  white-space: normal; text-align: center;
-  font-size: 15px; font-weight: 700; line-height: 1.2;
-  background: #FFFFFF; color: #0B1930; border: 0; border-radius: 11px; box-shadow: none;
-  transition: background-color .2s ease, transform .2s ease;
-}
-.hero-actions .button svg { color: #0B1930; }
-.hero-actions .button:hover { background: #EEF2F7; transform: none; }
-.hero-actions .button:active { background: #E2E8F0; transform: scale(.99); }
-.hero-actions .button:focus-visible { outline: 3px solid var(--brand-dot); outline-offset: 3px; }
-.hero-trust { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 28px; }
-.hero-trust li { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #FFFFFFBF; }
-.hero-trust svg { color: var(--brand-dot); }
-.hero-visual { width: 100%; max-width: clamp(500px, 32vw, 600px); justify-self: end; aspect-ratio: 1; }
-.particles { position: relative; width: 100%; height: 100%; touch-action: pan-y; cursor: crosshair; }
-.particles canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 
 /* ---------- Servicios: carrusel informativo ---------- */
 .services {
@@ -557,8 +531,6 @@ main:focus { outline: none; }
 }
 
 @media (max-width: 700px) {
-  .hero-grid { grid-template-columns: minmax(0, 1fr); padding-block: 44px 36px; }
-  .hero-visual { justify-self: center; max-width: min(340px, 75vw); }
   .process-grid { grid-template-columns: 1fr; }
   .process-grid > li, .process-grid > li:nth-child(n + 4) { grid-column: auto; }
   .grid-2 { grid-template-columns: 1fr; }
@@ -610,17 +582,7 @@ main:focus { outline: none; }
 
 /* ---------- Composición mobile ---------- */
 @media (max-width: 600px) {
-  .hero-grid { gap: 14px; padding-block: 12px 36px; }
-  /* Orden: logo de partículas primero, luego etiqueta, título, texto y botones */
-  .hero-visual { order: -1; justify-self: stretch; width: 100%; max-width: none; aspect-ratio: auto; height: clamp(220px, 58vw, 256px); }
-  .hero-copy { text-align: center; }
-  .eyebrow { margin-bottom: 12px; font-size: 11px; letter-spacing: 2px; }
-  .hero h1 { font-size: clamp(30px, 8.2vw, 36px); letter-spacing: -.04em; }
-  .hero-lead { margin: 12px auto 0; font-size: 16px; line-height: 1.6; }
-  .hero-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 20px; }
-  .hero-actions .button { width: 100%; }
   .quote-submit .button { white-space: normal; text-align: center; }
-  .hero-trust { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

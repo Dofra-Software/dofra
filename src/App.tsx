@@ -1,6 +1,6 @@
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import DofraParticles from './components/DofraParticles'
+import Hero from './components/hero/Hero'
 import ProcessTimeline from './components/ProcessTimeline'
 import MobileProcessTimeline from './components/MobileProcessTimeline'
 import useProjectOpening from './components/useProjectOpening'
@@ -180,7 +180,7 @@ const content = {
       ],
     },
     rights: 'Todos los derechos reservados.',
-    heroVisual: 'Logo de Dofra formado por partículas blancas y terracota.',
+    heroVisual: 'Bloque de láminas de metal y vidrio que se separa en capas: estructura, diseño y sistema.',
   },
   en: {
     skip: 'Skip to content',
@@ -312,7 +312,7 @@ const content = {
       ],
     },
     rights: 'All rights reserved.',
-    heroVisual: 'Dofra logo made of white and terracotta particles.',
+    heroVisual: 'A block of metal and glass plates that separates into layers: structure, design and system.',
   },
   fr: frenchContent,
 }
@@ -611,19 +611,7 @@ export default function App() {
     </div></header>
 
     <main id="contenido" tabIndex={-1}>
-      <section className="hero" id="inicio" aria-labelledby="hero-titulo"><div className="container hero-grid">
-        <div className="hero-copy">
-          <p className="eyebrow">{t.eyebrow}</p>
-          <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
-          <p className="hero-lead">{t.heroDesc}</p>
-          <div className="hero-actions">
-            <a className="button button-primary button-large" href="#contacto">{t.heroContact}<Icon name="arrow" size={18} /></a>
-            <a className="button button-ghost button-large" href="#servicios">{t.seeWork}<Icon name="arrow" size={18} /></a>
-          </div>
-          <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
-        </div>
-        <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
-      </div></section>
+      <Hero t={t} arrow={<Icon name="arrow" size={18} />} />
 
       <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>

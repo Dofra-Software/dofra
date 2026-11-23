@@ -1,0 +1,162 @@
+/* ---------- HERO «Construcción» ---------- */
+@property --e { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+.hx {
+  --p: 0; --mx: 0; --my: 0; --ts: 1;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+  position: relative; isolation: isolate; overflow: clip;
+  background: var(--bg-soft); color: #fff;
+}
+.hx.is-quick { --ts: .45; }
+
+/* Panel azul: al salir, se contrae levemente y deja ver la sección siguiente. */
+.hx-bg {
+  position: absolute; inset: 0; z-index: -1; background: var(--brand-bg);
+  transform-origin: 50% 0; transform: scale(calc(1 - var(--p) * .05));
+  border-radius: 0 0 calc(var(--p) * 48px) calc(var(--p) * 48px);
+}
+
+.hx-inner {
+  position: relative; width: min(var(--wide-container), 100% - 2 * var(--gutter)); margin-inline: auto;
+  min-height: calc(100svh - var(--header-h));
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-rows: 1fr auto auto;
+  column-gap: clamp(24px, 4vw, 64px);
+  padding-block: clamp(36px, 6vh, 88px) clamp(20px, 3.5vh, 40px);
+}
+
+/* Guías de construcción: la grilla del layout, apenas visible. */
+.hx-guides { position: absolute; inset: 0; pointer-events: none; z-index: -1; }
+.hx-guides i {
+  position: absolute; top: 0; bottom: 0; width: 1px; background: #FFFFFF12;
+  transform-origin: 50% 0; animation: hx-guide calc(1300ms * var(--ts)) var(--ease-io) both;
+}
+.hx-guides i:nth-child(1) { left: 0; }
+.hx-guides i:nth-child(2) { left: 58.33%; animation-delay: calc(90ms * var(--ts)); }
+.hx-guides i:nth-child(3) { right: 0; animation-delay: calc(180ms * var(--ts)); }
+
+/* Copy */
+.hx-copy { grid-area: 1 / 1; align-self: center; position: relative; z-index: 2; max-width: 700px; }
+.hx .eyebrow { margin-bottom: 22px; }
+.hx h1 {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 4.5vw, 70px);
+  line-height: 1.04; letter-spacing: -.045em; text-wrap: balance;
+}
+.hx h1 span { color: var(--brand-dot); }
+.hx-lead { margin-top: 22px; max-width: 50ch; font-size: clamp(16px, 1.25vw, 18px); line-height: 1.65; color: var(--muted-dark); }
+
+.hx-in { animation: hx-up calc(950ms * var(--ts)) var(--ease-out) calc(var(--d) * 1ms * var(--ts)) both; }
+
+/* Botones (mismo estilo blanco para ambos) + microinteracciones */
+.hx-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.hx-btn {
+  min-height: 50px; padding: 13px 20px; gap: 12px; border: 0; border-radius: 11px; box-shadow: none;
+  background: #FFFFFF; color: var(--brand-bg); font-size: 15px; font-weight: 700; line-height: 1.2;
+  white-space: normal; text-align: center;
+  transition: background-color .25s ease, transform .5s var(--ease-out);
+}
+.hx-btn:hover { background: #EEF2F7; }
+.hx-btn:active { background: #E2E8F0; }
+.hx-btn:focus-visible { outline: 3px solid var(--brand-dot); outline-offset: 3px; }
+.hx-arrow { position: relative; flex: none; width: 18px; height: 18px; overflow: hidden; }
+.hx-arrow > span { position: absolute; inset: 0; display: grid; place-items: center; transition: translate .5s var(--ease-out); }
+.hx-arrow > span + span { translate: -130% 0; }
+.hx-btn:hover .hx-arrow > span:first-child { translate: 130% 0; }
+.hx-btn:hover .hx-arrow > span + span { translate: 0 0; transition-delay: .06s; }
+
+/* Objeto */
+.hx-visual {
+  grid-area: 1 / 2 / 3 / 3; align-self: center; justify-self: end; position: relative; z-index: 1;
+  width: 100%; max-width: 640px; aspect-ratio: 1; margin-bottom: -4%;
+  transform: translate3d(0, calc(var(--p) * 16vh), 0);
+  pointer-events: none;
+}
+.hx-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+
+/* Versión CSS 3D */
+.hx-css { position: absolute; inset: 0; perspective: 1400px; }
+.hx-css-rot {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  transform: rotateX(calc(58deg - var(--my) * 6deg)) rotateZ(calc(-40deg + var(--mx) * 8deg + var(--p) * 24deg));
+  animation: hx-assemble calc(1600ms * var(--ts)) var(--ease-out) calc(240ms * var(--ts)) both;
+}
+.hx-plate {
+  position: absolute; inset: 24%;
+  transform: translateZ(calc((var(--l) - 2) * (8px + var(--p) * 56px) + var(--e) * var(--l) * 40px));
+  border: 1px solid #FFFFFF38; opacity: calc(1 - var(--e));
+}
+.hx-plate.is-metal { background: #1B2C4C; box-shadow: inset 0 0 0 1px #FFFFFF14; }
+.hx-plate.is-glass { background: #FFFFFF14; border-color: #FFFFFF6B; }
+.hx-plate.is-tile { inset: 27% 27% auto auto; width: 11%; height: 11%; border-radius: 50%; background: var(--brand-dot); border: 0; }
+
+/* Marca DOFRA. — se construye sobre la línea base y se hunde en ella al salir */
+.hx-mark { grid-area: 2 / 1 / 3 / 3; position: relative; z-index: 0; margin-top: clamp(20px, 4vh, 48px); }
+.hx-baseline {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: #FFFFFF47;
+  transform-origin: 0 50%; animation: hx-line calc(800ms * var(--ts)) var(--ease-io) both;
+}
+.hx-word {
+  display: flex; align-items: baseline; white-space: nowrap;
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(84px, 18vw, 320px);
+  line-height: .78; letter-spacing: -.06em; color: #fff;
+  animation: hx-track calc(1500ms * var(--ts)) var(--ease-out) calc(220ms * var(--ts)) both;
+}
+.hx-ch { display: inline-block; clip-path: inset(-60% -30% 0 -30%); }
+.hx-ch > span {
+  display: inline-block;
+  transform: translate3d(0, calc(clamp(0, var(--p) * 1.7 - .15 - var(--i) * .09, 1) * 108%), 0);
+  animation: hx-rise calc(1050ms * var(--ts)) var(--ease-out) calc((260ms + var(--i) * 75ms) * var(--ts)) both;
+}
+/* Punto redondo, como en el logo (el punto de Manrope es cuadrado). */
+.hx-dot { margin-left: .04em; }
+.hx-dot > span {
+  width: .15em; height: .15em; border-radius: 50%; background: var(--brand-dot);
+  transform-origin: 50% 100%;
+  animation: hx-drop calc(750ms * var(--ts)) cubic-bezier(.34, 1.5, .64, 1) calc(1000ms * var(--ts)) both;
+}
+
+/* Pie: datos + eslogan */
+.hx-foot {
+  grid-area: 3 / 1 / 4 / 3; display: flex; align-items: center; justify-content: space-between; gap: 12px 24px;
+  margin-top: 16px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+}
+.hx-facts { display: flex; flex-wrap: wrap; color: #FFFFFFA6; }
+.hx-facts li + li { margin-left: 18px; padding-left: 18px; border-left: 1px solid #FFFFFF2E; }
+.hx-sign { color: var(--brand-dot); letter-spacing: .04em; text-transform: none; font-size: 13px; }
+
+@keyframes hx-up { from { opacity: 0; translate: 0 .6em; } }
+@keyframes hx-guide { from { transform: scaleY(0); } }
+@keyframes hx-line { from { transform: scaleX(0); } }
+@keyframes hx-track { from { letter-spacing: .02em; } }
+@keyframes hx-rise { from { translate: 0 108%; } }
+@keyframes hx-drop { from { opacity: 0; translate: 0 -.5em; scale: .2; } }
+@keyframes hx-assemble { from { --e: 1; } to { --e: 0; } }
+
+/* Tablet */
+@media (max-width: 1080px) {
+  .hx-inner { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .hx-guides i:nth-child(2) { left: 60%; }
+}
+
+/* Celular */
+@media (max-width: 760px) {
+  .hx-inner {
+    grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto;
+    min-height: 0; padding-block: 4px 22px;
+  }
+  .hx-guides i:nth-child(2) { display: none; }
+  .hx-visual {
+    grid-area: 1 / 1; justify-self: center; width: 100%; max-width: 420px; aspect-ratio: 5 / 3; margin: 0 0 8px;
+    transform: translate3d(0, calc(var(--p) * 8vh), 0);
+  }
+  .hx-copy { grid-area: 2 / 1; }
+  .hx .eyebrow { margin-bottom: 12px; font-size: 11px; letter-spacing: 2px; }
+  .hx h1 { font-size: clamp(31px, 8.6vw, 42px); }
+  .hx-lead { margin-top: 14px; font-size: 16px; line-height: 1.6; }
+  .hx-actions { flex-direction: column; align-items: stretch; margin-top: 22px; }
+  .hx-btn { width: 100%; }
+  .hx-mark { grid-area: 3 / 1; margin-top: 36px; }
+  .hx-word { font-size: 25vw; }
+  .hx-foot { grid-area: 4 / 1; margin-top: 12px; }
+  .hx-facts { display: none; }
+}

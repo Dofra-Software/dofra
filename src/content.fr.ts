@@ -180,5 +180,5 @@ export const frenchContent = {
     ],
   },
   rights: 'Tous droits réservés.',
-  heroVisual: 'Logo Dofra composé de particules blanches et terracotta.',
+  heroVisual: 'Un bloc de plaques de métal et de verre qui se sépare en couches : structure, design et système.',
 }
