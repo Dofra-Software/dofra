@@ -1,6 +1,6 @@
 # Dofra Software — Sitio web
 
-Sitio institucional bilingüe (español/inglés) creado con React 18, TypeScript y Vite.
+Sitio institucional trilingüe (español, inglés y francés) creado con React 18, TypeScript y Vite.
 
 ## Requisitos
 - Node.js 20 o superior (Node 24 funciona)
@@ -20,12 +20,13 @@ npm run dev
 
 ## Antes de publicar (IMPORTANTE)
 
-1. **Formulario (FormSubmit):** el primer envío hacia `info@dofrasoftware.com` dispara un correo de activación de FormSubmit. Hay que abrirlo y confirmar; hasta entonces el formulario muestra el mensaje de error (nunca uno de éxito falso).
-2. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
-3. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
-4. **Proyectos:** odonto360, Spa Gestor y AppFotos, con capturas reales en `public/proyectos/` (versión grande y de 800 px). odonto360 y Spa Gestor usan datos sintéticos o ficticios; la foto de AppFotos es de Unsplash (uso aprobado). Los enlaces "Ver proyecto" apuntan a las demos y landings públicas. Relevo usa una captura real de su demo pública (relevo.dofrasoftware.com/demo, datos ficticios), en WebP de 480 a 2400 px.
-5. **Sobre Dofra:** presentación de Franca y Victoria cargada; faltan las fotos (opcional).
-6. **Panel del inicio:** es una demostración con datos ficticios y está identificado como tal.
+1. **Formulario de contacto:** se procesa con Google Apps Script (`apps-script/Code.gs`, ver `docs/FORMULARIO.md`). FormSubmit queda solo como alternativa en el código si `CONTACT_ENDPOINT` estuviera vacío; hoy no se usa.
+2. **Botón de arrepentimiento y botón de baja:** necesitan su propio Apps Script con la hoja privada de solicitudes y la variable `VITE_REQUESTS_ENDPOINT` al compilar. Sin eso, los formularios muestran el error con el correo de contacto. Ver `docs/LEGAL.md`.
+3. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
+4. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
+5. **Proyectos:** odonto360, Spa Gestor y AppFotos, con capturas reales en `public/proyectos/` (versión grande y de 800 px). odonto360 y Spa Gestor usan datos sintéticos o ficticios; la foto de AppFotos es de Unsplash (uso aprobado). Los enlaces "Ver proyecto" apuntan a las demos y landings públicas. Relevo usa una captura real de su demo pública (relevo.dofrasoftware.com/demo, datos ficticios), en WebP de 480 a 2400 px.
+6. **Sobre Dofra:** presentación de Franca y Victoria cargada; faltan las fotos (opcional).
+7. **Panel del inicio:** es una demostración con datos ficticios y está identificado como tal.
 
 ## Compilar
 
@@ -58,11 +59,13 @@ Si tu rama por defecto no es `main`, usá el nombre correcto. Si GitHub solicita
 - Framework: `Vite`.
 - Build command: `npm run build`.
 - Build output directory: `dist`.
-- No necesitás variables de entorno para esta versión.
+- Variable de entorno: `VITE_REQUESTS_ENDPOINT` (URL `/exec` del Apps Script de solicitudes). Es pública por diseño, no es un secreto.
 
 ## Personalización
 
-- Idiomas y textos: `src/App.tsx` (`content.es` / `content.en`).
+- Idiomas y textos: `src/App.tsx` (`content.es` / `content.en`) y `src/content.fr.ts`.
+- Textos legales, formularios de arrepentimiento y baja y enlaces legales del footer: `src/legal/` (ver `docs/LEGAL.md`).
+- Rutas y metadatos de cada página: `src/routes.ts`.
 - Colores, tipografía y responsive: `src/styles.css`.
 - Favicon: `public/favicon.svg`.
 - Metadatos y SEO básico: `index.html`.
@@ -71,6 +74,7 @@ Si tu rama por defecto no es `main`, usá el nombre correcto. Si GitHub solicita
 
 - El dashboard del hero y la maqueta de Equilibrium son **representaciones ilustrativas**, no datos reales.
 - Los números que aparecen en el dashboard son decorativos, no métricas de Dofra.
-- La fuente de Google Fonts requiere internet; el sitio usa una fuente de respaldo si no está disponible.
-- No se usan cookies de analítica ni servicios externos de formularios.
+- Las tipografías se alojan en el propio sitio (`public/fonts/`); no se usa Google Fonts.
+- El sitio guarda en `localStorage` la clave `dofra-lang` (idioma elegido), solo cuando la persona elige un idioma.
+- Según la auditoría del 24/11/2026, no usa cookies propias ni de terceros, analítica web (Google Analytics, Cloudflare Web Analytics), Google Tag Manager, Meta Pixel ni otras herramientas de seguimiento publicitario. Si se agrega alguna, hay que actualizar `src/legal/` (política de cookies y de privacidad) antes de publicar.
 # dofra

@@ -8,6 +8,17 @@ import TeamFlipCards from './components/TeamFlipCards'
 import ServicesSection from './components/ServicesSection'
 import TechGuides, { TechMeasure } from './components/TechGuides'
 import { frenchContent } from './content.fr'
+import LegalPage from './components/LegalPage'
+import RequestForm from './components/RequestForm'
+import RichText from './components/RichText'
+import { legal } from './legal'
+import { PATHS, pageFromPath } from './routes'
+import type { PageId } from './routes'
+
+/** Página actual según la ruta. Cada ruta es una carga completa: no hace falta un enrutador. */
+const PAGE: PageId = pageFromPath(window.location.pathname)
+/** En las páginas internas, los enlaces a secciones del inicio llevan la ruta («/#contacto»). */
+const HOME = PAGE === 'home' ? '' : '/'
 
 const LANGUAGES = {
   es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida' },
@@ -137,7 +148,6 @@ const content = {
       budget: 'Presupuesto aproximado (opcional)', budgetNone: 'Prefiero conversarlo',
       budgets: ['Menos de USD 500', 'USD 500 – 1.500', 'USD 1.500 – 5.000', 'Más de USD 5.000'],
       message: 'Contanos sobre tu proyecto', messagePh: 'Qué hace tu negocio, qué te gustaría resolver y cualquier detalle que quieras compartir.', messageEmpty: 'Escribí tu mensaje.',
-      consent: 'Acepto que Dofra Software use mis datos solo para responder esta consulta. El envío se procesa mediante el servicio FormSubmit.',
       send: 'Enviar consulta', sending: 'Enviando…',
       success: '¡Gracias! Recibimos tu consulta y te vamos a responder por correo electrónico.',
       error: 'No pudimos enviar tu consulta. Probá de nuevo en unos minutos o escribinos directamente a',
@@ -260,7 +270,6 @@ const content = {
       budget: 'Estimated budget (optional)', budgetNone: "I'd rather discuss it",
       budgets: ['Under USD 500', 'USD 500 – 1,500', 'USD 1,500 – 5,000', 'Over USD 5,000'],
       message: 'Tell us about your project', messagePh: "What your business does, what you'd like to solve and any other details you want to share.", messageEmpty: 'Please write your message.',
-      consent: 'I agree that Dofra Software may use my details only to reply to this inquiry. The form is processed by the FormSubmit service.',
       send: 'Send inquiry', sending: 'Sending…',
       success: "Thank you! We've received your inquiry and will reply by email.",
       error: "We couldn't send your inquiry. Please try again in a few minutes or email us directly at",
@@ -332,7 +341,7 @@ function Icon({ name, size = 22 }: { name: string; size?: number }) {
 }
 
 function Brand({ light = false, label }: { light?: boolean; label: string }) {
-  return <a className={`brand ${light ? 'brand-light' : ''}`} href="#inicio" aria-label={label}><img className="brand-logo" src="/dofra-logo.png" alt="" width="48" height="48" /></a>
+  return <a className={`brand ${light ? 'brand-light' : ''}`} href={`${HOME}#inicio`} aria-label={label}><img className="brand-logo" src="/dofra-logo.png" alt="" width="48" height="48" /></a>
 }
 
 /** Secciones cuyas apariciones se repiten: al salir por completo de la sección vuelven al inicio. */
@@ -431,7 +440,7 @@ function LanguagePicker({ lang, label, onChange }: { lang: Lang; label: string; 
 }
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>(readStoredLang)
+  const [lang, setLangState] = useState<Lang>(readStoredLang)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLElement>(null)
   const menuToggleRef = useRef<HTMLButtonElement>(null)
@@ -442,14 +451,26 @@ export default function App() {
   const t = content[lang]
   const f = t.form
   const faqs = t.faqs.filter((item: Faq) => !item.pending)
+  const l = legal[lang]
   useReveal()
   useProjectOpening(projectsRef)
 
+  /** La preferencia se guarda solo cuando la persona elige un idioma (no al cargar el sitio). */
+  function setLang(next: Lang) {
+    setLangState(next)
+    try { window.localStorage.setItem('dofra-lang', next) } catch { /* sin almacenamiento disponible */ }
+  }
+
   useEffect(() => {
     document.documentElement.lang = lang
-    try { window.localStorage.setItem('dofra-lang', lang) } catch { /* sin almacenamiento disponible */ }
-    document.title = `Dofra Software | ${LANGUAGES[lang].title}`
-  }, [lang])
+    const doc = PAGE === 'terms' ? l.docs.terms : PAGE === 'privacy' ? l.docs.privacy : PAGE === 'cookies' ? l.docs.cookies : null
+    const request = PAGE === 'withdrawal' ? l.requests.withdrawal : PAGE === 'cancellation' ? l.requests.cancellation : null
+    document.title = doc ? `${doc.title} | Dofra Software`
+      : request ? `${request.kicker.charAt(0)}${request.kicker.slice(1).toLowerCase()} | Dofra Software`
+      : `Dofra Software | ${LANGUAGES[lang].title}`
+    const description = doc?.description ?? request?.description
+    if (description) document.querySelector('meta[name="description"]')?.setAttribute('content', description)
+  }, [lang, l])
 
   function closeMenu() {
     setMenuOpen(false)
@@ -550,15 +571,21 @@ export default function App() {
     <header className="header"><div className="container nav-inner">
       <Brand label={t.brandLabel} />
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
-      <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
+      <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`${HOME}#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
       <div className="nav-actions">
         <LanguagePicker lang={lang} label={t.langSwitch} onChange={setLang} />
-        <a className="button button-primary nav-cta" href="#contacto">{t.talk}<Icon name="arrow" size={16} /></a>
+        <a className="button button-primary nav-cta" href={`${HOME}#contacto`}>{t.talk}<Icon name="arrow" size={16} /></a>
         <button type="button" className="menu-toggle" ref={menuToggleRef} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="menu-principal"><Icon name={menuOpen ? 'close' : 'menu'} size={20} /></button>
       </div>
     </div></header>
 
-    <main id="contenido" tabIndex={-1}>
+    {PAGE === 'terms' && <LegalPage doc={l.docs.terms} ui={l.ui} />}
+    {PAGE === 'privacy' && <LegalPage doc={l.docs.privacy} ui={l.ui} />}
+    {PAGE === 'cookies' && <LegalPage doc={l.docs.cookies} ui={l.ui} />}
+    {PAGE === 'withdrawal' && <RequestForm kind="withdrawal" lang={lang} t={l} />}
+    {PAGE === 'cancellation' && <RequestForm kind="cancellation" lang={lang} t={l} />}
+
+    {PAGE === 'home' && <main id="contenido" tabIndex={-1}>
       <section className="hero" id="inicio" aria-labelledby="hero-titulo"><TechGuides hero /><div className="container hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
@@ -632,7 +659,14 @@ export default function App() {
             <label><span>{f.budget}</span><select name="budget" defaultValue=""><option value="">{f.budgetNone}</option>{f.budgets.map((label, i) => <option key={BUDGET_VALUES[i]} value={BUDGET_VALUES[i]}>{label}</option>)}</select></label>
           </div>
           <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required maxLength={3000} rows={4} placeholder={f.messagePh} onInput={event => event.currentTarget.setCustomValidity('')} /></label>
-          <label className="quote-consent"><input type="checkbox" required name="consent" value="Sí" /><span>{f.consent} <span aria-hidden="true">*</span></span></label>
+          {/* value «Sí»: el receptor (apps-script/Code.gs) solo acepta envíos con consent === 'Sí'. */}
+          <div className="quote-consent-block">
+            <div className="quote-consent">
+              <input type="checkbox" id="quote-consent" required name="consent" value="Sí" aria-describedby="quote-processed" />
+              <label htmlFor="quote-consent"><RichText text={l.contact.consent} newTabLabel={l.ui.newTab} internalInNewTab /> <span aria-hidden="true">*</span></label>
+            </div>
+            <p className="quote-processed" id="quote-processed">{l.contact.processedBy}</p>
+          </div>
           <div className="quote-submit">
             <button type="submit" className="button button-primary button-large" disabled={formStatus === 'sending'}>{formStatus === 'sending' ? f.sending : f.send}<Icon name="arrow" size={18} /></button>
             <div className={`quote-feedback ${formStatus}`} role={formStatus === 'error' ? 'alert' : 'status'} aria-live="polite">
@@ -642,7 +676,7 @@ export default function App() {
           </div>
         </form>
       </div></div></section>
-    </main>
+    </main>}
 
     <footer className="footer" aria-labelledby="footer-titulo"><TechGuides /><div className="container">
       <div className="footer-cta">
@@ -651,17 +685,28 @@ export default function App() {
           <h2 id="footer-titulo"><span>{t.footer.title[0]}</span> <span>{t.footer.title[1]}</span></h2>
           <p className="footer-desc">{t.footer.desc}</p>
         </div>
-        <a className="button button-primary button-large footer-cta-button" href="#contacto" onClick={goToContactForm}>{t.footer.cta}<Icon name="arrow" size={18} /></a>
+        <a className="button button-primary button-large footer-cta-button" href={`${HOME}#contacto`} onClick={goToContactForm}>{t.footer.cta}<Icon name="arrow" size={18} /></a>
       </div>
       <div className="footer-main">
-        <a className="footer-brand" href="#inicio" aria-label={t.brandLabel}>
+        <a className="footer-brand" href={`${HOME}#inicio`} aria-label={t.brandLabel}>
           <img src="/dofra-logo.png" alt="" width="40" height="40" />
           <span>DOFRA <span>SOFTWARE</span></span>
         </a>
-        <nav className="footer-links" aria-label={t.footer.navLabel}>{t.nav.slice(1).map((label, i) => <a key={label} href={`#${navIds[i + 1]}`}>{label}</a>)}</nav>
+        <nav className="footer-links" aria-label={t.footer.navLabel}>{t.nav.slice(1).map((label, i) => <a key={label} href={`${HOME}#${navIds[i + 1]}`}>{label}</a>)}</nav>
         <ul className="footer-social" aria-label={t.footer.socialLabel}>{SOCIAL_LINKS.filter(link => link.url).map(link => <li key={link.id}>
           <a href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`${link.name} (${t.footer.newTab})`}><Icon name={link.id} size={18} /></a>
         </li>)}<li className="footer-email-item"><a href={`mailto:${CONTACT_EMAIL}`} aria-label={`Email: ${CONTACT_EMAIL}`}><Icon name="mail" size={18} /></a></li></ul>
+      </div>
+      <div className="footer-legal">
+        <nav className="footer-legal-links" aria-label={l.footer.navLabel}>
+          <a href={PATHS.terms} aria-current={PAGE === 'terms' ? 'page' : undefined}>{l.footer.terms}</a>
+          <a href={PATHS.privacy} aria-current={PAGE === 'privacy' ? 'page' : undefined}>{l.footer.privacy}</a>
+          <a href={PATHS.cookies} aria-current={PAGE === 'cookies' ? 'page' : undefined}>{l.footer.cookies}</a>
+        </nav>
+        <ul className="footer-rights" aria-label={l.footer.requestsLabel}>
+          <li><a href={PATHS.withdrawal} aria-current={PAGE === 'withdrawal' ? 'page' : undefined}>{l.footer.withdrawal}</a></li>
+          <li><a href={PATHS.cancellation} aria-current={PAGE === 'cancellation' ? 'page' : undefined}>{l.footer.cancellation}</a></li>
+        </ul>
       </div>
       <div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span className="footer-slogan" lang="en">{t.footer.slogan}</span></div>
     </div></footer>

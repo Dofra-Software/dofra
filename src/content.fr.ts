@@ -118,7 +118,6 @@ export const frenchContent = {
     message: 'Décrivez votre projet',
     messagePh: 'Votre activité, ce que vous souhaitez améliorer et toute information que vous souhaitez partager.',
     messageEmpty: 'Veuillez écrire votre message.',
-    consent: 'J’accepte que Dofra Software utilise mes coordonnées uniquement pour répondre à cette demande.',
     send: 'Envoyer la demande', sending: 'Envoi en cours…',
     success: 'Merci ! Nous avons bien reçu votre demande et vous répondrons par e-mail.',
     error: 'Votre demande n’a pas pu être envoyée. Réessayez dans quelques minutes ou écrivez-nous directement à',

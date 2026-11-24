@@ -3,6 +3,8 @@
 // y el sitio dejaba de abrir. Ver docs/HOSTING.md.
 //
 // - La raíz sirve la aplicación.
+// - Las páginas legales (privacidad.html, cookies.html, etc.) y sitemap.xml los genera `vite build`
+//   (ver vite.config.ts y docs/LEGAL.md).
 // - Cualquier otra ruta cae en 404.html, que también es la aplicación y muestra la pantalla pública.
 // - CNAME fija el dominio personalizado; .nojekyll evita que GitHub ignore archivos.
 import fs from 'node:fs';
@@ -10,7 +12,7 @@ import path from 'node:path';
 
 const DIST = path.resolve('dist');
 const DOMAIN = process.env.SITE_DOMAIN || 'www.dofrasoftware.com';
-const ROUTES = []; // Sitio de una sola página: sólo la raíz y 404.html.
+const ROUTES = []; // Las rutas legales ya salen de vite build como <ruta>.html.
 
 const index = path.join(DIST, 'index.html');
 if (!fs.existsSync(index)) {
