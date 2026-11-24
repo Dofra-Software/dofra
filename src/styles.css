@@ -822,23 +822,13 @@ main:focus { outline: none; }
 .turnstile-slot:empty { display: none; }
 .turnstile-slot { min-height: 0; }
 
-/* ---------- Botones de arrepentimiento y baja en el primer acceso (Disposición 954/2025) ---------- */
-.rights-bar { background: var(--brand-bg); border-bottom: 1px solid #ffffff14; }
-.rights-bar-inner { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 28px; width: min(var(--wide-container), 100% - 2 * var(--gutter)); margin-inline: auto; }
-.rights-bar a {
-  display: inline-flex; align-items: center; min-height: 36px;
-  font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .06em; color: #fff;
-  text-decoration: underline; text-decoration-color: var(--brand-dot); text-underline-offset: 4px; transition: color .2s;
-}
-.rights-bar a:hover, .rights-bar a[aria-current="page"] { color: var(--brand-dot); }
-.rights-bar :focus-visible { outline-color: #fff; outline-offset: 2px; }
-@media (max-width: 600px) {
-  .rights-bar-inner { justify-content: center; gap: 0 14px; }
-  .rights-bar a { min-height: 36px; font-size: 11px; letter-spacing: 0; }
-}
-
-/* ---------- Botones legales: alternativas de ubicación (VISTA PREVIA, ?botones=a|b|c) ---------- */
-.rights-links { display: none; flex-wrap: wrap; align-items: center; gap: 4px 0; }
+/* ---------- Botones de arrepentimiento y baja (Disposición 954/2025) ----------
+   «A simple vista, en lugar destacado y en el primer acceso», sin franjas ni elementos flotantes:
+   - inicio (escritorio y tablet): línea fina debajo de los beneficios del hero;
+   - inicio (celular): al comienzo del texto del hero, visible sin desplazarse;
+   - páginas internas: a la derecha de «Volver al inicio».
+   El footer conserva sus propios botones. */
+.rights-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; }
 .rights-links a {
   display: inline-flex; align-items: center; min-height: 32px;
   font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .06em; color: #fff;
@@ -848,41 +838,18 @@ main:focus { outline: none; }
 .rights-links a:hover, .rights-links a[aria-current="page"] { color: var(--brand-dot); }
 .rights-links a + a::before { content: "·"; margin: 0 12px; color: var(--brand-dot); text-decoration: none; }
 
-/* A · Cabecera: dos líneas compactas entre el menú y el idioma (escritorio) */
-.rights-header { flex-direction: column; align-items: flex-start; gap: 0; padding-left: 18px; border-left: 1px solid #FFFFFF24; }
-.rights-header a { min-height: 24px; font-size: 10.5px; color: #FFFFFFCC; }
-.rights-header a + a::before { content: none; }
-
-/* B · Hero: línea fina debajo de los beneficios */
 .rights-hero-b { margin-top: 26px; padding-top: 16px; border-top: 1px solid #FFFFFF1F; max-width: 540px; }
+.rights-hero-top { display: none; justify-content: center; margin-bottom: 12px; }
 
-/* C · Hero: anotación técnica en el borde inferior, alineada con el logo de partículas */
-.rights-hero-c { grid-column: 1 / -1; justify-content: flex-end; padding-top: 14px; border-top: 1px solid #FFFFFF1A; }
-.rights-hero-c::before { content: ""; width: 9px; height: 1px; margin-right: 10px; background: var(--brand-dot); }
-
-/* Celular: al comienzo del texto del hero, visible sin desplazarse */
-.rights-hero-top { justify-content: center; margin-bottom: 12px; }
-
-/* Páginas internas: a la derecha de «Volver al inicio» */
 .legal-hero-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 24px; }
 .rights-legal a { color: #C9D4E2; }
 
-:root[data-botones="a"] .rights-header { display: flex; }
-:root[data-botones="b"] .rights-hero-b,
-:root[data-botones="c"] .rights-hero-c,
-:root[data-botones="b"] .rights-legal,
-:root[data-botones="c"] .rights-legal { display: flex; }
-@media (max-width: 900px) {
-  :root[data-botones="a"] .rights-header { display: none; }
-  :root[data-botones="a"] .rights-hero-top, :root[data-botones="a"] .rights-legal { display: flex; }
-}
 @media (max-width: 600px) {
-  :root:is([data-botones="b"], [data-botones="c"]) :is(.rights-hero-b, .rights-hero-c) { display: none; }
-  :root:is([data-botones="b"], [data-botones="c"]) .rights-hero-top { display: flex; }
+  .rights-hero-b { display: none; }
+  .rights-hero-top { display: flex; }
   /* Las dos denominaciones no entran en una línea: se apilan, sin separador colgado. */
   .rights-links { flex-direction: column; gap: 0; }
   .rights-hero-top { align-items: center; }
   .rights-legal { align-items: flex-start; }
-  .rights-links a { min-height: 32px; }
   .rights-links a + a::before { content: none; }
 }

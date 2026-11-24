@@ -54,8 +54,15 @@ Para actualizar un texto legal: cambiar `es.ts`, trasladar el cambio a `en.ts` y
 
 - Arts. 1 y 4: enlaces denominados «BOTÓN DE ARREPENTIMIENTO» y «BOTÓN DE BAJA DE SERVICIO» (singular), «a simple vista,
   en lugar destacado y en el primer acceso», sin registración previa ni trámites adicionales.
-- Se muestran en una franja fina arriba del encabezado, en todas las páginas, y también en el footer. La denominación
-  va en español en los tres idiomas; en inglés y francés se agrega una explicación solo para lectores de pantalla.
+- Ubicación (desde el 25/11/2026, en reemplazo de la franja superior, sin franjas ni elementos flotantes):
+  - inicio, escritorio y tablet: línea fina debajo de los beneficios del hero, junto a las llamadas a la acción;
+  - inicio, celular: al comienzo del texto del hero, apilados y centrados;
+  - páginas internas (legales y formularios): a la derecha de «Volver al inicio»;
+  - footer: se conservan los dos botones en todas las páginas.
+  Comprobado sin desplazarse en 360×640, 768×1024, 1280×720 y 1440×900, en los tres idiomas. Componente:
+  `src/components/RightsLinks.tsx`; estilos en `src/styles.css` («Botones de arrepentimiento y baja»).
+- La denominación va en español en los tres idiomas; en inglés y francés se agrega una explicación solo para
+  lectores de pantalla.
 - Art. 5: el código de la solicitud debe informarse dentro de las 24 horas y por el mismo medio. El sitio lo muestra en
   pantalla en el momento y lo envía por correo.
 

@@ -22,13 +22,6 @@ const PAGE: PageId = pageFromPath(window.location.pathname)
 /** En las páginas internas, los enlaces a secciones del inicio llevan la ruta («/#contacto»). */
 const HOME = PAGE === 'home' ? '' : '/'
 
-/**
- * VISTA PREVIA: alternativas de ubicación de los botones legales, elegibles con ?botones=a|b|c.
- * Sin parámetro se ve la franja actual. Se elimina al elegir una alternativa.
- */
-const BOTONES = (['a', 'b', 'c'] as const).find(v => v === new URLSearchParams(window.location.search).get('botones')) ?? 'franja'
-document.documentElement.dataset.botones = BOTONES
-
 const LANGUAGES = {
   es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida',
     description: 'Páginas web y sistemas a medida para tu negocio. Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo.' },
@@ -599,16 +592,10 @@ export default function App() {
 
   return <>
     <a className="skip-link" href="#contenido">{t.skip}</a>
-    {/* Disposición 954/2025: ambos botones «a simple vista, en lugar destacado y en el primer acceso». */}
-    {BOTONES === 'franja' && <nav className="rights-bar" aria-label={l.footer.requestsLabel}><div className="rights-bar-inner">
-      <RightsLink page="withdrawal" label={l.footer.withdrawal} hint={l.footer.withdrawalHint} />
-      <RightsLink page="cancellation" label={l.footer.cancellation} hint={l.footer.cancellationHint} />
-    </div></nav>}
     <header className="header"><div className="container nav-inner">
       <Brand label={t.brandLabel} />
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
       <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`${HOME}#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
-      <RightsLinks labels={l.footer} className="rights-header" />
       <div className="nav-actions">
         <LanguagePicker lang={lang} label={t.langSwitch} onChange={setLang} />
         <a className="button button-primary nav-cta" href={`${HOME}#contacto`}>{t.talk}<Icon name="arrow" size={16} /></a>
@@ -625,6 +612,8 @@ export default function App() {
     {PAGE === 'home' && <main id="contenido" tabIndex={-1}>
       <section className="hero" id="inicio" aria-labelledby="hero-titulo"><TechGuides hero /><div className="container hero-grid">
         <div className="hero-copy">
+          {/* Disposición 954/2025: botones «a simple vista, en lugar destacado y en el primer acceso».
+              En celular van acá (visibles sin desplazarse); en pantallas más anchas, debajo de los beneficios. */}
           <RightsLinks labels={l.footer} className="rights-hero-top" />
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
@@ -637,7 +626,6 @@ export default function App() {
           <RightsLinks labels={l.footer} className="rights-hero-b" />
         </div>
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /><TechMeasure label={t.footer.slogan} /></div>
-        <RightsLinks labels={l.footer} className="rights-hero-c" />
       </div></section>
 
       <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><TechGuides tone="light" /><div className="container">
