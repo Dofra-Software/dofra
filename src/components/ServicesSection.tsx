@@ -36,6 +36,8 @@ const GRAPHICS: Record<string, ReactNode> = {
 
 export default function ServicesSection({ t, quote, linkLabel, icon }: Props) {
   const [tab, setTab] = useState<Tab>('web')
+  const [activePlan, setActivePlan] = useState(0)
+  const plansRef = useRef<HTMLUListElement>(null)
   const tabRefs = useRef<Record<Tab, HTMLButtonElement | null>>({ web: null, apps: null })
 
   // Enlaces directos (#paginas-web, #apps-a-medida): abren la pestaña correspondiente.
@@ -79,7 +81,24 @@ export default function ServicesSection({ t, quote, linkLabel, icon }: Props) {
 
     <div className="svc-panel" id={PANEL_IDS.web} role="tabpanel" aria-labelledby={`tab-${PANEL_IDS.web}`} tabIndex={-1} hidden={tab !== 'web'}>
       <header className="svc-panel-head"><h3>{t.web.plansTitle}</h3><p>{t.web.plansDesc}</p></header>
-      <ul className="svc-cards" aria-label={t.web.plansLabel} data-reveal>
+      <div className="svc-plan-controls" role="group" aria-label={t.web.plansLabel}>
+        {t.web.plans.map((plan, index) => (
+          <button key={plan.id} type="button" aria-controls="planes-web" aria-current={index === activePlan ? 'true' : undefined}
+            onClick={() => {
+              const track = plansRef.current
+              const card = track?.children[index] as HTMLElement | undefined
+              if (track && card) track.scrollTo({ left: card.offsetLeft })
+            }}>{plan.name}</button>
+        ))}
+      </div>
+      <ul className="svc-cards" id="planes-web" ref={plansRef} aria-label={t.web.plansLabel} data-reveal
+        onScroll={event => {
+          const track = event.currentTarget
+          const nextCard = track.children[1] as HTMLElement | undefined
+          if (nextCard && nextCard.offsetLeft > 0) {
+            setActivePlan(Math.min(track.children.length - 1, Math.max(0, Math.round(track.scrollLeft / nextCard.offsetLeft))))
+          }
+        }}>
         {t.web.plans.map((plan, i) => <li key={plan.id} className={`svc-card is-${plan.id}`} style={{ '--i': i } as CSSProperties} aria-labelledby={`plan-${plan.id}`}>
           <div className="svc-card-top">{plan.featured && <span className="svc-pill">{t.web.recommended}</span>}</div>
           <h4 id={`plan-${plan.id}`}>{plan.name}</h4>
