@@ -169,7 +169,7 @@ main:focus { outline: none; }
     min-block-size: calc(100svh - var(--header-h));
   }
 }
-.section-soft { background: var(--bg-soft); }
+.section-soft { background: var(--bg); }
 .section-dark { background: var(--navy-900); color: #fff; }
 .section-head { max-width: 680px; margin: 0 auto var(--head-gap); text-align: center; }
 .kicker, .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 2.4px; text-transform: uppercase; color: var(--accent-ink); }
@@ -396,7 +396,8 @@ main:focus { outline: none; }
 /* ---------- Contacto ---------- */
 .contact-panel { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 56px); align-items: start; background: var(--brand-bg); color: #fff; border-radius: 22px; padding: clamp(28px, 4.5vw, 56px); position: relative; overflow: hidden; }
 .contact-panel > * { min-width: 0; }
-.contact { background: var(--bg-soft); }
+.contact { background: var(--brand-bg); }
+.contact .contact-panel { border: 1px solid #FFFFFF1F; }
 .contact .kicker { color: var(--accent-on-dark); }
 .contact-intro > p:not(.kicker) { margin-top: 14px; font-size: 16px; line-height: 1.75; color: #FFFFFFBF; }
 .contact-intro .quote-email { margin-top: 22px; font-size: 15px; }

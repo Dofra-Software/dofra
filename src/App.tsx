@@ -54,7 +54,7 @@ const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[
 const content = {
   es: {
     skip: 'Saltar al contenido',
-    nav: ['Inicio', 'Proyectos', 'Servicios', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    nav: ['Inicio', 'Proyectos', 'Nosotras', 'Servicios', 'Contacto'], talk: 'Hablemos',
     navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Elegir idioma', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
@@ -177,7 +177,7 @@ const content = {
   },
   en: {
     skip: 'Skip to content',
-    nav: ['Home', 'Projects', 'Services', 'About us', 'Contact'], talk: "Let's talk",
+    nav: ['Home', 'Projects', 'About us', 'Services', 'Contact'], talk: "Let's talk",
     navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Choose language', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
@@ -465,7 +465,7 @@ export default function App() {
     return () => document.removeEventListener('keydown', onEscape)
   }, [menuOpen])
 
-  const navIds = ['inicio', 'proyectos', 'servicios', 'nosotras', 'contacto']
+  const navIds = ['inicio', 'proyectos', 'nosotras', 'servicios', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
 
@@ -594,13 +594,13 @@ export default function App() {
         </article>)}</div>
       </div></section>
 
-      <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
-
       <section className="section section-soft section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
         <TechGuides tone="light" />
         <TeamFlipCards title={t.aboutTitle} titleId="nosotras-titulo" paragraphs={t.aboutDesc} people={t.people}
           moreLabel={t.peopleMore} backLabel={t.peopleBack} />
       </section>
+
+      <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
 
       <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><TechGuides tone="light" grid={false} /><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></header>

@@ -1,6 +1,6 @@
 export const frenchContent = {
   skip: 'Aller au contenu',
-  nav: ['Accueil', 'Projets', 'Services', 'À propos', 'Contact'],
+  nav: ['Accueil', 'Projets', 'À propos', 'Services', 'Contact'],
   talk: 'Parlons-en',
   navLabel: 'Navigation principale',
   menuOpen: 'Ouvrir le menu',
