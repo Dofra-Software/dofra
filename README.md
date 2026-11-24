@@ -21,7 +21,7 @@ npm run dev
 ## Antes de publicar (IMPORTANTE)
 
 1. **Formulario de contacto:** se procesa con Google Apps Script (`apps-script/Code.gs`, ver `docs/FORMULARIO.md`). FormSubmit queda solo como alternativa en el código si `CONTACT_ENDPOINT` estuviera vacío; hoy no se usa.
-2. **Botón de arrepentimiento y botón de baja:** necesitan su propio Apps Script con la hoja privada de solicitudes y la variable `VITE_REQUESTS_ENDPOINT` al compilar. Sin eso, los formularios muestran el error con el correo de contacto. Ver `docs/LEGAL.md`.
+2. **Botón de arrepentimiento y botón de baja:** usan su propio Apps Script con la hoja privada de solicitudes. Su URL `/exec` está en `src/legal/index.ts` (la variable `VITE_REQUESTS_ENDPOINT` la reemplaza si se define). Ver `docs/LEGAL.md`.
 3. **Preguntas frecuentes pendientes:** en `src/App.tsx` hay respuestas con `pending: true` (plazos, dominio y alojamiento, actualizaciones, presupuesto). No se muestran hasta que se completen y se quite esa marca.
 4. **Demos conceptuales:** se retiraron del listado hasta que haya versiones explorables con diseño propio.
 5. **Proyectos:** odonto360, Spa Gestor y AppFotos, con capturas reales en `public/proyectos/` (versión grande y de 800 px). odonto360 y Spa Gestor usan datos sintéticos o ficticios; la foto de AppFotos es de Unsplash (uso aprobado). Los enlaces "Ver proyecto" apuntan a las demos y landings públicas. Relevo usa una captura real de su demo pública (relevo.dofrasoftware.com/demo, datos ficticios), en WebP de 480 a 2400 px.
@@ -59,7 +59,7 @@ Si tu rama por defecto no es `main`, usá el nombre correcto. Si GitHub solicita
 - Framework: `Vite`.
 - Build command: `npm run build`.
 - Build output directory: `dist`.
-- Variable de entorno: `VITE_REQUESTS_ENDPOINT` (URL `/exec` del Apps Script de solicitudes). Es pública por diseño, no es un secreto.
+- Variable de entorno opcional: `VITE_REQUESTS_ENDPOINT` (URL `/exec` del Apps Script de solicitudes; si no se define, se usa la de `src/legal/index.ts`). Es pública por diseño, no es un secreto.
 
 ## Personalización
 

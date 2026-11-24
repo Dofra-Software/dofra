@@ -30,7 +30,7 @@ Alcance: solo el sitio institucional www.dofrasoftware.com. No incluye Relevo, o
 | `src/legal/es.ts` | **Versión jurídica de referencia.** Términos, privacidad, cookies, textos de los formularios, etiquetas del footer y casilla de consentimiento del contacto. |
 | `src/legal/en.ts`, `src/legal/fr.ts` | Traducciones fieles, con el mismo orden de secciones y bloques. |
 | `src/legal/types.ts` | Estructura común: si una traducción queda incompleta, `npm run typecheck` falla. |
-| `src/legal/index.ts` | Reúne los idiomas y lee `VITE_REQUESTS_ENDPOINT`. |
+| `src/legal/index.ts` | Reúne los idiomas y define la URL del receptor de solicitudes (`VITE_REQUESTS_ENDPOINT` la reemplaza). |
 | `src/components/LegalPage.tsx` | Página de documento: encabezado, fecha, índice con anclas (`#s-1`, `#s-2`…), secciones numeradas. |
 | `src/components/RequestForm.tsx` | Formulario reutilizable para arrepentimiento y baja. |
 | `src/components/legal.css` | Estilos de las páginas legales y de los formularios. |
@@ -95,16 +95,16 @@ no editarlas a mano.
 7. **Implementar → Nueva implementación** → tipo **Aplicación web**: Ejecutar como **Yo**; Quién tiene acceso:
    **Cualquier persona**. Copiar la URL que termina en `/exec` (es pública por diseño, no es un secreto).
 8. Abrir esa URL en el navegador: debe mostrar `{"ok":true}`.
-9. Compilar el sitio con la variable: en PowerShell, `$env:VITE_REQUESTS_ENDPOINT = '<URL /exec>'; npm run build:site`
-   (o agregarla en Cloudflare Pages → Configuración → Variables de entorno para las vistas previas).
+9. Poner la URL en `REQUESTS_ENDPOINT` (`src/legal/index.ts`). Así la incluyen la compilación local que se publica
+   en GitHub Pages y las vistas previas de Cloudflare. `VITE_REQUESTS_ENDPOINT` la reemplaza si se define
+   (hecho el 24/11/2026 con la implementación «Solicitudes dofrasoftware.com»).
 10. Probar con datos ficticios y un correo de prueba propio, en una vista previa (no en producción): una solicitud de
     cada tipo, verificar la fila en la hoja, la constancia, el aviso a info@ y el número en pantalla. Después borrar
     las filas de prueba y, si se quiere empezar en 0001, borrar `SEQ_ARR_AAAA` y `SEQ_BAJ_AAAA` en **Configuración del
     proyecto → Propiedades del script**.
 
-Con la variable configurada, la política de privacidad agrega el párrafo sobre el registro en Google Sheets (bloque
-`when: 'registry'`). Sin la variable, ese párrafo no aparece y los formularios no pueden registrar solicitudes:
-**no publicar en producción sin completar estos pasos.**
+Con la URL configurada, la política de privacidad agrega el párrafo sobre el registro en Google Sheets (bloque
+`when: 'registry'`). Sin URL, ese párrafo no aparece y los formularios no pueden registrar solicitudes.
 
 Para cambiar el script más adelante: **Implementar → Gestionar implementaciones → Editar → Nueva versión** (la URL no
 cambia).
@@ -114,7 +114,6 @@ cambia).
 ```powershell
 git switch main
 git merge feat/documentacion-legal
-$env:VITE_REQUESTS_ENDPOINT = '<URL /exec del Apps Script de solicitudes>'
 npm run build:site
 node scripts/publish-static-site.mjs --confirm
 ```
