@@ -580,7 +580,7 @@ export default function App() {
 
       <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
         <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
-        <div className="work-list" ref={projectsRef}>{t.work.items.map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
+        <div className="work-list" ref={projectsRef}>{t.work.items.filter(item => item.id !== 'spa-gestor').map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
           <figure className="work-shot">
             <ProjectImage id={item.id} alt={item.alt} />
           </figure>
