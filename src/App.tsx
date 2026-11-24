@@ -6,6 +6,7 @@ import MobileProcessTimeline from './components/MobileProcessTimeline'
 import useProjectOpening from './components/useProjectOpening'
 import TeamFlipCards from './components/TeamFlipCards'
 import ServicesSection from './components/ServicesSection'
+import TechGuides, { TechMeasure } from './components/TechGuides'
 import { frenchContent } from './content.fr'
 
 const LANGUAGES = {
@@ -53,7 +54,7 @@ const SOCIAL_LINKS: { id: 'instagram' | 'linkedin'; name: string; url: string }[
 const content = {
   es: {
     skip: 'Saltar al contenido',
-    nav: ['Inicio', 'Servicios', 'Proyectos', 'Nosotras', 'Contacto'], talk: 'Hablemos',
+    nav: ['Inicio', 'Proyectos', 'Nosotras', 'Servicios', 'Contacto'], talk: 'Hablemos',
     navLabel: 'Navegación principal', menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', langSwitch: 'Elegir idioma', brandLabel: 'Dofra Software, ir al inicio',
     eyebrow: 'DESARROLLO WEB Y SOFTWARE A MEDIDA',
     heroA: 'Páginas web y sistemas a medida', heroB: 'para tu negocio.',
@@ -176,7 +177,7 @@ const content = {
   },
   en: {
     skip: 'Skip to content',
-    nav: ['Home', 'Services', 'Projects', 'About us', 'Contact'], talk: "Let's talk",
+    nav: ['Home', 'Projects', 'About us', 'Services', 'Contact'], talk: "Let's talk",
     navLabel: 'Main navigation', menuOpen: 'Open menu', menuClose: 'Close menu', langSwitch: 'Choose language', brandLabel: 'Dofra Software, go to top',
     eyebrow: 'WEB DEVELOPMENT & CUSTOM SOFTWARE',
     heroA: 'Websites and custom systems', heroB: 'for your business.',
@@ -324,6 +325,7 @@ function Icon({ name, size = 22 }: { name: string; size?: number }) {
     users: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5" /></>,
     trending: <><path d="m3 17 7-7 4 4 7-7M15 7h6v6" /></>,
     instagram: <><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.2" cy="6.8" r=".6" fill="currentColor" /></>,
+    mail: <><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" /><path d="m4.5 7.5 7.5 5.5 7.5-5.5" /></>,
     linkedin: <><rect x="3.5" y="3.5" width="17" height="17" rx="3" /><path d="M8 10.5V16M8 7.8v.2M11.5 16v-5.5M11.5 13c0-1.6 1-2.6 2.3-2.6s2.2.9 2.2 2.6V16" /></>,
   }
   return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
@@ -464,7 +466,7 @@ export default function App() {
     return () => document.removeEventListener('keydown', onEscape)
   }, [menuOpen])
 
-  const navIds = ['inicio', 'servicios', 'proyectos', 'nosotras', 'contacto']
+  const navIds = ['inicio', 'proyectos', 'nosotras', 'servicios', 'contacto']
   // mailto: abre la aplicación de correo que use cada visitante (Gmail, Outlook, Apple Mail, etc.)
   const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contactSubject)}`
 
@@ -557,7 +559,7 @@ export default function App() {
     </div></header>
 
     <main id="contenido" tabIndex={-1}>
-      <section className="hero" id="inicio" aria-labelledby="hero-titulo"><div className="container hero-grid">
+      <section className="hero" id="inicio" aria-labelledby="hero-titulo"><TechGuides hero /><div className="container hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
@@ -568,17 +570,17 @@ export default function App() {
           </div>
           <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
         </div>
-        <div className="hero-visual"><DofraParticles label={t.heroVisual} /></div>
+        <div className="hero-visual"><DofraParticles label={t.heroVisual} /><TechMeasure label={t.footer.slogan} /></div>
       </div></section>
 
-      <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><div className="container">
+      <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><TechGuides tone="light" /><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.processKicker}</p><h2 id="proceso-titulo">{t.processTitle}</h2></header>
         <ol className="grid process-grid" data-reveal>{t.process.map((step, i) => <li className="card process-card" key={step.title}><span className="process-number" aria-hidden="true">0{i + 1}</span><h3>{step.title}</h3><p>{step.desc}</p></li>)}</ol>
         <ProcessTimeline steps={t.process} label={t.processKicker} />
         <MobileProcessTimeline steps={t.process} label={t.processKicker} />
       </div></section>
 
-      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><div className="container">
+      <section className="section work" id="proyectos" aria-labelledby="proyectos-titulo"><TechGuides /><div className="container">
         <header className="work-head" data-reveal><p className="work-kicker">{t.work.kicker}</p><h2 id="proyectos-titulo">{t.work.title}</h2><p>{t.work.desc}</p></header>
         <div className="work-list" ref={projectsRef}>{t.work.items.filter(item => item.id !== 'spa-gestor').map((item, i) => <article className={`work-item${i % 2 ? ' is-reverse' : ''}`} key={item.id} data-reveal aria-labelledby={`proyecto-${item.id}`}>
           <figure className="work-shot">
@@ -593,14 +595,15 @@ export default function App() {
         </article>)}</div>
       </div></section>
 
-      <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
-
-      <section className="section section-dark section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
+      <section className="section section-soft section-compact" id="nosotras" aria-labelledby="nosotras-titulo">
+        <TechGuides tone="light" />
         <TeamFlipCards title={t.aboutTitle} titleId="nosotras-titulo" paragraphs={t.aboutDesc} people={t.people}
           moreLabel={t.peopleMore} backLabel={t.peopleBack} />
       </section>
 
-      <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><div className="container">
+      <ServicesSection t={t} quote={quote} linkLabel={linkLabel} icon={(name, size) => <Icon name={name} size={size} />} />
+
+      <section className="section section-soft section-compact" aria-labelledby="faq-titulo"><TechGuides tone="light" grid={false} /><div className="container">
         <header className="section-head" data-reveal><p className="kicker">{t.faqKicker}</p><h2 id="faq-titulo">{t.faqTitle}</h2></header>
         <div className="faq-list" data-reveal>{faqs.map((item, i) => <div className={`faq-item ${faqOpen === i ? 'expanded' : ''}`} key={item.q}>
           <h3><button type="button" id={`faq-q-${i}`} aria-expanded={faqOpen === i} aria-controls={`faq-a-${i}`} onClick={() => setFaqOpen(faqOpen === i ? null : i)}><span>{item.q}</span><span className="faq-icon" aria-hidden="true"><Icon name={faqOpen === i ? 'minus' : 'plus'} size={18} /></span></button></h3>
@@ -608,7 +611,7 @@ export default function App() {
         </div>)}</div>
       </div></section>
 
-      <section className="section contact section-compact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal>
+      <section className="section contact section-compact" id="contacto" aria-labelledby="contacto-titulo"><div className="container"><div className="contact-panel" data-reveal><TechGuides />
         <div className="contact-intro">
           <p className="kicker">{t.contactKicker}</p>
           <h2 id="contacto-titulo">{t.contactTitle}</h2>
@@ -641,7 +644,7 @@ export default function App() {
       </div></div></section>
     </main>
 
-    <footer className="footer" aria-labelledby="footer-titulo"><div className="container">
+    <footer className="footer" aria-labelledby="footer-titulo"><TechGuides /><div className="container">
       <div className="footer-cta">
         <div>
           <p className="footer-kicker">{t.footer.kicker}</p>
