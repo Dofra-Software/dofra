@@ -73,8 +73,12 @@ hoja de Google Sheets privada. El formulario de contacto no cambia.
 - Límites: 40 solicitudes por hora en total y 5 por correo y hora.
 - Saneamiento: recorte de longitud, sin caracteres de control y todo valor guardado como texto literal (protección
   contra la inyección de fórmulas).
-- Correos: constancia al solicitante («Dofra Software | Confirmación de solicitud», en su idioma) y aviso a
-  info@dofrasoftware.com («Nueva solicitud de arrepentimiento — …» / «Nueva solicitud de baja de servicio — …»).
+- Correos: constancia al solicitante («Dofra Software | Confirmación de solicitud», en su idioma, «Responder a»
+  info@dofrasoftware.com) y aviso interno a **dofrasoftware@gmail.com** («Nueva solicitud de arrepentimiento — …» /
+  «Nueva solicitud de baja de servicio — …», «Responder a» la persona que hizo la solicitud).
+- Por qué no a info@: info@dofrasoftware.com redirige a dofrasoftware@gmail.com, la misma cuenta que envía. Gmail puede
+  descartar ese reenvío como duplicado (Cloudflare lo advierte). info@ sigue siendo el correo público del sitio, de las
+  constancias y de las políticas.
 - Los correos del envío inicial salen con el bloqueo del script tomado: el activador de reintentos no puede mandar la
   misma constancia al mismo tiempo (sin correos duplicados).
 - Cuota de correo (Gmail gratuito: unos 100 destinatarios por día, compartidos con el formulario de contacto si ambos
@@ -86,7 +90,7 @@ hoja de Google Sheets privada. El formulario de contacto no cambia.
   1. fila en la hoja **«Incidencias»** (constancia persistente: fecha, identificador, motivo, detalle, alertas enviadas,
      resuelta);
   2. evento con aviso en **Google Calendar** de la cuenta de Dofra (no depende de la cuota de correo);
-  3. correo a info@, solo si queda cuota.
+  3. correo a dofrasoftware@gmail.com, solo si queda cuota.
   La constancia se debe comunicar por otro medio **dentro de las 24 horas** desde la recepción. Revisar «Incidencias» a
   diario y marcar «Resuelta: Sí» al terminar.
 - El formulario no cancela servicios, no borra datos, no interrumpe alojamientos ni emite devoluciones.
@@ -168,7 +172,7 @@ Contacto (proyecto «Formulario dofrasoftware.com»):
    en GitHub Pages y las vistas previas de Cloudflare. `VITE_REQUESTS_ENDPOINT` la reemplaza si se define
    (hecho el 24/11/2026 con la implementación «Solicitudes dofrasoftware.com»).
 10. Probar con datos ficticios y un correo de prueba propio, en una vista previa (no en producción): una solicitud de
-    cada tipo, verificar la fila en la hoja, la constancia, el aviso a info@ y el número en pantalla. Después borrar
+    cada tipo, verificar la fila en la hoja, la constancia, el aviso interno en dofrasoftware@gmail.com y el número en pantalla. Después borrar
     las filas de prueba y, si se quiere empezar en 0001, borrar `SEQ_ARR_AAAA` y `SEQ_BAJ_AAAA` en **Configuración del
     proyecto → Propiedades del script**.
 

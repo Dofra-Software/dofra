@@ -8,14 +8,14 @@
  * - Genera el identificador (DOF-ARR-AAAA-0001 / DOF-BAJ-AAAA-0001) con un bloqueo, sin duplicados.
  * - Evita solicitudes duplicadas (misma clave de envío o mismos datos en los últimos 10 minutos).
  * - Registra la solicitud ANTES de responder: si no quedó registrada, nunca devuelve éxito.
- * - Envía la constancia al solicitante y el aviso a info@dofrasoftware.com con el bloqueo tomado, así el
+ * - Envía la constancia al solicitante y el aviso interno (a dofrasoftware@gmail.com) con el bloqueo tomado, así el
  *   activador de reintentos nunca envía el mismo correo a la vez que el envío inicial.
  * - Cuota de correo: la constancia solo se envía si quedan más de RESERVA_CUOTA envíos en el día (la reserva
  *   queda para el formulario de contacto y los avisos internos). Si no alcanza, queda «Pendiente» SIN contar
  *   como intento fallido y se reintenta cada 10 minutos. La solicitud nunca se pierde: ya está en la hoja.
  * - Alertas: si la constancia sigue pendiente después de HORAS_ALERTA o falla MAX_INTENTOS veces, se deja
  *   constancia en la hoja «Incidencias», se crea un evento con aviso en Google Calendar (no depende de la cuota
- *   de correo) y, si hay cuota, también se avisa a info@.
+ *   de correo) y, si hay cuota, también se avisa por correo a la cuenta de Gmail de Dofra.
  * - Cloudflare Turnstile (opcional): si existe la propiedad TURNSTILE_SECRET, el token es obligatorio y se
  *   valida contra Cloudflare. Si Cloudflare no responde, la solicitud se acepta igual (no se impide ejercer el
  *   derecho) y se anota en «Incidencias».
@@ -23,7 +23,10 @@
  * - Nunca devuelve al navegador datos de la hoja ni de otros solicitantes.
  */
 
-const DESTINO_INTERNO = 'info@dofrasoftware.com';
+// Avisos internos directo a la cuenta de Gmail de Dofra: info@ redirige a esta misma cuenta y Gmail puede
+// descartar el reenvío de un correo que salió de ella. info@ sigue siendo el correo público y el «Responder a».
+const DESTINO_INTERNO = 'dofrasoftware@gmail.com';
+const CORREO_PUBLICO = 'info@dofrasoftware.com';
 const ZONA = 'America/Argentina/Cordoba';
 const HOJA = 'Solicitudes';
 const HOJA_INCIDENCIAS = 'Incidencias';
@@ -171,7 +174,7 @@ function instalarActivador() {
   ScriptApp.newTrigger('reintentarPendientes').timeBased().everyMinutes(10).create();
 }
 
-/** Activador: reintenta constancias y avisos pendientes; alerta a info@ si siguen fallando. */
+/** Activador: reintenta constancias y avisos pendientes; alerta si siguen fallando. */
 function reintentarPendientes() {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(30000)) return;
@@ -197,7 +200,7 @@ function reintentarPendientes() {
 function probarCorreos() {
   const destino = Session.getEffectiveUser().getEmail();
   const prueba = { id: 'DOF-ARR-0000-0000 (PRUEBA)', tipo: 'Arrepentimiento', fecha: 'fecha de prueba', idioma: 'es' };
-  MailApp.sendEmail({ to: destino, replyTo: DESTINO_INTERNO, name: 'Dofra Software', subject: asuntoConstancia_('es') + ' (PRUEBA)', body: cuerpoConstancia_(prueba) });
+  MailApp.sendEmail({ to: destino, replyTo: CORREO_PUBLICO, name: 'Dofra Software', subject: asuntoConstancia_('es') + ' (PRUEBA)', body: cuerpoConstancia_(prueba) });
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -338,7 +341,7 @@ function enviarPendientes_(hoja, fila) {
       const intentos = Number(v[COL.intentos - 1] || 0) + 1;
       hoja.getRange(fila, COL.intentos).setValue(intentos);
       try {
-        MailApp.sendEmail({ to: texto_(datos.correo), replyTo: DESTINO_INTERNO, name: 'Dofra Software', subject: asuntoConstancia_(datos.idioma), body: cuerpoConstancia_(datos) });
+        MailApp.sendEmail({ to: texto_(datos.correo), replyTo: CORREO_PUBLICO, name: 'Dofra Software', subject: asuntoConstancia_(datos.idioma), body: cuerpoConstancia_(datos) });
         hoja.getRange(fila, COL.confirmacion).setValue('Enviada');
       } catch (err) {
         errores.push('Constancia (intento ' + intentos + '): ' + err);
@@ -370,7 +373,7 @@ function cuota_() {
  * Alerta sobre una constancia no enviada. Una sola vez por solicitud y motivo.
  * 1) Constancia persistente en la hoja «Incidencias» (siempre).
  * 2) Evento con aviso en Google Calendar: no depende de la cuota ni del servicio de correo.
- * 3) Correo a info@, solo si queda cuota.
+ * 3) Correo a la cuenta de Gmail de Dofra (DESTINO_INTERNO), solo si queda cuota.
  */
 function alertar_(datos, motivo, detalle) {
   if (yaRegistrada_(datos.id, motivo)) return;
@@ -390,7 +393,7 @@ function alertar_(datos, motivo, detalle) {
     try {
       MailApp.sendEmail({ to: DESTINO_INTERNO, name: 'Solicitudes dofrasoftware.com', subject: 'ATENCIÓN: constancia sin enviar ' + datos.id,
         body: motivo + '. ' + detalle + '\n\n' + instruccion });
-      canales.push('Correo a info@');
+      canales.push('Correo a ' + DESTINO_INTERNO);
     } catch (err) {
       console.error('No se pudo enviar la alerta de ' + datos.id + ': ' + err);
     }
@@ -497,4 +500,4 @@ function respuesta_(obj) {
 }
 
 // Solo para las pruebas locales con Node (apps-script/solicitudes/prueba-local.mjs). Apps Script lo ignora.
-if (typeof module !== 'undefined') module.exports = { doPost: doPost, doGet: doGet, reintentarPendientes: reintentarPendientes, celda_: celda_, COL: COL, RESERVA_CUOTA: RESERVA_CUOTA };
+if (typeof module !== 'undefined') module.exports = { DESTINO_INTERNO: DESTINO_INTERNO, doPost: doPost, doGet: doGet, reintentarPendientes: reintentarPendientes, celda_: celda_, COL: COL, RESERVA_CUOTA: RESERVA_CUOTA };

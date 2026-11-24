@@ -8,7 +8,9 @@
  * DESTINO con «Responder a» la persona que escribió. Responde JSON { success: true|false }.
  * No guarda los mensajes en ningún lado: sólo los reenvía por correo.
  */
-const DESTINO = 'info@dofrasoftware.com';
+// Notificación interna directa a la cuenta de Gmail de Dofra. info@dofrasoftware.com redirige a esta misma
+// cuenta y Gmail puede descartar el reenvío de un correo que salió de ella. info@ sigue siendo el correo público.
+const DESTINO = 'dofrasoftware@gmail.com';
 const MAX_ENVIOS_POR_HORA = 20; // Protección simple contra abuso (cuota de Gmail: ~100 correos/día).
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

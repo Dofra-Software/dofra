@@ -13,7 +13,7 @@ de Google de Dofra y no guarda los mensajes: sólo los reenvía por correo.
 ## Cómo funciona
 
 - `apps-script/Code.gs` recibe el formulario, valida (nombre, correo, mensaje, consentimiento), descarta el campo
-  trampa `_honey`, limita a 20 envíos por hora y manda un correo a `info@dofrasoftware.com` con «Responder a» la
+  trampa `_honey`, limita a 20 envíos por hora y manda un correo a `dofrasoftware@gmail.com` con «Responder a» la
   persona que escribió. Responde `{ "success": true }` sólo si el correo se envió.
 - El sitio (`src/App.tsx`) envía a la URL de `CONTACT_ENDPOINT`. Mantiene los 15 s de espera, el mensaje de error con el
   enlace de correo y no muestra éxito si el receptor no lo confirma.
@@ -24,7 +24,7 @@ de Google de Dofra y no guarda los mensajes: sólo los reenvía por correo.
 1. Entrar a https://script.google.com con la cuenta de Google de Dofra → **Nuevo proyecto**. Nombre: «Formulario dofrasoftware.com».
 2. Reemplazar el contenido de `Código.gs` por el de `apps-script/Code.gs` y guardar.
 3. Elegir la función `probarEnvio` → **Ejecutar**. Google pide autorizar «Enviar correo electrónico en tu nombre»:
-   aceptar (lo debe hacer una persona de Dofra). Debe llegar un correo de prueba a info@dofrasoftware.com.
+   aceptar (lo debe hacer una persona de Dofra). Debe llegar un correo de prueba a dofrasoftware@gmail.com.
 4. **Implementar → Nueva implementación** → tipo **Aplicación web**:
    - Ejecutar como: **Yo** (la cuenta de Dofra).
    - Quién tiene acceso: **Cualquier persona**.
@@ -50,3 +50,6 @@ sin URL configurada. 12/12 superadas. Falta repetir la prueba contra el Apps Scr
 - `GET /exec` responde `{"ok":true}`. Un POST inválido responde `{"success":false,"message":"invalid"}` sin enviar correo.
   El 302 de Google incluye `Access-Control-Allow-Origin: *`, igual que el servidor de prueba.
 - Envío real desde el sitio compilado: éxito en ~5,6 s y correo de prueba enviado a info@dofrasoftware.com.
+- 24/11/2026: el aviso pasa a enviarse directo a dofrasoftware@gmail.com. info@dofrasoftware.com redirige a esa
+  misma cuenta, que es la que envía, y Gmail puede descartar el reenvío como duplicado. info@ sigue siendo el correo
+  público del sitio (enlace de correo, mensajes de error y políticas).

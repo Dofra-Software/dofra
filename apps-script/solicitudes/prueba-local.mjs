@@ -90,8 +90,8 @@ console.log('Registro e identificadores')
   prueba('arrepentimiento registrado con DOF-ARR-AAAA-0001', r1.success === true && r1.id === `DOF-ARR-${anio}-0001`)
   prueba('constancia enviada', r1.emailSent === true)
   prueba('la respuesta no incluye datos personales', !('name' in r1) && !JSON.stringify(r1).includes('Persona'))
-  prueba('aviso interno con asunto diferenciado', e.enviados.some(m => m.to === 'info@dofrasoftware.com' && m.subject === `Nueva solicitud de arrepentimiento — DOF-ARR-${anio}-0001`))
-  prueba('constancia al solicitante con asunto indicado', e.enviados.some(m => m.to === 'prueba@example.com' && m.subject === 'Dofra Software | Confirmación de solicitud' && m.body.includes(`DOF-ARR-${anio}-0001`) && m.body.includes('Built by Dofra.')))
+  prueba('aviso interno con asunto diferenciado', e.enviados.some(m => m.to === 'dofrasoftware@gmail.com' && m.replyTo === 'prueba@example.com' && m.subject === `Nueva solicitud de arrepentimiento — DOF-ARR-${anio}-0001`))
+  prueba('constancia al solicitante con asunto indicado', e.enviados.some(m => m.to === 'prueba@example.com' && m.replyTo === 'info@dofrasoftware.com' && m.subject === 'Dofra Software | Confirmación de solicitud' && m.body.includes(`DOF-ARR-${anio}-0001`) && m.body.includes('Built by Dofra.')))
   const r2 = e.post(base({ kind: 'baja', service: 'Mantenimiento mensual' }))
   prueba('baja con su propia numeración', r2.id === `DOF-BAJ-${anio}-0001`)
   prueba('aviso interno de baja diferenciado', e.enviados.some(m => m.subject === `Nueva solicitud de baja de servicio — DOF-BAJ-${anio}-0001`))
@@ -128,7 +128,7 @@ console.log('Validación y saneamiento')
   const r = e.post(base({ name: '=HYPERLINK("http://x","y")', details: '+cmd', reference: '@ref' }))
   const fila = e.filas[e.filas.length - 1]
   prueba('fórmulas neutralizadas en la hoja', fila[e.api.COL.nombre - 1].startsWith("'=") && fila[e.api.COL.info - 1] === "'+cmd" && fila[e.api.COL.referencia - 1] === "'@ref")
-  prueba('el aviso interno muestra el texto sin el apóstrofo', e.enviados.some(m => m.to === 'info@dofrasoftware.com' && m.body.includes('Nombre: =HYPERLINK')) && r.success)
+  prueba('el aviso interno muestra el texto sin el apóstrofo', e.enviados.some(m => m.to === 'dofrasoftware@gmail.com' && m.body.includes('Nombre: =HYPERLINK')) && r.success)
 }
 
 console.log('Fallos de correo, reintentos y alertas')
@@ -151,7 +151,7 @@ console.log('Fallos de correo, reintentos y alertas')
   prueba('tras 6 intentos queda «Fallida»', e2.filas[1][e2.api.COL.confirmacion - 1] === 'Fallida')
   prueba('queda constancia en la hoja «Incidencias» (una sola vez)', inc.filter(f => f[2] === 'Constancia fallida').length === 1)
   prueba('alerta por Google Calendar con aviso emergente', e2.eventos.length === 1 && e2.eventos[0].recordatorios.includes(0))
-  prueba('y también por correo a info@', e2.enviados.some(m => m.to === 'info@dofrasoftware.com' && m.subject.startsWith('ATENCIÓN')))
+  prueba('y también por correo a la cuenta de Gmail de Dofra', e2.enviados.some(m => m.to === 'dofrasoftware@gmail.com' && m.subject.startsWith('ATENCIÓN')))
 }
 
 console.log('Cuota de correo')
