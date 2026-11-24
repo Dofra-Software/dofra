@@ -39,7 +39,7 @@ export const STATIC_META: Record<Exclude<PageId, 'home'>, { title: string; descr
     description: 'Formulario para solicitar la revocación de una contratación con Dofra Software, sin necesidad de registro ni de indicar el motivo.',
   },
   cancellation: {
-    title: 'Botón de baja de servicios | Dofra Software',
+    title: 'Botón de baja de servicio | Dofra Software',
     description: 'Formulario para solicitar la baja de un servicio contratado con Dofra Software, sin necesidad de registro ni de indicar el motivo.',
   },
 }

@@ -6,11 +6,17 @@
  * («/privacidad»), externos («https://…») o de correo («mailto:…»).
  */
 
-/** Párrafo, lista o bloque condicionado a que el registro de solicitudes esté activo. */
+/**
+ * Condiciones de los bloques: 'registry' = registro de solicitudes en Google Sheets activo;
+ * 'turnstile' / 'noTurnstile' = Cloudflare Turnstile activo o no (src/turnstile.ts).
+ */
+export type Condition = 'registry' | 'turnstile' | 'noTurnstile'
+
+/** Párrafo, lista o bloque condicionado. */
 export type Block =
   | string
   | { list: string[] }
-  | { when: 'registry'; block: Block }
+  | { when: Condition; block: Block }
 
 export type LegalSection = { title: string; blocks: Block[] }
 
@@ -50,8 +56,14 @@ export type LegalLocale = {
     privacy: string
     cookies: string
     requestsLabel: string
+    /**
+     * Denominación exacta exigida por la Disposición 954/2025 (arts. 1 y 4): se muestra en español en todos
+     * los idiomas. En inglés y francés, `withdrawalHint` / `cancellationHint` la explican a lectores de pantalla.
+     */
     withdrawal: string
     cancellation: string
+    withdrawalHint?: string
+    cancellationHint?: string
   }
   contact: {
     /** Casilla obligatoria del formulario de contacto (con enlace a la política de privacidad). */

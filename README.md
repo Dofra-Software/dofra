@@ -77,4 +77,5 @@ Si tu rama por defecto no es `main`, usá el nombre correcto. Si GitHub solicita
 - Las tipografías se alojan en el propio sitio (`public/fonts/`); no se usa Google Fonts.
 - El sitio guarda en `localStorage` la clave `dofra-lang` (idioma elegido), solo cuando la persona elige un idioma.
 - Según la auditoría del 24/11/2026, no usa cookies propias ni de terceros, analítica web (Google Analytics, Cloudflare Web Analytics), Google Tag Manager, Meta Pixel ni otras herramientas de seguimiento publicitario. Si se agrega alguna, hay que actualizar `src/legal/` (política de cookies y de privacidad) antes de publicar.
+- Cloudflare Turnstile (anti-bots) está preparado pero desactivado hasta cargar `TURNSTILE_SITE_KEY` (`src/turnstile.ts`). Activo, se carga solo al usar un formulario y puede dejar la cookie técnica `cf_clearance` de Cloudflare; las políticas lo informan automáticamente. Ver `docs/LEGAL.md`.
 # dofra

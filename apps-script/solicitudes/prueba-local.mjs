@@ -9,24 +9,37 @@ import { fileURLToPath } from 'node:url'
 const dir = path.dirname(fileURLToPath(import.meta.url))
 const source = fs.readFileSync(path.join(dir, 'Code.gs'), 'utf8')
 
-function crearEntorno({ fallaCorreoA = null } = {}) {
-  const filas = [['encabezados']]
-  const props = new Map([['SHEET_ID', 'hoja-de-prueba']])
-  const cache = new Map()
-  const enviados = []
+function crearHoja(filas) {
   const rango = (r, c, nr = 1, nc = 1) => ({
     getValues: () => Array.from({ length: nr }, (_, i) => Array.from({ length: nc }, (_, j) => filas[r - 1 + i]?.[c - 1 + j] ?? '')),
     getValue: () => filas[r - 1]?.[c - 1] ?? '',
     setValue: v => { filas[r - 1][c - 1] = v },
+    setValues: v => { v.forEach((f, i) => { filas[r - 1 + i] = [...f] }); return { setFontWeight() {} } },
   })
-  const hoja = { appendRow: v => filas.push([...v]), getLastRow: () => filas.length, getRange: rango }
+  return { filas, appendRow: v => filas.push([...v]), getLastRow: () => filas.length, getRange: rango, setFrozenRows() {} }
+}
+
+function crearEntorno({ fallaCorreoA = null, cuota = { valor: 100 }, turnstile = null, secreto = null } = {}) {
+  const solicitudes = crearHoja([['encabezados']])
+  const hojas = { Solicitudes: solicitudes }
+  const props = new Map([['SHEET_ID', 'hoja-de-prueba']])
+  if (secreto) props.set('TURNSTILE_SECRET', secreto)
+  const cache = new Map()
+  const enviados = []
+  const eventos = []
+  const bloqueo = { tomado: false }
+  const enviadosSinBloqueo = []
+  const libro = {
+    getSheetByName: n => hojas[n] ?? null,
+    insertSheet: n => (hojas[n] = crearHoja([])),
+  }
   const ctx = {
-    console,
+    console: { error() {}, log: console.log },
     module: { exports: {} },
-    SpreadsheetApp: { openById: () => ({ getSheetByName: () => hoja }), flush() {} },
+    SpreadsheetApp: { openById: () => libro, flush() {} },
     PropertiesService: { getScriptProperties: () => ({ getProperty: k => props.get(k) ?? null, setProperty: (k, v) => props.set(k, v) }) },
     CacheService: { getScriptCache: () => ({ get: k => cache.get(k) ?? null, put: (k, v) => cache.set(k, v) }) },
-    LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock() {} }) },
+    LockService: { getScriptLock: () => ({ tryLock: () => { bloqueo.tomado = true; return true }, releaseLock() { bloqueo.tomado = false } }) },
     Utilities: {
       DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' },
       computeDigest: (_a, text) => [...crypto.createHash('sha256').update(text, 'utf8').digest()].map(b => (b > 127 ? b - 256 : b)),
@@ -36,10 +49,19 @@ function crearEntorno({ fallaCorreoA = null } = {}) {
       },
     },
     MailApp: {
-      getRemainingDailyQuota: () => 100,
+      getRemainingDailyQuota: () => cuota.valor,
       sendEmail: m => {
         if (fallaCorreoA && m.to === fallaCorreoA.destino && fallaCorreoA.activo) throw new Error('Fallo simulado de correo')
+        if (!bloqueo.tomado) enviadosSinBloqueo.push(m)
+        cuota.valor -= 1
         enviados.push(m)
+      },
+    },
+    CalendarApp: { getDefaultCalendar: () => ({ createEvent: (titulo, inicio, fin, op) => { const e = { titulo, op, recordatorios: [], addPopupReminder: m => e.recordatorios.push(m) }; eventos.push(e); return e } }) },
+    UrlFetchApp: {
+      fetch: (_url, op) => {
+        if (!turnstile) throw new Error('UrlFetchApp no esperado')
+        return turnstile(op.payload)
       },
     },
     ContentService: { MimeType: { JSON: 'json' }, createTextOutput: s => ({ contenido: s, setMimeType() { return this } }) },
@@ -48,8 +70,10 @@ function crearEntorno({ fallaCorreoA = null } = {}) {
   vm.runInContext(source, ctx)
   const api = ctx.module.exports
   const post = params => JSON.parse(api.doPost({ parameter: params }).contenido)
-  return { api, post, filas, enviados, props }
+  return { api, post, filas: solicitudes.filas, hojas, enviados, eventos, enviadosSinBloqueo, cuota }
 }
+
+const respuestaTurnstile = (codigo, json) => ({ getResponseCode: () => codigo, getContentText: () => JSON.stringify(json) })
 
 let ok = 0, fallas = 0
 function prueba(nombre, condicion) {
@@ -74,6 +98,7 @@ console.log('Registro e identificadores')
   const r3 = e.post(base({ service: 'Otro proyecto' }))
   prueba('segundo arrepentimiento: 0002', r3.id === `DOF-ARR-${anio}-0002`)
   prueba('estado inicial «Recibida»', e.filas[1][e.api.COL.estado - 1] === 'Recibida')
+  prueba('los correos del envío inicial salen con el bloqueo tomado (sin carrera con el activador)', e.enviadosSinBloqueo.length === 0)
 }
 
 console.log('Duplicados')
@@ -87,6 +112,8 @@ console.log('Duplicados')
   prueba('sin fila ni correos nuevos', e.filas.length === 2 && e.enviados.length === correos)
   const r3 = e.post({ ...datos, requestKey: 'otra-clave-distinta' })
   prueba('mismos datos en 10 minutos = misma solicitud', r3.id === r1.id && e.filas.length === 2)
+  e.api.reintentarPendientes()
+  prueba('el activador no reenvía lo ya enviado', e.enviados.length === correos)
 }
 
 console.log('Validación y saneamiento')
@@ -104,7 +131,7 @@ console.log('Validación y saneamiento')
   prueba('el aviso interno muestra el texto sin el apóstrofo', e.enviados.some(m => m.to === 'info@dofrasoftware.com' && m.body.includes('Nombre: =HYPERLINK')) && r.success)
 }
 
-console.log('Fallos de correo y reintentos')
+console.log('Fallos de correo, reintentos y alertas')
 {
   const falla = { destino: 'prueba@example.com', activo: true }
   const e = crearEntorno({ fallaCorreoA: falla })
@@ -119,9 +146,53 @@ console.log('Fallos de correo y reintentos')
   const falla2 = { destino: 'prueba@example.com', activo: true }
   const e2 = crearEntorno({ fallaCorreoA: falla2 })
   e2.post(base())
-  for (let i = 0; i < 6; i++) e2.api.reintentarPendientes()
+  for (let i = 0; i < 8; i++) e2.api.reintentarPendientes()
+  const inc = e2.hojas.Incidencias?.filas ?? []
   prueba('tras 6 intentos queda «Fallida»', e2.filas[1][e2.api.COL.confirmacion - 1] === 'Fallida')
-  prueba('y se alerta a info@ para comunicarla dentro de las 24 horas', e2.enviados.some(m => m.to === 'info@dofrasoftware.com' && m.subject.startsWith('ATENCIÓN')))
+  prueba('queda constancia en la hoja «Incidencias» (una sola vez)', inc.filter(f => f[2] === 'Constancia fallida').length === 1)
+  prueba('alerta por Google Calendar con aviso emergente', e2.eventos.length === 1 && e2.eventos[0].recordatorios.includes(0))
+  prueba('y también por correo a info@', e2.enviados.some(m => m.to === 'info@dofrasoftware.com' && m.subject.startsWith('ATENCIÓN')))
+}
+
+console.log('Cuota de correo')
+{
+  const cuota = { valor: 11 }
+  const e = crearEntorno({ cuota })
+  const r = e.post(base())
+  const fila = () => e.filas[1]
+  prueba('con poca cuota se registra igual y se envía el aviso interno', r.success && fila()[e.api.COL.aviso - 1] === 'Enviado')
+  prueba('la constancia espera sin gastar la reserva', fila()[e.api.COL.confirmacion - 1] === 'Pendiente' && cuota.valor === e.api.RESERVA_CUOTA)
+  prueba('la espera por cuota no cuenta como intento fallido', Number(fila()[e.api.COL.intentos - 1]) === 0)
+  for (let i = 0; i < 10; i++) e.api.reintentarPendientes()
+  prueba('no pasa a «Fallida» mientras solo falte cuota', fila()[e.api.COL.confirmacion - 1] === 'Pendiente')
+  fila()[e.api.COL.recibidaIso - 1] = Date.now() - 3 * 3600 * 1000 // simula 3 horas de espera
+  e.api.reintentarPendientes()
+  e.api.reintentarPendientes()
+  const inc = e.hojas.Incidencias?.filas ?? []
+  prueba('tras 2 horas pendiente: incidencia y alerta por Calendar, una sola vez', inc.filter(f => f[2] === 'Constancia demorada').length === 1 && e.eventos.length === 1)
+  cuota.valor = 100
+  e.api.reintentarPendientes()
+  prueba('al volver la cuota, la constancia se envía', fila()[e.api.COL.confirmacion - 1] === 'Enviada')
+}
+
+console.log('Cloudflare Turnstile')
+{
+  const sin = crearEntorno()
+  prueba('sin TURNSTILE_SECRET funciona como antes (sin token)', sin.post(base()).success === true)
+
+  let ultimo = null
+  const e = crearEntorno({ secreto: 'secreto-prueba', turnstile: p => { ultimo = p; return p.response === 'token-bueno' ? respuestaTurnstile(200, { success: true, action: 'arrepentimiento' }) : respuestaTurnstile(200, { success: false, 'error-codes': ['invalid-input-response'] }) } })
+  prueba('con TURNSTILE_SECRET, sin token se rechaza', e.post(base()).message === 'verification')
+  prueba('token inválido se rechaza', e.post(base({ turnstileToken: 'token-malo' })).message === 'verification')
+  prueba('nada se registra si la verificación falla', e.filas.length === 1)
+  const ok1 = e.post(base({ turnstileToken: 'token-bueno' }))
+  prueba('token válido: se registra', ok1.success === true && ultimo.secret === 'secreto-prueba')
+  prueba('token de otra acción se rechaza', e.post(base({ kind: 'baja', turnstileToken: 'token-bueno' })).message === 'verification')
+
+  const caido = crearEntorno({ secreto: 'secreto-prueba', turnstile: () => respuestaTurnstile(503, {}) })
+  const r = caido.post(base({ turnstileToken: 'cualquiera' }))
+  prueba('si Cloudflare no responde, se acepta igual (no se impide el derecho)', r.success === true)
+  prueba('y queda anotado en «Incidencias»', (caido.hojas.Incidencias?.filas ?? []).some(f => f[2] === 'Turnstile no disponible'))
 }
 
 console.log('Límites')

@@ -89,3 +89,5 @@
   .request-submit .button { width: 100%; }
   .request-receipt dl > div { grid-template-columns: 1fr; }
 }
+
+.request-form[hidden] { display: none; }

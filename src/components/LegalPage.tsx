@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import type { Block, LegalDoc, LegalLocale } from '../legal/types'
 import { REGISTRY_ACTIVE } from '../legal'
+import { TURNSTILE_ACTIVE } from '../turnstile'
 import RichText from './RichText'
 import './legal.css'
 
@@ -41,7 +42,8 @@ export function LegalHero({ ui, kicker, title, updated, children }: {
 function renderBlock(block: Block, key: number, newTab: string): ReactNode {
   if (typeof block === 'string') return <p key={key}><RichText text={block} newTabLabel={newTab} /></p>
   if ('list' in block) return <ul key={key}>{block.list.map(item => <li key={item}><RichText text={item} newTabLabel={newTab} /></li>)}</ul>
-  return block.when === 'registry' && REGISTRY_ACTIVE ? renderBlock(block.block, key, newTab) : null
+  const active = { registry: REGISTRY_ACTIVE, turnstile: TURNSTILE_ACTIVE, noTurnstile: !TURNSTILE_ACTIVE }[block.when]
+  return active ? renderBlock(block.block, key, newTab) : null
 }
 
 /** Documento legal: título, fecha de actualización, índice con anclas y secciones numeradas. */

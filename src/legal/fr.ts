@@ -21,8 +21,10 @@ export const legalFr: LegalLocale = {
     privacy: 'Politique de confidentialité',
     cookies: 'Politique relative aux cookies',
     requestsLabel: 'Droits des consommateurs',
-    withdrawal: 'BOUTON DE RÉTRACTATION',
-    cancellation: 'BOUTON DE RÉSILIATION DES SERVICES',
+    withdrawal: 'BOTÓN DE ARREPENTIMIENTO',
+    cancellation: 'BOTÓN DE BAJA DE SERVICIO',
+    withdrawalHint: 'Bouton de rétractation',
+    cancellationHint: 'Bouton de résiliation de service',
   },
   contact: {
     consent: 'J’ai lu la [Politique de confidentialité](/privacidad) et j’autorise le traitement de mes données personnelles pour la gestion de ma demande et des communications qui s’y rapportent.',
@@ -230,6 +232,7 @@ export const legalFr: LegalLocale = {
             'Google Apps Script, pour le traitement des demandes envoyées au moyen du formulaire de contact.',
             'Les services de messagerie et de communication nécessaires à la gestion des demandes et des relations commerciales.',
           ] },
+          { when: 'turnstile', block: 'Cloudflare Turnstile, de Cloudflare, Inc., pour vérifier que les envois des formulaires ne sont pas automatisés. Ce service n’est chargé que lorsqu’un formulaire est rempli et peut traiter l’adresse IP ainsi que des données techniques du navigateur et de l’appareil.' },
           { when: 'registry', block: 'Les demandes de rétractation et de résiliation de services sont reçues au moyen de Google Apps Script et enregistrées dans une feuille de calcul Google Sheets privée, à laquelle seules les responsables de DOFRA ont accès.' },
           'Le prestataire d’hébergement peut traiter des informations techniques de connexion, telles que les adresses IP et les journaux d’accès.',
           'Les données peuvent être communiquées à des prestataires lorsque cela est nécessaire aux finalités indiquées, ainsi qu’aux autorités compétentes en cas d’obligation légale.',
@@ -242,6 +245,7 @@ export const legalFr: LegalLocale = {
         { title: 'Cookies et stockage local', blocks: [
           'Le site institutionnel n’utilise actuellement ni cookies de suivi, ni outils de publicité personnalisée, ni systèmes d’analyse d’audience.',
           'Il utilise le stockage local du navigateur pour conserver la préférence de langue.',
+          { when: 'turnstile', block: 'Lorsqu’un formulaire est rempli, Cloudflare Turnstile peut déposer des cookies techniques strictement nécessaires à la vérification de sécurité, qui ne sont pas utilisés à des fins publicitaires ni d’analyse d’audience.' },
           'Pour plus d’informations, l’utilisateur peut consulter la [Politique relative aux cookies et au stockage local](/cookies).',
         ] },
         { title: 'Conservation des données', blocks: [
@@ -285,7 +289,9 @@ export const legalFr: LegalLocale = {
           'Elle ne couvre pas les applications, démonstrations, plateformes indépendantes ni les sites web de tiers accessibles au moyen de liens.',
         ] },
         { title: 'Utilisation de cookies', blocks: [
-          'À l’heure actuelle, le site institutionnel de DOFRA n’utilise ni cookies propres ou de tiers, ni outils de suivi publicitaire, ni profils de navigation, ni systèmes d’analyse d’audience.',
+          { when: 'noTurnstile', block: 'À l’heure actuelle, le site institutionnel de DOFRA n’utilise ni cookies propres ou de tiers, ni outils de suivi publicitaire, ni profils de navigation, ni systèmes d’analyse d’audience.' },
+          { when: 'turnstile', block: 'À l’heure actuelle, le site institutionnel de DOFRA n’utilise ni cookies propres, ni outils de suivi publicitaire, ni profils de navigation, ni systèmes d’analyse d’audience.' },
+          { when: 'turnstile', block: 'Lorsque l’utilisateur remplit un formulaire, le service Cloudflare Turnstile, de Cloudflare, Inc., peut déposer des cookies tiers strictement nécessaires, comme cf_clearance, pour vérifier que l’envoi n’est pas automatisé. Ces cookies ne sont pas utilisés à des fins publicitaires ni d’analyse d’audience, et leur durée et leur fonctionnement sont régis par la politique de Cloudflare en matière de cookies.' },
         ] },
         { title: 'Stockage local', blocks: [
           'Le site utilise la technologie localStorage du navigateur pour conserver la préférence de langue et faciliter la navigation lors des visites suivantes.',
@@ -305,6 +311,7 @@ export const legalFr: LegalLocale = {
         ] },
         { title: 'Services et liens externes', blocks: [
           'Le site utilise des services technologiques externes pour son hébergement et pour traiter les demandes envoyées au moyen du formulaire de contact.',
+          { when: 'turnstile', block: 'Lorsqu’un formulaire est rempli, le site utilise Cloudflare Turnstile pour empêcher les envois automatisés.' },
           'Le traitement des données personnelles associé à ces services est décrit dans la [Politique de confidentialité](/privacidad) de DOFRA.',
           'Les sites externes accessibles au moyen de liens peuvent appliquer leurs propres politiques en matière de cookies et de confidentialité.',
         ] },

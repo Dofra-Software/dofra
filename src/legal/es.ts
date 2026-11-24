@@ -21,7 +21,7 @@ export const legalEs: LegalLocale = {
     cookies: 'Política de cookies',
     requestsLabel: 'Derechos del consumidor',
     withdrawal: 'BOTÓN DE ARREPENTIMIENTO',
-    cancellation: 'BOTÓN DE BAJA DE SERVICIOS',
+    cancellation: 'BOTÓN DE BAJA DE SERVICIO',
   },
   contact: {
     consent: 'He leído la [Política de Privacidad](/privacidad) y autorizo el tratamiento de mis datos personales para gestionar mi consulta y las comunicaciones relacionadas con ella.',
@@ -55,7 +55,7 @@ export const legalEs: LegalLocale = {
       typeName: 'Arrepentimiento',
     },
     cancellation: {
-      kicker: 'BOTÓN DE BAJA DE SERVICIOS',
+      kicker: 'BOTÓN DE BAJA DE SERVICIO',
       title: 'Solicitud de baja de servicio',
       description: 'Utilizá este formulario para solicitar la cancelación de un servicio contratado con Dofra Software.',
       service: 'Servicio que desea cancelar',
@@ -155,7 +155,7 @@ export const legalEs: LegalLocale = {
           'Se respetarán los derechos de información, garantía, revocación, arrepentimiento y cancelación que resulten aplicables.',
           'Ninguna disposición de estos términos podrá interpretarse como una renuncia a derechos irrenunciables del consumidor.',
           `Las solicitudes relacionadas con estos derechos podrán canalizarse a través de ${EMAIL}, sin perjuicio de otros mecanismos obligatorios que deban habilitarse.`,
-          'Las solicitudes de arrepentimiento y de baja de servicios también pueden presentarse directamente mediante el [Botón de arrepentimiento](/arrepentimiento) y el [Botón de baja de servicios](/baja-de-servicio), sin necesidad de registro previo.',
+          'Las solicitudes de arrepentimiento y de baja de servicios también pueden presentarse directamente mediante el [Botón de arrepentimiento](/arrepentimiento) y el [Botón de baja de servicio](/baja-de-servicio), sin necesidad de registro previo.',
         ] },
         { title: 'Modificaciones', blocks: [
           'DOFRA podrá actualizar estos términos para reflejar cambios en sus servicios, funcionamiento o legislación.',
@@ -229,6 +229,7 @@ export const legalEs: LegalLocale = {
             'Google Apps Script, para el procesamiento de las consultas enviadas mediante el formulario de contacto.',
             'Servicios de correo electrónico y comunicaciones necesarios para gestionar consultas y relaciones comerciales.',
           ] },
+          { when: 'turnstile', block: 'Cloudflare Turnstile, de Cloudflare, Inc., para verificar que los envíos de los formularios no sean automatizados. Este servicio se carga únicamente al completar un formulario y puede procesar la dirección IP y datos técnicos del navegador y del dispositivo.' },
           { when: 'registry', block: 'Las solicitudes de arrepentimiento y de baja de servicios se reciben mediante Google Apps Script y se registran en una hoja de cálculo privada de Google Sheets, a la que solo acceden las responsables de DOFRA.' },
           'El proveedor de alojamiento podrá procesar información técnica de conexión, como direcciones IP y registros de acceso.',
           'Los datos podrán comunicarse a proveedores cuando resulte necesario para las finalidades informadas, así como a autoridades competentes cuando exista una obligación legal.',
@@ -241,6 +242,7 @@ export const legalEs: LegalLocale = {
         { title: 'Cookies y almacenamiento local', blocks: [
           'El sitio institucional no utiliza actualmente cookies de seguimiento, herramientas de publicidad personalizada ni sistemas de analítica web.',
           'Utiliza almacenamiento local del navegador para conservar la preferencia de idioma.',
+          { when: 'turnstile', block: 'Al completar un formulario, Cloudflare Turnstile puede establecer cookies técnicas estrictamente necesarias para la verificación de seguridad, que no se utilizan con fines publicitarios ni de analítica.' },
           'Para obtener información adicional, el usuario podrá consultar la [Política de Cookies y Almacenamiento Local](/cookies).',
         ] },
         { title: 'Conservación de datos', blocks: [
@@ -284,7 +286,9 @@ export const legalEs: LegalLocale = {
           'No comprende las aplicaciones, demostraciones, plataformas independientes ni sitios web de terceros accesibles mediante enlaces.',
         ] },
         { title: 'Uso de cookies', blocks: [
-          'Actualmente, el sitio institucional de DOFRA no utiliza cookies propias ni de terceros, herramientas de seguimiento publicitario, perfiles de navegación ni sistemas de analítica web.',
+          { when: 'noTurnstile', block: 'Actualmente, el sitio institucional de DOFRA no utiliza cookies propias ni de terceros, herramientas de seguimiento publicitario, perfiles de navegación ni sistemas de analítica web.' },
+          { when: 'turnstile', block: 'Actualmente, el sitio institucional de DOFRA no utiliza cookies propias, herramientas de seguimiento publicitario, perfiles de navegación ni sistemas de analítica web.' },
+          { when: 'turnstile', block: 'Cuando el usuario completa un formulario, el servicio Cloudflare Turnstile, de Cloudflare, Inc., puede establecer cookies de terceros estrictamente necesarias, como cf_clearance, para verificar que el envío no es automatizado. Estas cookies no se utilizan con fines publicitarios ni de analítica, y su duración y funcionamiento se rigen por la política de cookies de Cloudflare.' },
         ] },
         { title: 'Almacenamiento local', blocks: [
           'El sitio utiliza la tecnología localStorage del navegador para conservar la preferencia de idioma y facilitar la navegación en futuras visitas.',
@@ -304,6 +308,7 @@ export const legalEs: LegalLocale = {
         ] },
         { title: 'Servicios y enlaces externos', blocks: [
           'El sitio utiliza servicios tecnológicos externos para su alojamiento y para procesar las consultas enviadas mediante el formulario de contacto.',
+          { when: 'turnstile', block: 'Al completar un formulario, el sitio utiliza Cloudflare Turnstile para prevenir envíos automatizados.' },
           'El tratamiento de los datos personales asociados a dichos servicios se describe en la [Política de Privacidad](/privacidad) de DOFRA.',
           'Los sitios externos accesibles mediante enlaces pueden aplicar sus propias políticas de cookies y privacidad.',
         ] },

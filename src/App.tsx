@@ -13,6 +13,7 @@ import RequestForm from './components/RequestForm'
 import RichText from './components/RichText'
 import { legal } from './legal'
 import { PATHS, pageFromPath } from './routes'
+import { useTurnstile } from './turnstile'
 import type { PageId } from './routes'
 
 /** Página actual según la ruta. Cada ruta es una carga completa: no hace falta un enrutador. */
@@ -21,9 +22,12 @@ const PAGE: PageId = pageFromPath(window.location.pathname)
 const HOME = PAGE === 'home' ? '' : '/'
 
 const LANGUAGES = {
-  es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida' },
-  en: { label: 'English', flag: 'us', formLabel: 'Inglés', title: 'Websites and custom systems' },
-  fr: { label: 'Français', flag: 'fr', formLabel: 'Francés', title: 'Sites web et logiciels sur mesure' },
+  es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida',
+    description: 'Páginas web y sistemas a medida para tu negocio. Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo.' },
+  en: { label: 'English', flag: 'us', formLabel: 'Inglés', title: 'Websites and custom systems',
+    description: 'Websites and custom systems for your business. We help startups, independent professionals and small businesses showcase their services, organize their work and save time.' },
+  fr: { label: 'Français', flag: 'fr', formLabel: 'Francés', title: 'Sites web et logiciels sur mesure',
+    description: 'Sites web et logiciels sur mesure pour votre activité. Nous aidons les entrepreneurs, les indépendants et les petites entreprises à présenter leurs services, à organiser leur travail et à gagner du temps.' },
 } as const
 
 type Lang = keyof typeof LANGUAGES
@@ -344,6 +348,13 @@ function Brand({ light = false, label }: { light?: boolean; label: string }) {
   return <a className={`brand ${light ? 'brand-light' : ''}`} href={`${HOME}#inicio`} aria-label={label}><img className="brand-logo" src="/dofra-logo.png" alt="" width="48" height="48" /></a>
 }
 
+/** Botón legal con su denominación exacta en español; en inglés y francés suma una explicación para lectores de pantalla. */
+function RightsLink({ page, label, hint }: { page: 'withdrawal' | 'cancellation'; label: string; hint?: string }) {
+  return <a href={PATHS[page]} aria-current={PAGE === page ? 'page' : undefined}>
+    <span lang="es">{label}</span>{hint && <span className="sr-only"> ({hint})</span>}
+  </a>
+}
+
 /** Secciones cuyas apariciones se repiten: al salir por completo de la sección vuelven al inicio. */
 const REPLAY_SECTIONS = '.process-section, #proyectos'
 
@@ -452,6 +463,7 @@ export default function App() {
   const f = t.form
   const faqs = t.faqs.filter((item: Faq) => !item.pending)
   const l = legal[lang]
+  const contactTurnstile = useTurnstile({ action: 'contacto', theme: 'dark', lang })
   useReveal()
   useProjectOpening(projectsRef)
 
@@ -468,8 +480,8 @@ export default function App() {
     document.title = doc ? `${doc.title} | Dofra Software`
       : request ? `${request.kicker.charAt(0)}${request.kicker.slice(1).toLowerCase()} | Dofra Software`
       : `Dofra Software | ${LANGUAGES[lang].title}`
-    const description = doc?.description ?? request?.description
-    if (description) document.querySelector('meta[name="description"]')?.setAttribute('content', description)
+    const description = doc?.description ?? request?.description ?? LANGUAGES[lang].description
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
   }, [lang, l])
 
   function closeMenu() {
@@ -529,6 +541,16 @@ export default function App() {
     if (data.get('_honey')) return // bot detectado: no se envía nada
     data.set('message', String(data.get('message') ?? '').trim())
     setFormStatus('sending')
+    // Verificación anti-bots (solo si Turnstile está activo). Si no carga, se muestra el correo como alternativa.
+    try {
+      const turnstileToken = await contactTurnstile.getToken()
+      if (turnstileToken) data.set('turnstileToken', turnstileToken)
+    } catch (error) {
+      console.error('[Dofra] No se pudo verificar el formulario de contacto:', error instanceof Error ? error.message : String(error))
+      contactTurnstile.reset()
+      setFormStatus('error')
+      return
+    }
     const controller = new AbortController()
     const timeout = window.setTimeout(() => controller.abort(), 15000)
     try {
@@ -563,11 +585,17 @@ export default function App() {
       setFormStatus('error')
     } finally {
       window.clearTimeout(timeout)
+      contactTurnstile.reset() // cada token de Turnstile sirve para un solo envío
     }
   }
 
   return <>
     <a className="skip-link" href="#contenido">{t.skip}</a>
+    {/* Disposición 954/2025: ambos botones «a simple vista, en lugar destacado y en el primer acceso». */}
+    <nav className="rights-bar" aria-label={l.footer.requestsLabel}><div className="rights-bar-inner">
+      <RightsLink page="withdrawal" label={l.footer.withdrawal} hint={l.footer.withdrawalHint} />
+      <RightsLink page="cancellation" label={l.footer.cancellation} hint={l.footer.cancellationHint} />
+    </div></nav>
     <header className="header"><div className="container nav-inner">
       <Brand label={t.brandLabel} />
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
@@ -646,7 +674,7 @@ export default function App() {
           <p className="quote-email">{f.orEmail} <a href={mailtoLink}>{CONTACT_EMAIL}</a></p>
           <ul className="contact-chips">{t.contactSmall.map(item => <li key={item}><Icon name="globe" size={15} />{item}</li>)}</ul>
         </div>
-        <form className="quote-form" onSubmit={submitQuote} aria-describedby="form-required-note">
+        <form className="quote-form" onSubmit={submitQuote} onFocus={() => { void contactTurnstile.prepare() }} aria-describedby="form-required-note">
           <input type="hidden" name="_subject" value={f.subject} />
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="idioma" value={LANGUAGES[lang].formLabel} />
@@ -667,6 +695,7 @@ export default function App() {
             </div>
             <p className="quote-processed" id="quote-processed">{l.contact.processedBy}</p>
           </div>
+          <div className="turnstile-slot" ref={contactTurnstile.container} />
           <div className="quote-submit">
             <button type="submit" className="button button-primary button-large" disabled={formStatus === 'sending'}>{formStatus === 'sending' ? f.sending : f.send}<Icon name="arrow" size={18} /></button>
             <div className={`quote-feedback ${formStatus}`} role={formStatus === 'error' ? 'alert' : 'status'} aria-live="polite">
@@ -704,8 +733,8 @@ export default function App() {
           <a href={PATHS.cookies} aria-current={PAGE === 'cookies' ? 'page' : undefined}>{l.footer.cookies}</a>
         </nav>
         <ul className="footer-rights" aria-label={l.footer.requestsLabel}>
-          <li><a href={PATHS.withdrawal} aria-current={PAGE === 'withdrawal' ? 'page' : undefined}>{l.footer.withdrawal}</a></li>
-          <li><a href={PATHS.cancellation} aria-current={PAGE === 'cancellation' ? 'page' : undefined}>{l.footer.cancellation}</a></li>
+          <li><RightsLink page="withdrawal" label={l.footer.withdrawal} hint={l.footer.withdrawalHint} /></li>
+          <li><RightsLink page="cancellation" label={l.footer.cancellation} hint={l.footer.cancellationHint} /></li>
         </ul>
       </div>
       <div className="footer-bottom"><span>© {new Date().getFullYear()} Dofra Software. {t.rights}</span><span className="footer-slogan" lang="en">{t.footer.slogan}</span></div>

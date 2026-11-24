@@ -21,8 +21,10 @@ export const legalEn: LegalLocale = {
     privacy: 'Privacy policy',
     cookies: 'Cookie policy',
     requestsLabel: 'Consumer rights',
-    withdrawal: 'WITHDRAWAL BUTTON',
-    cancellation: 'SERVICE CANCELLATION BUTTON',
+    withdrawal: 'BOTÓN DE ARREPENTIMIENTO',
+    cancellation: 'BOTÓN DE BAJA DE SERVICIO',
+    withdrawalHint: 'Withdrawal button',
+    cancellationHint: 'Service cancellation button',
   },
   contact: {
     consent: 'I have read the [Privacy Policy](/privacidad) and I authorize the processing of my personal data to handle my inquiry and the communications related to it.',
@@ -230,6 +232,7 @@ export const legalEn: LegalLocale = {
             'Google Apps Script, to process the inquiries sent through the contact form.',
             'Email and communication services needed to manage inquiries and business relationships.',
           ] },
+          { when: 'turnstile', block: 'Cloudflare Turnstile, by Cloudflare, Inc., to verify that form submissions are not automated. This service is only loaded when a form is filled in and may process the IP address and technical data about the browser and device.' },
           { when: 'registry', block: 'Withdrawal and service cancellation requests are received through Google Apps Script and registered in a private Google Sheets spreadsheet that only DOFRA’s owners can access.' },
           'The hosting provider may process technical connection information, such as IP addresses and access logs.',
           'Data may be disclosed to providers when necessary for the purposes described, and to competent authorities where there is a legal obligation.',
@@ -242,6 +245,7 @@ export const legalEn: LegalLocale = {
         { title: 'Cookies and local storage', blocks: [
           'The institutional website does not currently use tracking cookies, personalized advertising tools or web analytics systems.',
           'It uses the browser’s local storage to remember the language preference.',
+          { when: 'turnstile', block: 'When a form is filled in, Cloudflare Turnstile may set strictly necessary technical cookies for security verification, which are not used for advertising or analytics purposes.' },
           'For more information, users may consult the [Cookie and Local Storage Policy](/cookies).',
         ] },
         { title: 'Data retention', blocks: [
@@ -285,7 +289,9 @@ export const legalEn: LegalLocale = {
           'It does not cover applications, demos, independent platforms or third-party websites accessible through links.',
         ] },
         { title: 'Use of cookies', blocks: [
-          'DOFRA’s institutional website does not currently use first-party or third-party cookies, advertising tracking tools, browsing profiles or web analytics systems.',
+          { when: 'noTurnstile', block: 'DOFRA’s institutional website does not currently use first-party or third-party cookies, advertising tracking tools, browsing profiles or web analytics systems.' },
+          { when: 'turnstile', block: 'DOFRA’s institutional website does not currently use first-party cookies, advertising tracking tools, browsing profiles or web analytics systems.' },
+          { when: 'turnstile', block: 'When the user fills in a form, the Cloudflare Turnstile service, by Cloudflare, Inc., may set strictly necessary third-party cookies, such as cf_clearance, to verify that the submission is not automated. These cookies are not used for advertising or analytics purposes, and their duration and operation are governed by Cloudflare’s cookie policy.' },
         ] },
         { title: 'Local storage', blocks: [
           'The site uses the browser’s localStorage technology to remember the language preference and make navigation easier on future visits.',
@@ -305,6 +311,7 @@ export const legalEn: LegalLocale = {
         ] },
         { title: 'External services and links', blocks: [
           'The site uses external technology services for hosting and to process the inquiries sent through the contact form.',
+          { when: 'turnstile', block: 'When a form is filled in, the site uses Cloudflare Turnstile to prevent automated submissions.' },
           'The processing of personal data associated with those services is described in DOFRA’s [Privacy Policy](/privacidad).',
           'External sites accessible through links may apply their own cookie and privacy policies.',
         ] },

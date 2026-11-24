@@ -17,6 +17,8 @@ function doPost(e) {
     const p = (e && e.parameter) || {};
     // Campo trampa para bots: se responde como si nada para no darles pistas, pero no se envía.
     if (p._honey) return respuesta_({ success: true });
+    // Cloudflare Turnstile (opcional, ver docs/LEGAL.md): solo se exige si existe la propiedad TURNSTILE_SECRET.
+    if (verificarTurnstile_(p.turnstileToken) === 'invalido') return respuesta_({ success: false, message: 'verification' });
 
     const nombre = limpiar_(p.name, 100);
     const correo = limpiar_(p.email, 150);
@@ -64,6 +66,27 @@ function doGet() {
 /** Ejecutar una vez desde el editor para autorizar el envío de correos y probarlo. */
 function probarEnvio() {
   MailApp.sendEmail(DESTINO, 'Prueba del formulario de dofrasoftware.com', 'Si recibís este correo, el receptor funciona.');
+}
+
+/**
+ * Sin la propiedad TURNSTILE_SECRET está desactivado ('ok'). Si Cloudflare no responde ('no_disponible'),
+ * el mensaje se acepta igual: el límite por hora sigue protegiendo el formulario.
+ */
+function verificarTurnstile_(token) {
+  const secreto = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET');
+  if (!secreto) return 'ok';
+  if (!token || String(token).length > 2048) return 'invalido';
+  try {
+    const r = UrlFetchApp.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',
+      { method: 'post', payload: { secret: secreto, response: String(token) }, muteHttpExceptions: true });
+    if (r.getResponseCode() >= 500) return 'no_disponible';
+    const json = JSON.parse(r.getContentText());
+    if (json.success === true) return !json.action || json.action === 'contacto' ? 'ok' : 'invalido';
+    return (json['error-codes'] || []).indexOf('internal-error') >= 0 ? 'no_disponible' : 'invalido';
+  } catch (err) {
+    console.error('Turnstile: ' + err);
+    return 'no_disponible';
+  }
 }
 
 function limpiar_(valor, max) {

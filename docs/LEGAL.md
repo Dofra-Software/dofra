@@ -50,6 +50,15 @@ Para actualizar un texto legal: cambiar `es.ts`, trasladar el cambio a `en.ts` y
   `consent === 'Sí'`. **No cambiar ese valor** sin actualizar el script.
 - No hay casilla de newsletter (todavía no existe ese servicio).
 
+## Botones en el primer acceso (Disposición 954/2025)
+
+- Arts. 1 y 4: enlaces denominados «BOTÓN DE ARREPENTIMIENTO» y «BOTÓN DE BAJA DE SERVICIO» (singular), «a simple vista,
+  en lugar destacado y en el primer acceso», sin registración previa ni trámites adicionales.
+- Se muestran en una franja fina arriba del encabezado, en todas las páginas, y también en el footer. La denominación
+  va en español en los tres idiomas; en inglés y francés se agrega una explicación solo para lectores de pantalla.
+- Art. 5: el código de la solicitud debe informarse dentro de las 24 horas y por el mismo medio. El sitio lo muestra en
+  pantalla en el momento y lo envía por correo.
+
 ## Botón de arrepentimiento y botón de baja
 
 Proyecto de Apps Script **separado** del formulario de contacto (`apps-script/solicitudes/Code.gs`), vinculado a una
@@ -66,9 +75,20 @@ hoja de Google Sheets privada. El formulario de contacto no cambia.
   contra la inyección de fórmulas).
 - Correos: constancia al solicitante («Dofra Software | Confirmación de solicitud», en su idioma) y aviso a
   info@dofrasoftware.com («Nueva solicitud de arrepentimiento — …» / «Nueva solicitud de baja de servicio — …»).
+- Los correos del envío inicial salen con el bloqueo del script tomado: el activador de reintentos no puede mandar la
+  misma constancia al mismo tiempo (sin correos duplicados).
+- Cuota de correo (Gmail gratuito: unos 100 destinatarios por día, compartidos con el formulario de contacto si ambos
+  scripts usan la misma cuenta): la constancia solo se envía si quedan más de 10 envíos en el día. Si no, queda
+  «Pendiente» sin contar como intento fallido y se reintenta cada 10 minutos. El aviso interno tiene prioridad.
 - Si la constancia falla: la solicitud queda registrada, el sitio muestra el identificador y avisa que el correo se
-  reenviará. Un activador reintenta cada 10 minutos. Tras 6 intentos (≈ 1 hora) la marca «Fallida» y manda una alerta a
-  info@ para comunicar el número por otro medio **dentro de las 24 horas**.
+  reenviará. Tras 6 errores de envío (≈ 1 hora) la marca «Fallida».
+- Alertas (una por solicitud y motivo) cuando la constancia queda «Fallida» o sigue «Pendiente» después de 2 horas:
+  1. fila en la hoja **«Incidencias»** (constancia persistente: fecha, identificador, motivo, detalle, alertas enviadas,
+     resuelta);
+  2. evento con aviso en **Google Calendar** de la cuenta de Dofra (no depende de la cuota de correo);
+  3. correo a info@, solo si queda cuota.
+  La constancia se debe comunicar por otro medio **dentro de las 24 horas** desde la recepción. Revisar «Incidencias» a
+  diario y marcar «Resuelta: Sí» al terminar.
 - El formulario no cancela servicios, no borra datos, no interrumpe alojamientos ni emite devoluciones.
 - Pruebas locales sin servicios reales: `node apps-script/solicitudes/prueba-local.mjs`.
 
@@ -79,6 +99,53 @@ contratado · Referencia contractual · Información adicional · **Estado de ge
 Confirmación al solicitante (Pendiente / Enviada / Fallida) · Fecha de resolución · Observaciones internas.
 A la derecha hay columnas técnicas (idioma, clave de envío, intentos, último error, aviso interno, recepción, huella):
 no editarlas a mano.
+
+### Cloudflare Turnstile (anti-bots, gratuito)
+
+Está preparado pero **desactivado** hasta cargar las claves. Desactivado, los formularios funcionan como hasta ahora y
+las políticas no lo mencionan.
+
+- Navegador (`src/turnstile.ts`): el script de Cloudflare se carga recién cuando la persona hace foco en un formulario
+  (visitar el sitio no conecta con Cloudflare). Modo «solo si hace falta interacción». Si no carga, el envío no sale y
+  el formulario muestra el correo info@ como canal alternativo.
+- Servidor (los dos Apps Script): si existe la propiedad `TURNSTILE_SECRET`, el token es obligatorio y se valida con
+  Cloudflare (también la acción: `contacto`, `arrepentimiento` o `baja`). Si Cloudflare no responde, se acepta
+  igual para no impedir el ejercicio del derecho (en solicitudes queda anotado en «Incidencias»).
+- Con la clave del sitio cargada, las políticas muestran los bloques `when: 'turnstile'` (privacidad: proveedor y
+  cookies técnicas; cookies: `cf_clearance` de Cloudflare, estrictamente necesaria y de terceros).
+- Riesgo conocido: `challenges.cloudflare.com` está en IP de Cloudflare (104.18.94.41 / 104.18.95.41 el 24/11/2026). No
+  son las IP bloqueadas en España en horario de LaLiga (188.114.96.x / 97.x), pero puede cambiar: en ese caso, el
+  formulario ofrece el correo.
+
+**Activación** (en este orden, para no romper el formulario de contacto de www mientras tanto):
+
+1. Cloudflare (cuenta de Dofra) → **Turnstile → Add widget**. Nombre: «dofrasoftware.com». Hostnames:
+   `dofrasoftware.com`, `www.dofrasoftware.com` y `dofra.pages.dev` (vistas previas). Modo: **Managed**.
+   Copiar la **Site Key** (pública) y la **Secret Key** (secreta: no va en el código ni en el repositorio).
+2. Actualizar los dos Apps Script con el código nuevo (pasos de abajo), todavía **sin** `TURNSTILE_SECRET`.
+3. Poner la Site Key en `TURNSTILE_SITE_KEY` (`src/turnstile.ts`, como valor por defecto) y probar en la vista previa.
+4. Script de **solicitudes**: **Configuración del proyecto → Propiedades del script → Agregar**: `TURNSTILE_SECRET` =
+   Secret Key. Probar en la vista previa.
+5. Publicar www (sección «Publicar»).
+6. Recién entonces, script de **contacto**: agregar `TURNSTILE_SECRET`. Antes de publicar www, el sitio actual no
+   envía el token y el contacto quedaría rechazado.
+
+### Actualizar los Apps Script ya publicados (se conserva la URL /exec)
+
+Solicitudes (hoja «Solicitudes dofrasoftware.com» → Extensiones → Apps Script):
+
+1. Reemplazar `Código.gs` por `apps-script/solicitudes/Code.gs` y guardar.
+2. Ejecutar `configurar`. Google pide permisos nuevos (Google Calendar y, si ya hay `TURNSTILE_SECRET`, conexión a
+   servicios externos): revisarlos y aceptarlos. Crea la hoja «Incidencias» y recrea el activador. No borra filas.
+3. **Implementar → Gestionar implementaciones** → lápiz (Editar) → Versión: **Nueva versión** → **Implementar**.
+   La URL `/exec` no cambia.
+4. Abrir la URL: debe mostrar `{"ok":true}`.
+
+Contacto (proyecto «Formulario dofrasoftware.com»):
+
+1. Reemplazar `Código.gs` por `apps-script/Code.gs` y guardar.
+2. Ejecutar `probarEnvio` y aceptar el permiso nuevo de conexión a servicios externos (Turnstile).
+3. **Implementar → Gestionar implementaciones** → Editar → **Nueva versión** → Implementar. La URL no cambia.
 
 ### Puesta en marcha (la tienen que hacer las responsables, con la cuenta de Google de Dofra)
 
