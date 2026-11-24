@@ -52,3 +52,11 @@ Verificado el 21/11 desde Movistar, en horario de bloqueo:
 | `spa-gestor.pages.dev`, `rio-cine.pages.dev` (portfolio) | 172.66.x | Responden hoy, pero son IP compartidas de Cloudflare |
 
 Mientras tanto, el enlace de correo (`mailto:`) del sitio sigue funcionando como alternativa al formulario.
+
+## Historial de publicaciones
+
+| Fecha | Código (dofra) | Publicación (dofra-sitio) | Anterior, para volver atrás |
+|---|---|---|---|
+| 24/11/2026 | `main@bcc2831`: documentación legal, botones de arrepentimiento y baja, Turnstile; más los commits de diseño `2fd519d` y `46ceaf3` | `af1dba0` (JavaScript `index-D6NHS9FA.js`) | `efc4b0f` (JavaScript `index-Ct45mhD_.js`) |
+
+Para volver atrás, ver «Volver atrás ante un error» en `docs/LEGAL.md`.
