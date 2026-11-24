@@ -184,12 +184,70 @@ cambia).
 
 ## Publicar (solo después de la aprobación)
 
-```powershell
-git switch main
-git merge feat/documentacion-legal
-npm run build:site
-node scripts/publish-static-site.mjs --confirm
-```
+Estado verificado el 24/11/2026: `main` es ancestro de la rama (fusión directa, sin conflictos) y la compilación local
+produce el mismo archivo JavaScript que la vista previa ya probada. Además de esta rama se publican dos commits de
+diseño de `main` que todavía no están en www (`2fd519d` planes web y carrusel en celular; `46ceaf3` guías de sección).
 
-Después de publicar, comprobar: las cinco rutas abren con acceso directo y recarga, el footer muestra los enlaces y
-los dos botones, y `https://www.dofrasoftware.com/sitemap.xml` y `/robots.txt` responden.
+1. Anotar la versión actual de www para poder volver atrás:
+
+   ```powershell
+   git ls-remote https://github.com/Dofra-Software/dofra-sitio.git main
+   ```
+
+2. Fusionar y publicar:
+
+   ```powershell
+   git switch main
+   git pull --ff-only
+   git merge --ff-only feat/documentacion-legal
+   git push origin main
+   npm run build:site
+   node scripts/publish-static-site.mjs --confirm
+   ```
+
+3. Esperar unos minutos (GitHub Pages guarda en caché hasta 10 minutos) y comprobar en https://www.dofrasoftware.com:
+   las cinco rutas con acceso directo y recarga; la franja superior y el footer con los dos botones; los tres
+   formularios con datos ficticios (número en pantalla, fila en la hoja, correos); `/sitemap.xml` y `/robots.txt`.
+4. Recién entonces, en el Apps Script de **contacto**: **Configuración del proyecto → Propiedades del script** →
+   agregar `TURNSTILE_SECRET` (la misma Secret Key que ya tiene el script de solicitudes). Probar otra consulta.
+
+## Volver atrás ante un error
+
+- **Sitio (www):** cada publicación es un commit «Publicar sitio desde dofra@…» en `Dofra-Software/dofra-sitio`.
+  Para volver a la versión anterior:
+
+  ```powershell
+  git clone https://github.com/Dofra-Software/dofra-sitio.git $env:TEMP/dofra-sitio
+  cd $env:TEMP/dofra-sitio
+  git revert --no-edit HEAD
+  git push origin main
+  ```
+
+  Después, en este repositorio, `git revert -m 1` (o `git revert` de los commits) en `main` para que el código
+  coincida con lo publicado. No hace falta tocar DNS ni Cloudflare.
+- **Apps Script:** **Implementar → Gestionar implementaciones** → Editar → Versión: elegir la anterior →
+  **Implementar**. La URL `/exec` no cambia. Los datos de la hoja no se tocan.
+- **Turnstile:**
+  - Si el servidor rechaza envíos legítimos: borrar la propiedad `TURNSTILE_SECRET` del script afectado (deja de
+    exigir el token al instante, sin publicar nada).
+  - Si el widget no carga para nadie: poner `TURNSTILE_SITE_KEY` vacía en `src/turnstile.ts` (la variable de entorno
+    vacía no alcanza, porque se usa el valor por defecto), compilar y publicar. Las políticas dejan de mencionarlo solas.
+- Mientras tanto, el correo info@dofrasoftware.com sigue siendo el canal alternativo que muestran los formularios.
+
+## Pendientes de revisión legal (no resueltos)
+
+No se publicó información inventada. Estos puntos quedan para verificar con asesoramiento profesional:
+
+1. **Registro ante la AAIP:** si corresponde inscribir las bases de datos personales (consultas de contacto y registro
+   de solicitudes en Google Sheets) ante la Agencia de Acceso a la Información Pública, Ley 25.326.
+2. **Data Fiscal de ARCA:** aplicabilidad del Formulario 960/D al modelo comercial de Dofra. Si corresponde, agregar el
+   distintivo oficial con los enlaces que entregue ARCA. No usar imágenes genéricas ni códigos QR ficticios.
+3. **Domicilio legal:** si «Nueva Córdoba, Córdoba Capital, Argentina» alcanza como domicilio del responsable
+   (artículo 6 de la Ley 25.326) y como identificación del proveedor en contratos a distancia.
+
+Otros puntos a verificar:
+
+- **Disposición 954/2025, art. 6:** teléfono o canal alternativo de atención, área responsable y horario mínimo de
+  atención. No se agregaron porque no hay datos confirmados.
+- **Disposición 3/2026:** su texto oficial no se pudo leer.
+- **Transferencias internacionales:** condiciones de Google, GitHub y Cloudflare.
