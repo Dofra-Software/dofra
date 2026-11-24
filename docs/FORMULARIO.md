@@ -19,6 +19,29 @@ de Google de Dofra y no guarda los mensajes: sólo los reenvía por correo.
   enlace de correo y no muestra éxito si el receptor no lo confirma.
 - Mientras `CONTACT_ENDPOINT` esté vacío, se sigue usando FormSubmit: este cambio no altera nada hasta configurarlo.
 
+## Confirmación automática a quien escribe
+
+Después del aviso interno, el script envía una confirmación a la persona que completó el formulario:
+
+- Asunto: «Dofra Software | Recibimos tu consulta» (o en inglés / francés, según el campo «idioma» del formulario).
+- Remitente «Dofra Software», «Responder a» info@dofrasoftware.com. Firma «Dofra Software — Built by Dofra.».
+- HTML sobrio: franja azul #0B1930 con el logo original (`https://www.dofrasoftware.com/dofra-logo.png`), filete
+  terracota #C4938E y texto azul sobre blanco; incluye versión de texto plano.
+- Contra el abuso: el texto es fijo y **no repite nada de lo que escribió la persona** (nombre, mensaje), así el
+  formulario no sirve para mandar spam a terceros. Como máximo una confirmación por dirección cada 6 horas y 30 por
+  día, y solo si quedan más de 20 envíos de Gmail en el día (la reserva es para los avisos internos y las solicitudes).
+  Con Turnstile activo, además hace falta un token válido.
+- Si la confirmación no sale (cuota, límite o error), la consulta igual llegó: el sitio muestra éxito igual.
+- Pruebas locales sin servicios reales: `node apps-script/prueba-local.mjs` (incluye tokens de Turnstile ausentes,
+  inválidos, reutilizados y de otro formulario, con las respuestas reales de Cloudflare).
+
+### Actualizar el script publicado (se conserva la URL /exec)
+
+1. Proyecto «Formulario dofrasoftware.com» → reemplazar todo `Código.gs` por `apps-script/Code.gs` y guardar.
+2. **Implementar → Gestionar implementaciones** → lápiz (Editar) → Versión: **Nueva versión** → **Implementar**.
+3. No pide permisos nuevos. Probar una consulta con un correo propio: tienen que llegar el aviso a
+   dofrasoftware@gmail.com y la confirmación al correo propio, con «Responder a» info@.
+
 ## Puesta en marcha (requiere la cuenta de Google de Dofra)
 
 1. Entrar a https://script.google.com con la cuenta de Google de Dofra → **Nuevo proyecto**. Nombre: «Formulario dofrasoftware.com».

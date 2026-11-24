@@ -188,6 +188,8 @@ console.log('Cloudflare Turnstile')
   const ok1 = e.post(base({ turnstileToken: 'token-bueno' }))
   prueba('token válido: se registra', ok1.success === true && ultimo.secret === 'secreto-prueba')
   prueba('token de otra acción se rechaza', e.post(base({ kind: 'baja', turnstileToken: 'token-bueno' })).message === 'verification')
+  const reusado = crearEntorno({ secreto: 'secreto-prueba', turnstile: () => respuestaTurnstile(200, { success: false, 'error-codes': ['timeout-or-duplicate'] }) })
+  prueba('token reutilizado (timeout-or-duplicate) se rechaza', reusado.post(base({ turnstileToken: 'ya-usado' })).message === 'verification' && reusado.filas.length === 1)
 
   const caido = crearEntorno({ secreto: 'secreto-prueba', turnstile: () => respuestaTurnstile(503, {}) })
   const r = caido.post(base({ turnstileToken: 'cualquiera' }))
