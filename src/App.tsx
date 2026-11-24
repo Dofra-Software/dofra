@@ -11,6 +11,7 @@ import { frenchContent } from './content.fr'
 import LegalPage from './components/LegalPage'
 import RequestForm from './components/RequestForm'
 import RichText from './components/RichText'
+import RightsLinks from './components/RightsLinks'
 import { legal } from './legal'
 import { PATHS, pageFromPath } from './routes'
 import { useTurnstile } from './turnstile'
@@ -20,6 +21,13 @@ import type { PageId } from './routes'
 const PAGE: PageId = pageFromPath(window.location.pathname)
 /** En las páginas internas, los enlaces a secciones del inicio llevan la ruta («/#contacto»). */
 const HOME = PAGE === 'home' ? '' : '/'
+
+/**
+ * VISTA PREVIA: alternativas de ubicación de los botones legales, elegibles con ?botones=a|b|c.
+ * Sin parámetro se ve la franja actual. Se elimina al elegir una alternativa.
+ */
+const BOTONES = (['a', 'b', 'c'] as const).find(v => v === new URLSearchParams(window.location.search).get('botones')) ?? 'franja'
+document.documentElement.dataset.botones = BOTONES
 
 const LANGUAGES = {
   es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida',
@@ -592,14 +600,15 @@ export default function App() {
   return <>
     <a className="skip-link" href="#contenido">{t.skip}</a>
     {/* Disposición 954/2025: ambos botones «a simple vista, en lugar destacado y en el primer acceso». */}
-    <nav className="rights-bar" aria-label={l.footer.requestsLabel}><div className="rights-bar-inner">
+    {BOTONES === 'franja' && <nav className="rights-bar" aria-label={l.footer.requestsLabel}><div className="rights-bar-inner">
       <RightsLink page="withdrawal" label={l.footer.withdrawal} hint={l.footer.withdrawalHint} />
       <RightsLink page="cancellation" label={l.footer.cancellation} hint={l.footer.cancellationHint} />
-    </div></nav>
+    </div></nav>}
     <header className="header"><div className="container nav-inner">
       <Brand label={t.brandLabel} />
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
       <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`${HOME}#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
+      <RightsLinks labels={l.footer} className="rights-header" />
       <div className="nav-actions">
         <LanguagePicker lang={lang} label={t.langSwitch} onChange={setLang} />
         <a className="button button-primary nav-cta" href={`${HOME}#contacto`}>{t.talk}<Icon name="arrow" size={16} /></a>
@@ -607,15 +616,16 @@ export default function App() {
       </div>
     </div></header>
 
-    {PAGE === 'terms' && <LegalPage doc={l.docs.terms} ui={l.ui} />}
-    {PAGE === 'privacy' && <LegalPage doc={l.docs.privacy} ui={l.ui} />}
-    {PAGE === 'cookies' && <LegalPage doc={l.docs.cookies} ui={l.ui} />}
+    {PAGE === 'terms' && <LegalPage doc={l.docs.terms} ui={l.ui} rights={l.footer} />}
+    {PAGE === 'privacy' && <LegalPage doc={l.docs.privacy} ui={l.ui} rights={l.footer} />}
+    {PAGE === 'cookies' && <LegalPage doc={l.docs.cookies} ui={l.ui} rights={l.footer} />}
     {PAGE === 'withdrawal' && <RequestForm kind="withdrawal" lang={lang} t={l} />}
     {PAGE === 'cancellation' && <RequestForm kind="cancellation" lang={lang} t={l} />}
 
     {PAGE === 'home' && <main id="contenido" tabIndex={-1}>
       <section className="hero" id="inicio" aria-labelledby="hero-titulo"><TechGuides hero /><div className="container hero-grid">
         <div className="hero-copy">
+          <RightsLinks labels={l.footer} className="rights-hero-top" />
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
           <p className="hero-lead">{t.heroDesc}</p>
@@ -624,8 +634,10 @@ export default function App() {
             <a className="button button-ghost button-large" href="#servicios">{t.seeWork}<Icon name="arrow" size={18} /></a>
           </div>
           <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
+          <RightsLinks labels={l.footer} className="rights-hero-b" />
         </div>
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /><TechMeasure label={t.footer.slogan} /></div>
+        <RightsLinks labels={l.footer} className="rights-hero-c" />
       </div></section>
 
       <section className="section section-soft section-compact process-section" aria-labelledby="proceso-titulo"><TechGuides tone="light" /><div className="container">
