@@ -3,14 +3,15 @@ import { useCallback, useEffect, useRef } from 'react'
 /**
  * Cloudflare Turnstile (gratuito) para los formularios. Ver docs/LEGAL.md.
  *
- * - Clave del sitio: pública por diseño. Vacía = Turnstile desactivado (los formularios funcionan como antes
+ * - Clave del sitio: pública por diseño (widget «dofrasoftware.com», modo Managed, pre-clearance desactivado).
+ *   Vacía = Turnstile desactivado (los formularios funcionan como antes
  *   y la política de privacidad no lo menciona). La clave secreta va SOLO en las propiedades de Apps Script.
  * - El script de Cloudflare se carga recién cuando la persona empieza a completar un formulario: visitar el
  *   sitio no genera ninguna conexión a Cloudflare.
  * - Si Turnstile no carga (bloqueo de red, extensiones), el envío falla y el formulario muestra el correo de
  *   contacto como canal alternativo.
  */
-export const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
+export const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAAAGRXAvTQt7jRhd__'
 export const TURNSTILE_ACTIVE = TURNSTILE_SITE_KEY !== ''
 
 const SCRIPT_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'

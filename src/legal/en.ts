@@ -291,7 +291,7 @@ export const legalEn: LegalLocale = {
         { title: 'Use of cookies', blocks: [
           { when: 'noTurnstile', block: 'DOFRA’s institutional website does not currently use first-party or third-party cookies, advertising tracking tools, browsing profiles or web analytics systems.' },
           { when: 'turnstile', block: 'DOFRA’s institutional website does not currently use first-party cookies, advertising tracking tools, browsing profiles or web analytics systems.' },
-          { when: 'turnstile', block: 'When the user fills in a form, the Cloudflare Turnstile service, by Cloudflare, Inc., may set strictly necessary third-party cookies, such as cf_clearance, to verify that the submission is not automated. These cookies are not used for advertising or analytics purposes, and their duration and operation are governed by Cloudflare’s cookie policy.' },
+          { when: 'turnstile', block: 'When the user fills in a form, the Cloudflare Turnstile service, by Cloudflare, Inc., may use strictly necessary third-party technical cookies to verify that the submission is not automated. These cookies are not used for advertising or analytics purposes, and their duration and operation are governed by Cloudflare’s cookie policy.' },
         ] },
         { title: 'Local storage', blocks: [
           'The site uses the browser’s localStorage technology to remember the language preference and make navigation easier on future visits.',

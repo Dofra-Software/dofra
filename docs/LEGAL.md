@@ -102,8 +102,8 @@ no editarlas a mano.
 
 ### Cloudflare Turnstile (anti-bots, gratuito)
 
-Está preparado pero **desactivado** hasta cargar las claves. Desactivado, los formularios funcionan como hasta ahora y
-las políticas no lo mencionan.
+Activo desde el 24/11/2026: widget «dofrasoftware.com», modo Managed, pre-clearance desactivado. Si se vacía
+`TURNSTILE_SITE_KEY`, queda desactivado: los formularios funcionan como antes y las políticas no lo mencionan.
 
 - Navegador (`src/turnstile.ts`): el script de Cloudflare se carga recién cuando la persona hace foco en un formulario
   (visitar el sitio no conecta con Cloudflare). Modo «solo si hace falta interacción». Si no carga, el envío no sale y
@@ -112,7 +112,9 @@ las políticas no lo mencionan.
   Cloudflare (también la acción: `contacto`, `arrepentimiento` o `baja`). Si Cloudflare no responde, se acepta
   igual para no impedir el ejercicio del derecho (en solicitudes queda anotado en «Incidencias»).
 - Con la clave del sitio cargada, las políticas muestran los bloques `when: 'turnstile'` (privacidad: proveedor y
-  cookies técnicas; cookies: `cf_clearance` de Cloudflare, estrictamente necesaria y de terceros).
+  cookies técnicas; cookies técnicas de terceros, estrictamente necesarias). Con pre-clearance desactivado, la documentación de Cloudflare
+  indica que no se emite `cf_clearance`; no detalla si el marco de Cloudflare usa otras cookies internas, por eso el texto
+  dice «puede utilizar».
 - Riesgo conocido: `challenges.cloudflare.com` está en IP de Cloudflare (104.18.94.41 / 104.18.95.41 el 24/11/2026). No
   son las IP bloqueadas en España en horario de LaLiga (188.114.96.x / 97.x), pero puede cambiar: en ese caso, el
   formulario ofrece el correo.

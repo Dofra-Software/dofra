@@ -288,7 +288,7 @@ export const legalEs: LegalLocale = {
         { title: 'Uso de cookies', blocks: [
           { when: 'noTurnstile', block: 'Actualmente, el sitio institucional de DOFRA no utiliza cookies propias ni de terceros, herramientas de seguimiento publicitario, perfiles de navegación ni sistemas de analítica web.' },
           { when: 'turnstile', block: 'Actualmente, el sitio institucional de DOFRA no utiliza cookies propias, herramientas de seguimiento publicitario, perfiles de navegación ni sistemas de analítica web.' },
-          { when: 'turnstile', block: 'Cuando el usuario completa un formulario, el servicio Cloudflare Turnstile, de Cloudflare, Inc., puede establecer cookies de terceros estrictamente necesarias, como cf_clearance, para verificar que el envío no es automatizado. Estas cookies no se utilizan con fines publicitarios ni de analítica, y su duración y funcionamiento se rigen por la política de cookies de Cloudflare.' },
+          { when: 'turnstile', block: 'Cuando el usuario completa un formulario, el servicio Cloudflare Turnstile, de Cloudflare, Inc., puede utilizar cookies técnicas de terceros estrictamente necesarias para verificar que el envío no es automatizado. Estas cookies no se utilizan con fines publicitarios ni de analítica, y su duración y funcionamiento se rigen por la política de cookies de Cloudflare.' },
         ] },
         { title: 'Almacenamiento local', blocks: [
           'El sitio utiliza la tecnología localStorage del navegador para conservar la preferencia de idioma y facilitar la navegación en futuras visitas.',
