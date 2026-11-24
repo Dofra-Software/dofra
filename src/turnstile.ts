@@ -11,7 +11,7 @@ import { useCallback, useEffect, useRef } from 'react'
  * - Si Turnstile no carga (bloqueo de red, extensiones), el envío falla y el formulario muestra el correo de
  *   contacto como canal alternativo.
  */
-export const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAAAGRXAvTQt7jRhd__'
+export const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAAGRXAvTQt7jRhd__'
 export const TURNSTILE_ACTIVE = TURNSTILE_SITE_KEY !== ''
 
 const SCRIPT_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
