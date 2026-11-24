@@ -136,6 +136,9 @@ Activo desde el 24/11/2026: widget «dofrasoftware.com», modo Managed, pre-clea
 6. Recién entonces, script de **contacto**: agregar `TURNSTILE_SECRET`. Antes de publicar www, el sitio actual no
    envía el token y el contacto quedaría rechazado.
 
+Estado: los seis pasos están hechos. `TURNSTILE_SECRET` está cargada en los dos Apps Script (contacto, después de
+publicar www el 24/11/2026).
+
 ### Actualizar los Apps Script ya publicados (se conserva la URL /exec)
 
 Solicitudes (hoja «Solicitudes dofrasoftware.com» → Extensiones → Apps Script):
@@ -181,6 +184,36 @@ Con la URL configurada, la política de privacidad agrega el párrafo sobre el r
 
 Para cambiar el script más adelante: **Implementar → Gestionar implementaciones → Editar → Nueva versión** (la URL no
 cambia).
+
+## Estado en producción (25/11/2026)
+
+Publicado el 24/11/2026 desde `main@bcc2831` (`dofra-sitio@af1dba0`; versión anterior: `efc4b0f`, ver
+`docs/HOSTING.md`). Pruebas reales en www.dofrasoftware.com, hechas por las responsables:
+
+- Los tres formularios (contacto, arrepentimiento y baja) funcionan con Turnstile activo en los dos Apps Script.
+- Las solicitudes se registran en la hoja «Solicitudes» con su identificador; las de prueba quedaron identificadas
+  y marcadas como «Resuelta».
+- Llegan los avisos internos a dofrasoftware@gmail.com, las constancias de arrepentimiento y baja, y la confirmación
+  automática de contacto.
+- Rechazo de tokens comprobado contra el endpoint real de solicitudes (25/11/2026): sin token, vacío, inválido y de
+  más de 2048 caracteres responden `verification` sin registrar nada. La reutilización la rechaza Cloudflare
+  (`timeout-or-duplicate`); está cubierta por las pruebas locales con la respuesta real de Cloudflare.
+- La confirmación de contacto llegó a **Spam** en las primeras pruebas de producción: no era un error del código
+  ni de cuota (ver «Mejoras futuras»).
+
+## Mejoras futuras
+
+- **Entregabilidad de los correos automáticos.** Las confirmaciones salen desde dofrasoftware@gmail.com (con
+  «Responder a» info@dofrasoftware.com) y pueden ir a Spam en el primer contacto. Opciones para evaluar, sin
+  implementar todavía:
+  - enviar desde una dirección del dominio (por ejemplo, Google Workspace o un servicio de envío) con SPF, DKIM y
+    DMARC configurados para dofrasoftware.com; si se suma un proveedor nuevo, actualizar la política de privacidad;
+  - revisar si conviene una versión solo de texto o sin imagen remota;
+  - mientras tanto, pedir a quien escribe que revise Spam o Promociones si no ve la confirmación.
+  La consulta llega siempre al aviso interno aunque la confirmación vaya a Spam.
+- Diagnóstico de confirmaciones omitidas (motivo en «Ejecuciones»): se preparó y se descartó el 25/11/2026 porque la
+  causa era Spam. Si hiciera falta, hoy el código omite la confirmación en silencio cuando quedan 20 envíos o menos,
+  cuando la dirección ya recibió una en las últimas 6 horas o al llegar a 30 por día.
 
 ## Publicar (solo después de la aprobación)
 

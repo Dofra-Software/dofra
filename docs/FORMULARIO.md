@@ -64,9 +64,9 @@ adelante: **Implementar → Gestionar implementaciones → Editar → Nueva vers
 
 Chromium contra un servidor local que imita a Apps Script (redirección 302 a otro origen con CORS, como Google):
 envío correcto, rechazo del receptor, conexión bloqueada (error a los 15 s con enlace de correo) y caída a FormSubmit
-sin URL configurada. 12/12 superadas. Falta repetir la prueba contra el Apps Script real una vez implementado (paso 7).
+sin URL configurada. 12/12 superadas. Después se probó contra el Apps Script real (ver «Estado»).
 
-## Estado (21/11/2026)
+## Estado
 
 - Proyecto «Formulario dofrasoftware.com» en la cuenta de Google de Dofra, autorizado y publicado como aplicación web
   (versión 1, ejecuta como dofrasoftware@gmail.com, acceso: cualquier usuario).
@@ -76,3 +76,8 @@ sin URL configurada. 12/12 superadas. Falta repetir la prueba contra el Apps Scr
 - 24/11/2026: el aviso pasa a enviarse directo a dofrasoftware@gmail.com. info@dofrasoftware.com redirige a esa
   misma cuenta, que es la que envía, y Gmail puede descartar el reenvío como duplicado. info@ sigue siendo el correo
   público del sitio (enlace de correo, mensajes de error y políticas).
+- 24/11/2026: confirmación automática a quien escribe y Cloudflare Turnstile (`TURNSTILE_SECRET` cargada después de
+  publicar www).
+- 25/11/2026: pruebas reales en producción correctas (aviso interno, confirmación y Reply-To). La confirmación llegó a
+  Spam en las primeras pruebas; no es un error del código ni de cuota. Mejora pendiente de entregabilidad: ver
+  «Mejoras futuras» en `docs/LEGAL.md`.
