@@ -20,7 +20,8 @@ if (!fs.existsSync(index)) {
   process.exit(1);
 }
 const html = fs.readFileSync(index, 'utf8');
-if (/<script(?![^>]*\bsrc=)[^>]*>/.test(html)) {
+// Se admiten los datos estructurados (application/ld+json): no ejecutan código.
+if (/<script(?![^>]*\b(?:src=|type="application\/ld\+json"))[^>]*>/.test(html)) {
   console.error('index.html tiene scripts en línea: revisar antes de publicar.');
   process.exit(1);
 }

@@ -22,8 +22,8 @@ const PAGE: PageId = pageFromPath(window.location.pathname)
 const HOME = PAGE === 'home' ? '' : '/'
 
 const LANGUAGES = {
-  es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida',
-    description: 'Páginas web y sistemas a medida para tu negocio. Ayudamos a emprendimientos, profesionales y pequeñas empresas a mostrar sus servicios, organizar su trabajo y ahorrar tiempo.' },
+  es: { label: 'Español', flag: 'ar', formLabel: 'Español', title: 'Páginas web y sistemas a medida en Córdoba',
+    description: 'Estudio de desarrollo en Córdoba: diseñamos páginas web y sistemas de gestión a medida, con turnos, reservas, clientes y pagos, para negocios de todo el país.' },
   en: { label: 'English', flag: 'us', formLabel: 'Inglés', title: 'Websites and custom systems',
     description: 'Websites and custom systems for your business. We help startups, independent professionals and small businesses showcase their services, organize their work and save time.' },
   fr: { label: 'Français', flag: 'fr', formLabel: 'Francés', title: 'Sites web et logiciels sur mesure',
