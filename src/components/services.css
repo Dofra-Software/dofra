@@ -67,6 +67,14 @@
   .svc-card:hover::before { transform: translateX(140%); }
   .svc-card:hover .svc-graphic svg { transform: translateX(7px); }
 }
+/* Pantallas táctiles: el mismo reflejo, con el mismo degradado, duración y curva, al tocar la tarjeta (ver
+   touchShine en ServicesSection.tsx). Sin elevación ni sombra: el carrusel de celular las recortaría. */
+@media (prefers-reduced-motion: no-preference) {
+  .svc-card.is-shine::before { animation: svc-shine .85s cubic-bezier(.2, .7, .2, 1); }
+  .svc-card.is-shine .svc-graphic svg { animation: svc-nudge .85s var(--svc-ease); }
+}
+@keyframes svc-shine { from { transform: translateX(-130%); } to { transform: translateX(140%); } }
+@keyframes svc-nudge { 50% { transform: translateX(7px); } }
 
 .svc-card-top { display: flex; justify-content: flex-end; min-height: 30px; }
 .svc-pill { padding: 7px 10px; border: 1px solid #0B193049; border-radius: 50px; font-size: 10px; font-weight: 800; letter-spacing: .03em; }

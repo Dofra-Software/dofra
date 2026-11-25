@@ -1,4 +1,4 @@
-import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from 'react'
+import type { CSSProperties, KeyboardEvent, MouseEvent, PointerEvent, ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import './services.css'
 import TechGuides from './TechGuides'
@@ -22,6 +22,20 @@ type Props = {
   quote: (kind: QuoteKind) => (event: MouseEvent<HTMLAnchorElement>) => void
   linkLabel: (label: string) => string
   icon: (name: string, size: number) => ReactNode
+}
+
+/**
+ * Brillo de las tarjetas al tocarlas (celular y tablet). Repite el reflejo diagonal del «hover» de escritorio, que
+ * no cambia. Solo con toque o lápiz, sin movimiento reducido y una vez por toque; no bloquea el desplazamiento (los
+ * eventos de puntero no pueden impedirlo) ni los botones.
+ */
+const SHINE_MS = 900
+function touchShine(event: PointerEvent<HTMLLIElement>) {
+  if (event.pointerType === 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const card = event.currentTarget
+  if (card.classList.contains('is-shine')) return
+  card.classList.add('is-shine')
+  window.setTimeout(() => card.classList.remove('is-shine'), SHINE_MS)
 }
 
 const PANEL_IDS: Record<Tab, string> = { web: 'paginas-web', apps: 'apps-a-medida' }
@@ -99,7 +113,8 @@ export default function ServicesSection({ t, quote, linkLabel, icon }: Props) {
             setActivePlan(Math.min(track.children.length - 1, Math.max(0, Math.round(track.scrollLeft / nextCard.offsetLeft))))
           }
         }}>
-        {t.web.plans.map((plan, i) => <li key={plan.id} className={`svc-card is-${plan.id}`} style={{ '--i': i } as CSSProperties} aria-labelledby={`plan-${plan.id}`}>
+        {t.web.plans.map((plan, i) => <li key={plan.id} className={`svc-card is-${plan.id}`} style={{ '--i': i } as CSSProperties} aria-labelledby={`plan-${plan.id}`}
+          onPointerDown={touchShine}>
           <div className="svc-card-top">{plan.featured && <span className="svc-pill">{t.web.recommended}</span>}</div>
           <h4 id={`plan-${plan.id}`}>{plan.name}</h4>
           <p className="svc-tagline">{plan.tagline}</p>
