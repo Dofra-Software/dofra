@@ -25,17 +25,41 @@ type Props = {
 }
 
 /**
- * Brillo de las tarjetas al tocarlas (celular y tablet). Repite el reflejo diagonal del «hover» de escritorio, que
- * no cambia. Solo con toque o lápiz, sin movimiento reducido y una vez por toque; no bloquea el desplazamiento (los
- * eventos de puntero no pueden impedirlo) ni los botones.
+ * Efecto de las tarjetas al tocarlas (celular y tablet): el mismo estado que el «hover» de escritorio (subida, sombra,
+ * reflejo diagonal y desplazamiento del gráfico, con las mismas transiciones), durante TOUCH_HOLD_MS.
+ * - Solo con toque o lápiz y sin movimiento reducido. El mouse sigue usando :hover, sin cambios.
+ * - No se activa al desplazarse: se espera TOUCH_INTENT_MS y, si el navegador toma el gesto para hacer scroll
+ *   (vertical o del carrusel), llega pointercancel y no pasa nada. Un toque corto se activa al levantar el dedo.
+ * - Los eventos de puntero no pueden bloquear el desplazamiento ni los botones de la tarjeta.
  */
-const SHINE_MS = 900
-function touchShine(event: PointerEvent<HTMLLIElement>) {
-  if (event.pointerType === 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+const TOUCH_INTENT_MS = 120
+const TOUCH_HOLD_MS = 900
+const pendingTouch = new WeakMap<HTMLElement, number>()
+const isTouch = (event: PointerEvent<HTMLElement>) =>
+  event.pointerType !== 'mouse' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+function activateCard(card: HTMLElement) {
+  if (card.classList.contains('is-touched')) return
+  card.classList.add('is-touched')
+  window.setTimeout(() => card.classList.remove('is-touched'), TOUCH_HOLD_MS)
+}
+function cardPointerDown(event: PointerEvent<HTMLLIElement>) {
+  if (!isTouch(event)) return
   const card = event.currentTarget
-  if (card.classList.contains('is-shine')) return
-  card.classList.add('is-shine')
-  window.setTimeout(() => card.classList.remove('is-shine'), SHINE_MS)
+  window.clearTimeout(pendingTouch.get(card))
+  pendingTouch.set(card, window.setTimeout(() => { pendingTouch.delete(card); activateCard(card) }, TOUCH_INTENT_MS))
+}
+function cardPointerUp(event: PointerEvent<HTMLLIElement>) {
+  const card = event.currentTarget
+  const timer = pendingTouch.get(card)
+  if (timer === undefined) return
+  window.clearTimeout(timer)
+  pendingTouch.delete(card)
+  activateCard(card)
+}
+function cardPointerCancel(event: PointerEvent<HTMLLIElement>) {
+  const card = event.currentTarget
+  window.clearTimeout(pendingTouch.get(card))
+  pendingTouch.delete(card)
 }
 
 const PANEL_IDS: Record<Tab, string> = { web: 'paginas-web', apps: 'apps-a-medida' }
@@ -114,7 +138,7 @@ export default function ServicesSection({ t, quote, linkLabel, icon }: Props) {
           }
         }}>
         {t.web.plans.map((plan, i) => <li key={plan.id} className={`svc-card is-${plan.id}`} style={{ '--i': i } as CSSProperties} aria-labelledby={`plan-${plan.id}`}
-          onPointerDown={touchShine}>
+          onPointerDown={cardPointerDown} onPointerUp={cardPointerUp} onPointerCancel={cardPointerCancel}>
           <div className="svc-card-top">{plan.featured && <span className="svc-pill">{t.web.recommended}</span>}</div>
           <h4 id={`plan-${plan.id}`}>{plan.name}</h4>
           <p className="svc-tagline">{plan.tagline}</p>

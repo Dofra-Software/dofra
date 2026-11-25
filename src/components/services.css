@@ -67,14 +67,14 @@
   .svc-card:hover::before { transform: translateX(140%); }
   .svc-card:hover .svc-graphic svg { transform: translateX(7px); }
 }
-/* Pantallas táctiles: el mismo reflejo, con el mismo degradado, duración y curva, al tocar la tarjeta (ver
-   touchShine en ServicesSection.tsx). Sin elevación ni sombra: el carrusel de celular las recortaría. */
+/* Pantallas táctiles: al tocar la tarjeta se aplica el mismo estado que el hover de escritorio, con las mismas
+   transiciones (ver cardPointerDown en ServicesSection.tsx). Sobre las tarjetas claras el reflejo solo es sutil:
+   lo que se percibe es la subida y la sombra, igual que con el mouse. */
 @media (prefers-reduced-motion: no-preference) {
-  .svc-card.is-shine::before { animation: svc-shine .85s cubic-bezier(.2, .7, .2, 1); }
-  .svc-card.is-shine .svc-graphic svg { animation: svc-nudge .85s var(--svc-ease); }
+  .svc-card.is-touched { transform: translateY(-9px); box-shadow: 0 25px 65px #00000033; }
+  .svc-card.is-touched::before { transform: translateX(140%); }
+  .svc-card.is-touched .svc-graphic svg { transform: translateX(7px); }
 }
-@keyframes svc-shine { from { transform: translateX(-130%); } to { transform: translateX(140%); } }
-@keyframes svc-nudge { 50% { transform: translateX(7px); } }
 
 .svc-card-top { display: flex; justify-content: flex-end; min-height: 30px; }
 .svc-pill { padding: 7px 10px; border: 1px solid #0B193049; border-radius: 50px; font-size: 10px; font-weight: 800; letter-spacing: .03em; }
@@ -220,6 +220,10 @@
     overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
   }
   .svc-card, .svc-card.is-advanced { grid-column: auto; padding: 26px; scroll-snap-align: start; }
+  /* Lugar para la subida y la sombra al tocar: el carrusel recorta lo que sale de su caja. El margen negativo
+     compensa el relleno, así que la ubicación de todo lo demás no cambia. */
+  .svc-cards { padding-block: 12px 40px; margin-block: -12px -40px; }
+  .svc-plus { position: relative; z-index: 1; }
   .svc-card-foot { margin-top: auto; }
   .svc-card .svc-example, .svc-card .svc-quote { overflow-wrap: anywhere; }
   .svc-card h4 { font-size: 38px; margin-top: 14px; }
