@@ -61,6 +61,7 @@ Mientras tanto, el enlace de correo (`mailto:`) del sitio sigue funcionando como
 | 25/11/2026 | `main@dd472d2`: botones de arrepentimiento y baja en el hero (sin franja superior) | `23e3a19` (JavaScript `index-CUxgMaN7.js`) | `af1dba0` (JavaScript `index-D6NHS9FA.js`) |
 | 25/11/2026 | `main@447b74c`: transiciones rectas entre secciones; botones legales en la cabecera | `7d9826c` (JavaScript `index-D6IpIxs1.js`) | `23e3a19` (JavaScript `index-CUxgMaN7.js`) |
 | 25/11/2026 | `main@7055fff`: brillo de las tarjetas de planes al tocarlas (celular y tablet) | `8ae8991` (JavaScript `index-Dt0yDUn6.js`) | `7d9826c` (JavaScript `index-D6IpIxs1.js`) |
+| 25/11/2026 | `main@0d1c524`: efecto táctil de las tarjetas visible en celular; botones de arrepentimiento y baja solo en el footer | `7a5d561` (JavaScript `index-CR5kh7Hk.js`) | `8ae8991` (JavaScript `index-Dt0yDUn6.js`) |
 
 Después de esta publicación se cargó `TURNSTILE_SECRET` en el Apps Script de contacto (el de solicitudes ya la
 tenía). Pruebas reales en producción correctas el 25/11/2026: ver «Estado en producción» en `docs/LEGAL.md`.
