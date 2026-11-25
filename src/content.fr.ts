@@ -91,8 +91,8 @@ export const frenchContent = {
     'Nous réunissons une expérience en entreprise internationale et plus de quatre ans dans les systèmes logiciels. Nous prenons le temps de vous écouter, de poser des questions et de comprendre votre projet pour concevoir une solution adaptée à votre activité et facile à utiliser.',
   ],
   people: [
-    { name: 'Franca', role: 'Comptable diplômée', desc: 'Elle analyse les processus administratifs et commerciaux de chaque client et définit le périmètre fonctionnel des projets.' },
-    { name: 'Victoria', role: 'Ingénieure en logiciel', desc: 'Elle pilote la conception technique et le développement des solutions, de l’architecture à la mise en œuvre.' },
+    { name: 'Franca Recchia', role: 'Comptable diplômée', desc: 'Elle analyse les processus administratifs et commerciaux de chaque client et définit le périmètre fonctionnel des projets.' },
+    { name: 'Victoria Recchia', role: 'Ingénieure en logiciel', desc: 'Elle pilote la conception technique et le développement des solutions, de l’architecture à la mise en œuvre.' },
   ],
   faqKicker: 'QUESTIONS FRÉQUENTES',
   faqTitle: 'Avant de commencer',

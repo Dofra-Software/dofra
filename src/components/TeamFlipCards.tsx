@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-type Person = { name: string; role: string; desc: string }
+/** `formal`: nombre con título profesional para el dorso (si falta, se usa `name`). */
+type Person = { name: string; formal?: string; role: string; desc: string }
 
 type Props = {
   title: string
@@ -180,7 +181,7 @@ export default function TeamFlipCards({ title, titleId, paragraphs, people, more
                     </button>
                   </div>
                   <div className="team-face team-back" {...faceProps('back')}>
-                    <h3 className="team-name">{person.name}</h3>
+                    <h3 className="team-name">{person.formal ?? person.name}</h3>
                     <p className="sr-only">{person.role}</p>
                     <p className="team-desc">{person.desc}</p>
                     <button type="button" className="team-toggle" aria-expanded={isFlipped}

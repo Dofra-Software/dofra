@@ -125,8 +125,8 @@ const content = {
       'Combinamos experiencia en empresas internacionales y más de 4 años de trayectoria en sistemas con una forma de trabajar cercana: escuchamos, preguntamos y buscamos entender qué necesita cada proyecto. Así, desarrollamos soluciones a medida que tienen sentido para tu negocio y son fáciles de usar.',
     ],
     people: [
-      { name: 'Franca', role: 'Contadora Pública', desc: 'Analiza los procesos administrativos y comerciales de cada cliente y define el alcance funcional de los proyectos.' },
-      { name: 'Victoria', role: 'Ingeniera en Software', desc: 'Lidera el diseño técnico de las soluciones y su desarrollo, desde la arquitectura hasta la implementación.' },
+      { name: 'Franca Recchia', formal: 'Cra. Franca Recchia', role: 'Contadora Pública', desc: 'Analiza los procesos administrativos y comerciales de cada cliente y define el alcance funcional de los proyectos.' },
+      { name: 'Victoria Recchia', formal: 'Ing. Victoria Recchia', role: 'Ingeniera en Software', desc: 'Lidera el diseño técnico de las soluciones y su desarrollo, desde la arquitectura hasta la implementación.' },
     ],
     faqKicker: 'PREGUNTAS FRECUENTES', faqTitle: 'Antes de empezar.',
     faqs: [
@@ -247,8 +247,8 @@ const content = {
       'We bring together experience at international companies and more than 4 years working in software systems with a hands-on, personal approach: we listen, ask questions and make sure we understand what each project needs. That way, we build tailored solutions that make sense for your business and are easy to use.',
     ],
     people: [
-      { name: 'Franca', role: 'Public Accountant', desc: 'Analyzes each client’s administrative and business processes and defines the functional scope of each project.' },
-      { name: 'Victoria', role: 'Software Engineer', desc: 'Leads the technical design and development of each solution, from architecture to implementation.' },
+      { name: 'Franca Recchia', role: 'Public Accountant', desc: 'Analyzes each client’s administrative and business processes and defines the functional scope of each project.' },
+      { name: 'Victoria Recchia', role: 'Software Engineer', desc: 'Leads the technical design and development of each solution, from architecture to implementation.' },
     ],
     faqKicker: 'FREQUENTLY ASKED QUESTIONS', faqTitle: 'Before we begin.',
     faqs: [
