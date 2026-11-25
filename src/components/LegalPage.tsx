@@ -4,7 +4,6 @@ import type { Block, LegalDoc, LegalLocale } from '../legal/types'
 import { REGISTRY_ACTIVE } from '../legal'
 import { TURNSTILE_ACTIVE } from '../turnstile'
 import RichText from './RichText'
-import RightsLinks from './RightsLinks'
 import './legal.css'
 
 const DESKTOP = '(min-width: 1000px)'
@@ -21,9 +20,8 @@ function useDesktop() {
 }
 
 /** Encabezado común de las páginas legales y de los formularios de solicitudes. */
-export function LegalHero({ ui, rights, kicker, title, updated, children }: {
+export function LegalHero({ ui, kicker, title, updated, children }: {
   ui: LegalLocale['ui']
-  rights: LegalLocale['footer']
   kicker: string
   title: string
   updated?: string
@@ -31,10 +29,7 @@ export function LegalHero({ ui, rights, kicker, title, updated, children }: {
 }) {
   return <header className="legal-hero">
     <div className="container legal-hero-inner">
-      <div className="legal-hero-top">
-        <a className="legal-back" href="/"><span aria-hidden="true">←</span> {ui.backHome}</a>
-        <RightsLinks labels={rights} className="rights-legal" />
-      </div>
+      <a className="legal-back" href="/"><span aria-hidden="true">←</span> {ui.backHome}</a>
       <p className="legal-kicker">{kicker}</p>
       <h1 id="legal-titulo">{title}</h1>
       {updated && <p className="legal-updated">{ui.updatedLabel} <time dateTime="2026-11-24">{updated}</time></p>}
@@ -52,7 +47,7 @@ function renderBlock(block: Block, key: number, newTab: string): ReactNode {
 }
 
 /** Documento legal: título, fecha de actualización, índice con anclas y secciones numeradas. */
-export default function LegalPage({ doc, ui, rights }: { doc: LegalDoc; ui: LegalLocale['ui']; rights: LegalLocale['footer'] }) {
+export default function LegalPage({ doc, ui }: { doc: LegalDoc; ui: LegalLocale['ui'] }) {
   const desktop = useDesktop()
   const [tocOpen, setTocOpen] = useState(false)
   const anchor = (i: number) => `s-${i + 1}`
@@ -69,7 +64,7 @@ export default function LegalPage({ doc, ui, rights }: { doc: LegalDoc; ui: Lega
   }, [])
 
   return <main id="contenido" tabIndex={-1} className="legal" aria-labelledby="legal-titulo">
-    <LegalHero ui={ui} rights={rights} kicker={ui.kicker} title={doc.title} updated={doc.updated} />
+    <LegalHero ui={ui} kicker={ui.kicker} title={doc.title} updated={doc.updated} />
     <div className="container legal-layout">
       <nav className="legal-toc" aria-label={ui.toc}>
         <details open={desktop || tocOpen} onToggle={event => { if (!desktop) setTocOpen(event.currentTarget.open) }}>

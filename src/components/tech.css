@@ -107,10 +107,9 @@
   .tg-measure { display: none; }
 }
 
-/* Responsive architectural frame and stepped section transitions. */
+/* Responsive architectural frame. Las transiciones entre secciones son rectas, de extremo a extremo. */
 :root {
   --tg-clearance: clamp(24px, 3vw, 48px);
-  --tg-step: clamp(16px, 1.5vw, 24px);
   --tg-content-width: var(--container);
 }
 @media (min-width: 2560px) { :root { --tg-clearance: 64px; } }
@@ -133,32 +132,7 @@
 .contact-panel .tg-v { display: none; }
 .contact-panel .tg-frame { width: calc(100% - 32px); }
 
-/* The preceding section extends into the next one, without changing its layout.
-   Use a separate top layer: process-section::after is reserved for its timeline. */
-main > :is(.hero, .work, .services, .contact) + .section-soft,
-main > .section-soft + :is(.work, .services, .contact) {
-  --tg-step-inset: max(8px, calc((100% - var(--tg-content-width)) / 2 - var(--tg-clearance)));
-}
-main > :is(.hero, .work, .services, .contact) + .section-soft::before,
-main > .section-soft + :is(.work, .services, .contact)::before {
-  content: "";
-  position: absolute;
-  inset: 0 var(--tg-step-inset) auto;
-  height: var(--tg-step);
-  background: var(--brand-bg);
-  pointer-events: none;
-  z-index: 0;
-}
-main > .section-soft + :is(.work, .services, .contact)::before { background: var(--bg); }
-/* Keep the top guide below the stepped edge. */
-main > :is(.hero, .work, .services, .contact) + .section-soft > .tg .tg-rule,
-main > .section-soft + :is(.work, .services, .contact) > .tg .tg-rule { top: calc(var(--tg-step) + 10px); }
-main > :is(.hero, .work, .services, .contact) + .section-soft > .tg .tg-mark,
-main > .section-soft + :is(.work, .services, .contact) > .tg .tg-mark { top: calc(var(--tg-step) + 8px); }
 @media (max-width: 767px) {
-  :root { --tg-step: clamp(8px, 2.5vw, 12px); }
   .tg-frame { width: calc(100% - 2 * var(--gutter)); }
   .tg-v { display: none !important; }
-  main > :is(.hero, .work, .services, .contact) + .section-soft,
-  main > .section-soft + :is(.work, .services, .contact) { --tg-step-inset: var(--gutter); }
 }

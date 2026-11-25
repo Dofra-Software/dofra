@@ -54,13 +54,17 @@ Para actualizar un texto legal: cambiar `es.ts`, trasladar el cambio a `en.ts` y
 
 - Arts. 1 y 4: enlaces denominados «BOTÓN DE ARREPENTIMIENTO» y «BOTÓN DE BAJA DE SERVICIO» (singular), «a simple vista,
   en lugar destacado y en el primer acceso», sin registración previa ni trámites adicionales.
-- Ubicación (desde el 25/11/2026, en reemplazo de la franja superior, sin franjas ni elementos flotantes):
-  - inicio, escritorio y tablet: línea fina debajo de los beneficios del hero, junto a las llamadas a la acción;
-  - inicio, celular: al comienzo del texto del hero, apilados y centrados;
-  - páginas internas (legales y formularios): a la derecha de «Volver al inicio»;
-  - footer: se conservan los dos botones en todas las páginas.
-  Comprobado sin desplazarse en 360×640, 768×1024, 1280×720 y 1440×900, en los tres idiomas. Componente:
-  `src/components/RightsLinks.tsx`; estilos en `src/styles.css` («Botones de arrepentimiento y baja»).
+- Ubicación: en la **cabecera de todas las páginas**, entre el menú y el idioma (en celular, entre el logo y el
+  idioma), apilados en dos líneas compactas dentro de su altura: sin franjas, sin elementos flotantes y fuera del
+  contenido comercial. El footer conserva sus dos botones.
+- Por qué no solo en el footer: los arts. 1 y 4 piden el enlace «a simple vista, en lugar destacado y en el primer
+  acceso». El footer queda al final de la página y no se ve al entrar sin desplazarse, así que, leído literalmente, no
+  alcanza. La aplicabilidad exacta al modelo de Dofra (contrataciones a distancia por correo o WhatsApp, sin venta en
+  el sitio) queda para la revisión legal; mientras tanto se mantiene la ubicación que cumple la lectura literal.
+- Historial: franja superior (24/11/2026) → línea en el hero (25/11/2026) → cabecera (vista previa del 25/11/2026).
+  Comprobado sin desplazarse, sin superposiciones ni scroll horizontal de 320 a 1440 px, en los tres idiomas.
+  Componente: `src/components/RightsLinks.tsx`; estilos en `src/styles.css` («Botones de arrepentimiento y baja»).
+  Por debajo de 360 px, el selector de idioma muestra solo la bandera para que todo entre en la cabecera.
 - La denominación va en español en los tres idiomas; en inglés y francés se agrega una explicación solo para
   lectores de pantalla.
 - Art. 5: el código de la solicitud debe informarse dentro de las 24 horas y por el mismo medio. El sitio lo muestra en

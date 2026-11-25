@@ -596,6 +596,9 @@ export default function App() {
       <Brand label={t.brandLabel} />
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
       <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`${HOME}#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
+      {/* Disposición 954/2025: botones «a simple vista, en lugar destacado y en el primer acceso», en la cabecera
+          de todas las páginas, sin franjas ni elementos flotantes. El footer conserva los suyos. */}
+      <RightsLinks labels={l.footer} className="rights-header" />
       <div className="nav-actions">
         <LanguagePicker lang={lang} label={t.langSwitch} onChange={setLang} />
         <a className="button button-primary nav-cta" href={`${HOME}#contacto`}>{t.talk}<Icon name="arrow" size={16} /></a>
@@ -603,18 +606,15 @@ export default function App() {
       </div>
     </div></header>
 
-    {PAGE === 'terms' && <LegalPage doc={l.docs.terms} ui={l.ui} rights={l.footer} />}
-    {PAGE === 'privacy' && <LegalPage doc={l.docs.privacy} ui={l.ui} rights={l.footer} />}
-    {PAGE === 'cookies' && <LegalPage doc={l.docs.cookies} ui={l.ui} rights={l.footer} />}
+    {PAGE === 'terms' && <LegalPage doc={l.docs.terms} ui={l.ui} />}
+    {PAGE === 'privacy' && <LegalPage doc={l.docs.privacy} ui={l.ui} />}
+    {PAGE === 'cookies' && <LegalPage doc={l.docs.cookies} ui={l.ui} />}
     {PAGE === 'withdrawal' && <RequestForm kind="withdrawal" lang={lang} t={l} />}
     {PAGE === 'cancellation' && <RequestForm kind="cancellation" lang={lang} t={l} />}
 
     {PAGE === 'home' && <main id="contenido" tabIndex={-1}>
       <section className="hero" id="inicio" aria-labelledby="hero-titulo"><TechGuides hero /><div className="container hero-grid">
         <div className="hero-copy">
-          {/* Disposición 954/2025: botones «a simple vista, en lugar destacado y en el primer acceso».
-              En celular van acá (visibles sin desplazarse); en pantallas más anchas, debajo de los beneficios. */}
-          <RightsLinks labels={l.footer} className="rights-hero-top" />
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-titulo">{t.heroA} <span>{t.heroB}</span></h1>
           <p className="hero-lead">{t.heroDesc}</p>
@@ -623,7 +623,6 @@ export default function App() {
             <a className="button button-ghost button-large" href="#servicios">{t.seeWork}<Icon name="arrow" size={18} /></a>
           </div>
           <ul className="hero-trust"><li><Icon name="check" size={15} />{t.trust1}</li><li><Icon name="check" size={15} />{t.trust2}</li><li><Icon name="globe" size={15} />{t.trust3}</li></ul>
-          <RightsLinks labels={l.footer} className="rights-hero-b" />
         </div>
         <div className="hero-visual"><DofraParticles label={t.heroVisual} /><TechMeasure label={t.footer.slogan} /></div>
       </div></section>

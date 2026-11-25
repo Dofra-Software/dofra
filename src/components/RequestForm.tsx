@@ -105,7 +105,7 @@ export default function RequestForm({ kind, lang, t }: { kind: RequestKind; lang
   }).format(new Date(receipt.receivedAt)) : ''
 
   return <main id="contenido" tabIndex={-1} className="legal" aria-labelledby="legal-titulo">
-    <LegalHero ui={t.ui} rights={t.footer} kicker={text.kicker} title={text.title}>
+    <LegalHero ui={t.ui} kicker={text.kicker} title={text.title}>
       <p className="legal-lead">{text.description}</p>
     </LegalHero>
     <div className="container legal-form-wrap">
