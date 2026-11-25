@@ -821,35 +821,3 @@ main:focus { outline: none; }
 /* Cloudflare Turnstile: solo ocupa lugar si Cloudflare pide una interacción */
 .turnstile-slot:empty { display: none; }
 .turnstile-slot { min-height: 0; }
-
-/* ---------- Botones de arrepentimiento y baja (Disposición 954/2025) ----------
-   «A simple vista, en lugar destacado y en el primer acceso»: en la cabecera de todas las páginas, apilados en dos
-   líneas compactas dentro de su altura (sin franjas, sin elementos flotantes, fuera del contenido comercial).
-   El footer conserva sus propios botones. */
-.rights-links { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
-.rights-links a {
-  display: inline-flex; align-items: center; min-height: 24px;
-  font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .05em; line-height: 1; color: #FFFFFFD9;
-  white-space: nowrap; transition: color .2s;
-}
-.rights-links a [lang="es"] { text-decoration: underline; text-decoration-color: #C4938E99; text-underline-offset: 3px; }
-.rights-links a:hover, .rights-links a[aria-current="page"] { color: var(--brand-dot); }
-.rights-header { flex: none; padding-left: 16px; border-left: 1px solid #FFFFFF24; }
-
-@media (max-width: 900px) {
-  /* Celular y tablet: entre el logo y el idioma (el menú se pliega y deja lugar). */
-  .rights-header { padding-left: 12px; margin-right: auto; }
-}
-@media (max-width: 420px) {
-  .rights-header { padding-left: 10px; }
-  .rights-links a { font-size: 9.5px; letter-spacing: .02em; }
-}
-@media (max-width: 374px) {
-  .nav-inner { gap: 8px; }
-  .rights-header { padding-left: 8px; }
-}
-@media (max-width: 359px) {
-  /* Pantallas muy angostas: el selector de idioma muestra solo la bandera (conserva su nombre accesible). */
-  .lang-switch > span, .lang-switch > svg { display: none; }
-  .rights-links a { font-size: 9px; }
-}

@@ -11,7 +11,6 @@ import { frenchContent } from './content.fr'
 import LegalPage from './components/LegalPage'
 import RequestForm from './components/RequestForm'
 import RichText from './components/RichText'
-import RightsLinks from './components/RightsLinks'
 import { legal } from './legal'
 import { PATHS, pageFromPath } from './routes'
 import { useTurnstile } from './turnstile'
@@ -596,9 +595,6 @@ export default function App() {
       <Brand label={t.brandLabel} />
       {menuOpen && <button type="button" className="nav-backdrop" tabIndex={-1} aria-label={t.menuClose} onClick={closeMenu} />}
       <nav ref={menuRef} id="menu-principal" className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label={t.navLabel}>{t.nav.map((label, i) => <a key={navIds[i]} href={`${HOME}#${navIds[i]}`} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
-      {/* Disposición 954/2025: botones «a simple vista, en lugar destacado y en el primer acceso», en la cabecera
-          de todas las páginas, sin franjas ni elementos flotantes. El footer conserva los suyos. */}
-      <RightsLinks labels={l.footer} className="rights-header" />
       <div className="nav-actions">
         <LanguagePicker lang={lang} label={t.langSwitch} onChange={setLang} />
         <a className="button button-primary nav-cta" href={`${HOME}#contacto`}>{t.talk}<Icon name="arrow" size={16} /></a>

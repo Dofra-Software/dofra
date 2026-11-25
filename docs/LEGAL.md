@@ -54,17 +54,15 @@ Para actualizar un texto legal: cambiar `es.ts`, trasladar el cambio a `en.ts` y
 
 - Arts. 1 y 4: enlaces denominados «BOTÓN DE ARREPENTIMIENTO» y «BOTÓN DE BAJA DE SERVICIO» (singular), «a simple vista,
   en lugar destacado y en el primer acceso», sin registración previa ni trámites adicionales.
-- Ubicación: en la **cabecera de todas las páginas**, entre el menú y el idioma (en celular, entre el logo y el
-  idioma), apilados en dos líneas compactas dentro de su altura: sin franjas, sin elementos flotantes y fuera del
-  contenido comercial. El footer conserva sus dos botones.
-- Por qué no solo en el footer: los arts. 1 y 4 piden el enlace «a simple vista, en lugar destacado y en el primer
-  acceso». El footer queda al final de la página y no se ve al entrar sin desplazarse, así que, leído literalmente, no
-  alcanza. La aplicabilidad exacta al modelo de Dofra (contrataciones a distancia por correo o WhatsApp, sin venta en
-  el sitio) queda para la revisión legal; mientras tanto se mantiene la ubicación que cumple la lectura literal.
-- Historial: franja superior (24/11/2026) → línea en el hero (25/11/2026) → cabecera (publicada el 25/11/2026).
-  Comprobado sin desplazarse, sin superposiciones ni scroll horizontal de 320 a 1440 px, en los tres idiomas.
-  Componente: `src/components/RightsLinks.tsx`; estilos en `src/styles.css` («Botones de arrepentimiento y baja»).
-  Por debajo de 360 px, el selector de idioma muestra solo la bandera para que todo entre en la cabecera.
+- Ubicación: **solo en el footer** de todas las páginas, en los tres idiomas (decisión de las responsables del
+  25/11/2026, para no duplicarlos). No aparecen en la cabecera, el hero, el menú ni en barras adicionales. Las páginas
+  `/arrepentimiento` y `/baja-de-servicio` siguen activas y los términos enlazan a ellas.
+- **Riesgo normativo informado y aceptado:** los arts. 1 y 4 piden el enlace «a simple vista, en lugar destacado y en el
+  primer acceso». El footer queda al final de la página y no se ve al entrar sin desplazarse, así que, leído
+  literalmente, puede no alcanzar. Queda para la revisión legal si la norma aplica al modelo de Dofra (contrataciones a
+  distancia por correo o WhatsApp, sin venta en el sitio). Si la revisión concluye que aplica, habrá que volver a
+  mostrarlos en el primer acceso.
+- Historial: franja superior (24/11/2026) → línea en el hero → cabecera → solo footer (25/11/2026).
 - La denominación va en español en los tres idiomas; en inglés y francés se agrega una explicación solo para
   lectores de pantalla.
 - Art. 5: el código de la solicitud debe informarse dentro de las 24 horas y por el mismo medio. El sitio lo muestra en
@@ -290,6 +288,9 @@ No se publicó información inventada. Estos puntos quedan para verificar con as
    (artículo 6 de la Ley 25.326) y como identificación del proveedor en contratos a distancia.
 
 Otros puntos a verificar:
+
+- **Botones de arrepentimiento y baja solo en el footer:** confirmar si cumplen «a simple vista, en lugar destacado y
+  en el primer acceso» (Disposición 954/2025, arts. 1 y 4) para el modelo de contratación de Dofra.
 
 - **Disposición 954/2025, art. 6:** teléfono o canal alternativo de atención, área responsable y horario mínimo de
   atención. No se agregaron porque no hay datos confirmados.
