@@ -61,7 +61,7 @@ Para actualizar un texto legal: cambiar `es.ts`, trasladar el cambio a `en.ts` y
   acceso». El footer queda al final de la página y no se ve al entrar sin desplazarse, así que, leído literalmente, no
   alcanza. La aplicabilidad exacta al modelo de Dofra (contrataciones a distancia por correo o WhatsApp, sin venta en
   el sitio) queda para la revisión legal; mientras tanto se mantiene la ubicación que cumple la lectura literal.
-- Historial: franja superior (24/11/2026) → línea en el hero (25/11/2026) → cabecera (vista previa del 25/11/2026).
+- Historial: franja superior (24/11/2026) → línea en el hero (25/11/2026) → cabecera (publicada el 25/11/2026).
   Comprobado sin desplazarse, sin superposiciones ni scroll horizontal de 320 a 1440 px, en los tres idiomas.
   Componente: `src/components/RightsLinks.tsx`; estilos en `src/styles.css` («Botones de arrepentimiento y baja»).
   Por debajo de 360 px, el selector de idioma muestra solo la bandera para que todo entre en la cabecera.
