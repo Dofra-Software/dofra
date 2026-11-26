@@ -18,6 +18,10 @@ de Google de Dofra y no guarda los mensajes: sólo los reenvía por correo.
 - El sitio (`src/App.tsx`) envía a la URL de `CONTACT_ENDPOINT`. Mantiene los 15 s de espera, el mensaje de error con el
   enlace de correo y no muestra éxito si el receptor no lo confirma.
 - Mientras `CONTACT_ENDPOINT` esté vacío, se sigue usando FormSubmit: este cambio no altera nada hasta configurarlo.
+- Campo opcional `plus_updates` (26/11/2026): casilla de interés en Actualizaciones Plus, visible solo con un plan web.
+  Si llega con valor `Sí`, el aviso interno suma la fila «Actualizaciones Plus: Le interesa (adicional opcional)»
+  después de «Presupuesto». Sin la casilla, el correo queda igual que antes, así que el script y el sitio se pueden
+  actualizar en cualquier orden sin perder datos (con el script anterior, la casilla simplemente no figura en el aviso).
 
 ## Confirmación automática a quien escribe
 

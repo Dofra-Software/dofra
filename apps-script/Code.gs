@@ -50,11 +50,12 @@ function doPost(e) {
       ['Correo', correo],
       ['Tipo de proyecto', limpiar_(p.project_type, 60) || 'Sin indicar'],
       ['Presupuesto', limpiar_(p.budget, 60) || 'Sin indicar'],
-      // Casilla opcional que el sitio muestra solo con un plan web (Esencial, Pro o Advanced).
-      ['Actualizaciones Plus', p.plus_updates === 'Sí' ? 'Le interesa' : 'No indicado'],
       ['Idioma', limpiar_(p.idioma, 20) || 'Sin indicar'],
       ['Mensaje', mensaje],
     ];
+    // Casilla opcional que el sitio muestra solo con un plan web (Esencial, Pro o Advanced). La fila aparece solo si
+    // se marcó: así el correo no cambia para el resto de las consultas ni para versiones anteriores del sitio.
+    if (p.plus_updates === 'Sí') filas.splice(4, 0, ['Actualizaciones Plus', 'Le interesa (adicional opcional)']);
     MailApp.sendEmail({
       to: DESTINO,
       replyTo: correo,

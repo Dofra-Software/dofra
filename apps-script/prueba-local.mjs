@@ -72,6 +72,26 @@ console.log('Aviso interno (sin cambios)')
   prueba('aviso a dofrasoftware@gmail.com con «Responder a» quien escribió', internos(e).length === 1 && internos(e)[0].replyTo === 'prueba@example.com')
 }
 
+console.log('Opciones del formulario y Actualizaciones Plus')
+{
+  const opciones = ['Página web — Plan Esencial', 'Página web — Plan Pro', 'Página web — Plan Advanced', 'Sistema o aplicación a medida', 'No sé qué plan necesito, quiero asesoramiento', 'Otro']
+  const tipos = opciones.map(tipo => { const e = crearEntorno(); e.post(base({ project_type: tipo })); return internos(e)[0].body })
+  prueba('las 6 opciones nuevas llegan completas en «Tipo de proyecto»', tipos.every((body, i) => body.includes('Tipo de proyecto: ' + opciones[i] + '\n')))
+
+  const con = crearEntorno(); con.post(base({ project_type: opciones[1], plus_updates: 'Sí', budget: 'USD 500 – 1.500' }))
+  const aviso = internos(con)[0]
+  prueba('con la casilla marcada: fila «Actualizaciones Plus» después de «Presupuesto»', aviso.body.includes('Presupuesto: USD 500 – 1.500\nActualizaciones Plus: Le interesa (adicional opcional)\nIdioma: Español'))
+  prueba('la fila también aparece en la versión HTML', aviso.htmlBody.includes('>Actualizaciones Plus</th>'))
+
+  const sin = crearEntorno(); sin.post(base({ project_type: opciones[0] }))
+  prueba('sin la casilla: el correo queda igual que antes (sin la fila)', !internos(sin)[0].body.includes('Actualizaciones Plus'))
+  const raro = crearEntorno(); raro.post(base({ plus_updates: '<b>sí</b>' }))
+  prueba('un valor distinto de «Sí» se ignora', !internos(raro)[0].body.includes('Actualizaciones Plus') && !internos(raro)[0].htmlBody.includes('<b>'))
+  const anterior = crearEntorno(); anterior.post(base({ project_type: 'Página web · Plan Pro' }))
+  prueba('compatible con el sitio publicado hoy (opciones anteriores, sin el campo)', internos(anterior)[0].body.includes('Tipo de proyecto: Página web · Plan Pro\nPresupuesto: Sin indicar\nIdioma'))
+  prueba('la confirmación a quien escribe no cambia', confirmaciones(con)[0].subject === 'Dofra Software | Recibimos tu consulta' && !confirmaciones(con)[0].body.includes('Plus'))
+}
+
 console.log('Confirmación automática')
 {
   const e = crearEntorno()
