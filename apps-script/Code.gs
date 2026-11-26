@@ -224,3 +224,8 @@ function respuesta_(obj) {
 
 // Solo para las pruebas locales con Node (apps-script/prueba-local.mjs). Apps Script lo ignora.
 if (typeof module !== 'undefined') module.exports = { doPost: doPost, idioma_: idioma_ };
+
+/** Ejecutar desde el editor para ver cuántos correos quedan hoy en la cuota de Gmail (se agregó en el editor publicado). */
+function verCuota() {
+  console.log(MailApp.getRemainingDailyQuota());
+}
