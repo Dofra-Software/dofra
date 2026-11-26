@@ -85,3 +85,9 @@ sin URL configurada. 12/12 superadas. Después se probó contra el Apps Script r
 - 25/11/2026: pruebas reales en producción correctas (aviso interno, confirmación y Reply-To). La confirmación llegó a
   Spam en las primeras pruebas; no es un error del código ni de cuota. Mejora pendiente de entregabilidad: ver
   «Mejoras futuras» en `docs/LEGAL.md`.
+- 26/11/2026: versión 5 publicada en la misma implementación (la URL `/exec` no cambia): fila «Actualizaciones Plus»
+  solo si se marcó la casilla. El repositorio incluye `verCuota()`, que se había agregado directamente en el editor;
+  `apps-script/Code.gs` quedó idéntico a la versión 5. Prueba real desde la vista previa
+  (`mejora-formulario-contacto.dofra.pages.dev`, Plan Pro + Plus): Turnstile aprobado, aviso recibido con todas las
+  filas y confirmación enviada a info@ (figura en «Enviados»; por la redirección de info@ a la misma cuenta, Gmail no
+  la muestra en Recibidos).
