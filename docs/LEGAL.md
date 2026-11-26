@@ -45,7 +45,7 @@ Para actualizar un texto legal: cambiar `es.ts`, trasladar el cambio a `en.ts` y
 ## Formulario de contacto
 
 - Casilla obligatoria, sin marcar, con enlace a `/privacidad` (se abre en otra pestaña para no perder lo escrito).
-- Debajo, «El formulario se procesa mediante Google Apps Script.».
+- La mención visible a Google Apps Script se quitó del formulario (26/11/2026); el proveedor sigue informado en la Política de Privacidad.
 - El valor de la casilla sigue siendo `Sí`: el receptor ya publicado (`apps-script/Code.gs`) solo acepta envíos con
   `consent === 'Sí'`. **No cambiar ese valor** sin actualizar el script.
 - No hay casilla de newsletter (todavía no existe ese servicio).
