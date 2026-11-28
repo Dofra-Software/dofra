@@ -64,6 +64,7 @@ Mientras tanto, el enlace de correo (`mailto:`) del sitio sigue funcionando como
 | 25/11/2026 | `main@0d1c524`: efecto táctil de las tarjetas visible en celular; botones de arrepentimiento y baja solo en el footer | `7a5d561` (JavaScript `index-CR5kh7Hk.js`) | `8ae8991` (JavaScript `index-Dt0yDUn6.js`) |
 | 25/11/2026 | `main@a457bac`: nombres completos en las tarjetas del equipo y título formal en el dorso | `1ae52e7` (JavaScript `index-DZtdtqxu.js`) | `7a5d561` (JavaScript `index-CR5kh7Hk.js`) |
 | 25/11/2026 | `seo/fundamentos-indexacion@ef9a162` (sobre `main@c8ade5c`): HTML prerenderizado, JSON-LD, og:image, favicons y título/descripción aprobados. Ver `docs/SEO.md`. Integrado en `main@cdcde76` | `c387d25` (JavaScript `index-BrtcDqAd.js`) | `1ae52e7` (JavaScript `index-DZtdtqxu.js`) |
+| 28/11/2026 | `main@6aaf894` (PR #6): formulario de contacto con los planes, preselección desde «Cotizar Esencial/Pro/Advanced» y casilla de Actualizaciones Plus. Apps Script sin cambios (ya en versión 5) | `a8c0140` (JavaScript `index-Dw70vpSD.js`, CSS `index-sS0bG7sC.css`) | `c387d25` (JavaScript `index-BrtcDqAd.js`) |
 
 Después de esta publicación se cargó `TURNSTILE_SECRET` en el Apps Script de contacto (el de solicitudes ya la
 tenía). Pruebas reales en producción correctas el 25/11/2026: ver «Estado en producción» en `docs/LEGAL.md`.
