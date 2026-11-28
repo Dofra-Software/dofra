@@ -68,7 +68,6 @@ export type LegalLocale = {
   contact: {
     /** Casilla obligatoria del formulario de contacto (con enlace a la política de privacidad). */
     consent: string
-    processedBy: string
   }
   requests: {
     intro: string

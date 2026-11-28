@@ -148,7 +148,8 @@ const content = {
       name: 'Nombre y apellido', namePh: 'Tu nombre',
       email: 'Correo electrónico', emailPh: 'nombre@ejemplo.com',
       type: 'Qué necesitás', typePh: 'Elegí una opción',
-      types: ['Página web · Plan Esencial', 'Página web · Plan Pro', 'Página web · Plan Advanced', 'Proyecto a medida', 'Página web', 'Aplicación web', 'Sistema a medida', 'Automatización', 'No sé qué necesito, quiero asesoramiento', 'Otro'],
+      types: ['Página web — Plan Esencial', 'Página web — Plan Pro', 'Página web — Plan Advanced', 'Sistema o aplicación a medida', 'No sé qué plan necesito, quiero asesoramiento', 'Otro'],
+      plus: 'Me interesa sumar Actualizaciones Plus (adicional opcional).',
       budget: 'Presupuesto aproximado (opcional)', budgetNone: 'Prefiero conversarlo',
       budgets: ['Menos de USD 500', 'USD 500 – 1.500', 'USD 1.500 – 5.000', 'Más de USD 5.000'],
       message: 'Contanos sobre tu proyecto', messagePh: 'Qué hace tu negocio, qué te gustaría resolver y cualquier detalle que quieras compartir.', messageEmpty: 'Escribí tu mensaje.',
@@ -270,7 +271,8 @@ const content = {
       name: 'Full name', namePh: 'Your name',
       email: 'Email', emailPh: 'name@example.com',
       type: 'What do you need?', typePh: 'Choose an option',
-      types: ['Website · Essential plan', 'Website · Pro plan', 'Website · Advanced plan', 'Custom project', 'Website', 'Web app', 'Custom system', 'Automation', "I'm not sure what I need, I'd like some advice", 'Other'],
+      types: ['Website — Essential plan', 'Website — Pro plan', 'Website — Advanced plan', 'Custom system or app', "I'm not sure which plan I need, I'd like some advice", 'Other'],
+      plus: "I'm interested in adding Plus Updates (optional add-on).",
       budget: 'Estimated budget (optional)', budgetNone: "I'd rather discuss it",
       budgets: ['Under USD 500', 'USD 500 – 1,500', 'USD 1,500 – 5,000', 'Over USD 5,000'],
       message: 'Tell us about your project', messagePh: "What your business does, what you'd like to solve and any other details you want to share.", messageEmpty: 'Please write your message.',
@@ -319,6 +321,8 @@ const TYPE_VALUES = content.es.form.types
 const BUDGET_VALUES = content.es.form.budgets
 /** Opción del formulario que preselecciona cada botón de cotización de Servicios. */
 const QUOTE_TYPES: Record<string, string> = { esencial: TYPE_VALUES[0], pro: TYPE_VALUES[1], advanced: TYPE_VALUES[2], custom: TYPE_VALUES[3] }
+/** Los tres planes web: solo con ellos se ofrece la casilla de interés en Actualizaciones Plus (adicional opcional). */
+const WEB_PLAN_VALUES = TYPE_VALUES.slice(0, 3)
 
 function Icon({ name, size = 22 }: { name: string; size?: number }) {
   const paths: Record<string, ReactNode> = {
@@ -681,14 +685,18 @@ export default function App() {
             <label><span>{f.type} <span aria-hidden="true">*</span></span><select name="project_type" required value={projectType} onChange={event => setProjectType(event.target.value)}><option value="" disabled>{f.typePh}</option>{f.types.map((label, i) => <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>{label}</option>)}</select></label>
             <label><span>{f.budget}</span><select name="budget" defaultValue=""><option value="">{f.budgetNone}</option>{f.budgets.map((label, i) => <option key={BUDGET_VALUES[i]} value={BUDGET_VALUES[i]}>{label}</option>)}</select></label>
           </div>
+          {/* Solo aparece con un plan web; si se elige otra opción, la casilla sale del formulario y no se envía. */}
+          {WEB_PLAN_VALUES.includes(projectType) && <div className="quote-consent quote-plus">
+            <input type="checkbox" id="quote-plus" name="plus_updates" value="Sí" />
+            <label htmlFor="quote-plus">{f.plus}</label>
+          </div>}
           <label><span>{f.message} <span aria-hidden="true">*</span></span><textarea name="message" required maxLength={3000} rows={4} placeholder={f.messagePh} onInput={event => event.currentTarget.setCustomValidity('')} /></label>
           {/* value «Sí»: el receptor (apps-script/Code.gs) solo acepta envíos con consent === 'Sí'. */}
           <div className="quote-consent-block">
             <div className="quote-consent">
-              <input type="checkbox" id="quote-consent" required name="consent" value="Sí" aria-describedby="quote-processed" />
+              <input type="checkbox" id="quote-consent" required name="consent" value="Sí" />
               <label htmlFor="quote-consent"><RichText text={l.contact.consent} newTabLabel={l.ui.newTab} internalInNewTab /> <span aria-hidden="true">*</span></label>
             </div>
-            <p className="quote-processed" id="quote-processed">{l.contact.processedBy}</p>
           </div>
           <div className="turnstile-slot" ref={contactTurnstile.container} />
           <div className="quote-submit">

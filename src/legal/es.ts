@@ -25,7 +25,6 @@ export const legalEs: LegalLocale = {
   },
   contact: {
     consent: 'He leído la [Política de Privacidad](/privacidad) y autorizo el tratamiento de mis datos personales para gestionar mi consulta y las comunicaciones relacionadas con ella.',
-    processedBy: 'El formulario se procesa mediante Google Apps Script.',
   },
   requests: {
     intro: 'No necesitás registrarte, crear una cuenta ni indicar el motivo de tu solicitud.',

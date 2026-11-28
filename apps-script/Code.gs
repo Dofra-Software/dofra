@@ -53,6 +53,9 @@ function doPost(e) {
       ['Idioma', limpiar_(p.idioma, 20) || 'Sin indicar'],
       ['Mensaje', mensaje],
     ];
+    // Casilla opcional que el sitio muestra solo con un plan web (Esencial, Pro o Advanced). La fila aparece solo si
+    // se marcó: así el correo no cambia para el resto de las consultas ni para versiones anteriores del sitio.
+    if (p.plus_updates === 'Sí') filas.splice(4, 0, ['Actualizaciones Plus', 'Le interesa (adicional opcional)']);
     MailApp.sendEmail({
       to: DESTINO,
       replyTo: correo,
@@ -221,3 +224,8 @@ function respuesta_(obj) {
 
 // Solo para las pruebas locales con Node (apps-script/prueba-local.mjs). Apps Script lo ignora.
 if (typeof module !== 'undefined') module.exports = { doPost: doPost, idioma_: idioma_ };
+
+/** Ejecutar desde el editor para ver cuántos correos quedan hoy en la cuota de Gmail (se agregó en el editor publicado). */
+function verCuota() {
+  console.log(MailApp.getRemainingDailyQuota());
+}

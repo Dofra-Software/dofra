@@ -28,7 +28,6 @@ export const legalEn: LegalLocale = {
   },
   contact: {
     consent: 'I have read the [Privacy Policy](/privacidad) and I authorize the processing of my personal data to handle my inquiry and the communications related to it.',
-    processedBy: 'The form is processed by Google Apps Script.',
   },
   requests: {
     intro: 'You do not need to register, create an account or give a reason for your request.',

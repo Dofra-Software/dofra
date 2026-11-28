@@ -18,6 +18,10 @@ de Google de Dofra y no guarda los mensajes: sólo los reenvía por correo.
 - El sitio (`src/App.tsx`) envía a la URL de `CONTACT_ENDPOINT`. Mantiene los 15 s de espera, el mensaje de error con el
   enlace de correo y no muestra éxito si el receptor no lo confirma.
 - Mientras `CONTACT_ENDPOINT` esté vacío, se sigue usando FormSubmit: este cambio no altera nada hasta configurarlo.
+- Campo opcional `plus_updates` (26/11/2026): casilla de interés en Actualizaciones Plus, visible solo con un plan web.
+  Si llega con valor `Sí`, el aviso interno suma la fila «Actualizaciones Plus: Le interesa (adicional opcional)»
+  después de «Presupuesto». Sin la casilla, el correo queda igual que antes, así que el script y el sitio se pueden
+  actualizar en cualquier orden sin perder datos (con el script anterior, la casilla simplemente no figura en el aviso).
 
 ## Confirmación automática a quien escribe
 
@@ -81,3 +85,9 @@ sin URL configurada. 12/12 superadas. Después se probó contra el Apps Script r
 - 25/11/2026: pruebas reales en producción correctas (aviso interno, confirmación y Reply-To). La confirmación llegó a
   Spam en las primeras pruebas; no es un error del código ni de cuota. Mejora pendiente de entregabilidad: ver
   «Mejoras futuras» en `docs/LEGAL.md`.
+- 26/11/2026: versión 5 publicada en la misma implementación (la URL `/exec` no cambia): fila «Actualizaciones Plus»
+  solo si se marcó la casilla. El repositorio incluye `verCuota()`, que se había agregado directamente en el editor;
+  `apps-script/Code.gs` quedó idéntico a la versión 5. Prueba real desde la vista previa
+  (`mejora-formulario-contacto.dofra.pages.dev`, Plan Pro + Plus): Turnstile aprobado, aviso recibido con todas las
+  filas y confirmación enviada a info@ (figura en «Enviados»; por la redirección de info@ a la misma cuenta, Gmail no
+  la muestra en Recibidos).

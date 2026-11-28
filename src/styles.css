@@ -794,7 +794,7 @@ main:focus { outline: none; }
 .quote-form .quote-consent label { display: block; font-weight: 400; color: #FFFFFFBF; }
 .quote-consent a { color: #fff; text-decoration: underline; text-decoration-color: var(--brand-dot); text-underline-offset: 3px; }
 .quote-consent a:hover { text-decoration-color: currentColor; }
-.quote-processed { padding-left: 29px; font-size: 13px; color: #FFFFFF99; }
+.quote-form .quote-plus label { display: block; font-weight: 400; color: #FFFFFFBF; }
 
 /* ---------- Footer: información legal y derechos del consumidor ---------- */
 .footer-legal { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 32px; padding: 20px 0; border-bottom: 1px solid #ffffff1a; }
